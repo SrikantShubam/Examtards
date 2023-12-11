@@ -1,0 +1,17 @@
+<h1>Hi exam search</h1>
+<form method="GET" action="{% url 'search_exam' %}">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Search</button>
+</form>
+
+{% if exams %}
+    <ul>
+        {% for exam in exams %}
+            <li>{{ exam.name }}</li>
+            <!-- Add other fields you want to display -->
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>No exams found.</p>
+{% endif %}

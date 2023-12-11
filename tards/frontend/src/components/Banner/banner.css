@@ -1,0 +1,86 @@
+.banner{
+  margin-top: 4rem;
+    background-image: url('https://s3-alpha-sig.figma.com/img/5ded/2b46/7b4be29c5c06e348df7fae3cae407d07?Expires=1702857600&Signature=jl5V0FgW2GXVXhk~ZK6S78O16IeT9JvnB5lziCOpVcM7e5xuPqARVawS7Ni~t-CzMiG1lRkRWDO5rxCopGoLtJECYsdq5jc-LywNlYrSdInpoQ81ZP1y4gJkWHzHBMd0MEMXdLtTv3gBEP9HUWTncjzscnmoGOeqUgaCpR1pDdPeYYGDP3l90hr9~e2H85qNIC7UADSVh92L3i~Kn8sPQOeqUhKpzQmSXORPeRGXS9zVKWnvd9-1NHHJXBi44c5pAYsWde11Bw-~GqesqUthO~7WsiTTq4vnoytCHvgb39q9QvIGDu4hGm-y6cUA2rR4qKI3HtkBbiQYMXjX~E4Zug__&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4');
+    background-repeat: no-repeat;
+  
+    width: 100%;
+ background-size:cover;
+ height: 20.0625rem;
+   
+ border-radius: 1.875rem;
+}
+.content{
+    /* width: 55.375rem; */
+    margin: 0 auto;
+    padding: 3rem 5rem 3rem 5rem;
+}
+.banner h1{
+  
+    line-height: 4rem;
+}
+
+.btn-custom{
+    display: inline-flex;
+
+align-items: center;
+gap: 0.9375rem;
+color:#ffff;
+background: var(--light-on-primary-fixed-variant, #004494);
+
+font-family: Roboto;
+font-size: 0.875rem;
+font-style: normal;
+font-weight: 500;
+line-height: 1.25rem;
+
+}
+
+
+.form-control{
+    background-color: var(--light-on-primary-fixed-variant, #004494) !important;
+    border: none;
+
+      outline: none !important;
+}
+ 
+
+  
+.input-group{
+    background-color: var(--light-on-primary-fixed-variant, #004494);
+    margin-top: 15rem;
+    color: #FFF;
+border-radius: 0.9375rem!important;
+
+
+  }
+
+
+
+  .form-control:focus {
+    background-color: var(--light-on-primary-fixed-variant, #004494);
+    border: none;
+    outline: none !important;
+    color: white;
+    box-shadow: none; 
+  }
+  .search-form .input-group-text {
+    border: none;
+    color: white;
+    background-color: #004494;
+  }
+  
+  .search-form input.form-control::placeholder {
+    font-family: 'Roboto', sans-serif; 
+    font-size: 0.875rem;
+    line-height: 1.5rem; 
+    text-align: center; 
+    background-color: #004494; 
+    color: white; 
+  }
+  
+  .search-form .input-group {
+    width: 18.0625rem; 
+    padding: 0.3125rem 2.25rem 0.3125rem 1.875rem; 
+    border-radius: 0.9375rem; 
+  }
+  
