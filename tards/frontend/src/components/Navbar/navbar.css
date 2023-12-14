@@ -1,6 +1,4 @@
-.navbar{
-    margin-top: 2rem ;
-}
+
 .title {
     display: flex;
 width: 7.625rem;
@@ -42,27 +40,7 @@ line-height: 1.75rem; /* 127.273% */
 
 
 
-/* :root {
-    --main-color: black;
-    --secondary-color: #283271;
-  }
 
-  a {
-   
-    color: var(--main-color); 
-    text-decoration: none;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-     background-image: linear-gradient(
-      to right,
-      var(--secondary-color),
-      var(--secondary-color) 50%,
-      var(--main-color) 50%
-    ); 
-    background-size: 200% 100%;
-    background-position: 100%;
-  } */
-  
  .title:hover,.nav-link:hover,a:hover {
     color: #005AC1!important;
   }

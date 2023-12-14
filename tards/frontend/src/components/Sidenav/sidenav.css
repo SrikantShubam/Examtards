@@ -1,0 +1,111 @@
+/* 
+  
+  ul {
+    padding-top: 1.88rem;
+    padding-bottom: 1.88rem;
+    border-radius: 0.9375rem;
+ 
+
+   
+  }
+  
+  li {
+    padding-top: 1rem;
+    list-style: none;
+    text-decoration: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  
+  }
+  
+  .wrapper-buttons {
+    display: inline-flex;
+    padding: 0.5rem 1rem;
+    align-items: center;
+    gap: 0.875rem;
+    margin-left: 0; 
+    border-radius: 0.3125rem;
+  }
+  
+  .btn {
+    text-transform: uppercase;
+    color: var(--material-theme-sys-light-on-primary-fixed-variant, #004494);
+    background-color: transparent;
+    font-family: Roboto;
+    font-size: 1rem;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 1.25rem;
+  }
+  
+  li i {
+    color: #004494;
+  }
+  
+  .wrapper-buttons:hover,
+  .wrapper-buttons:focus {
+    background: var(--material-theme-sys-light-primary-fixed-dim, #ADC6FF);
+    box-shadow: 0px 6px 30px 5px rgba(0, 0, 0, 0.12);
+    outline: none; 
+  }
+  
+  .btn:focus {
+    outline: none;
+
+  }
+   */
+
+
+.sidebar{
+  padding: 3.6rem 5rem 3.6rem 5rem;
+  flex-direction: column;
+justify-content: center;
+align-items: center;
+gap: 1.5625rem;
+display: flex;
+background: #DBE2F9;
+border-radius: 0.625rem;
+box-shadow: 0px 8px 10px 0px rgba(0, 0, 0, 0.20);
+}   
+li {
+ 
+  list-style: none;
+  text-decoration: none;
+ 
+
+}
+.wrapper-buttons{
+border-radius: 5px;
+gap: 0.875rem;
+display: flex;
+padding: 0.25rem 0.875rem;
+align-items: center;
+}
+.btn {
+  text-transform: uppercase;
+  color: var(--material-theme-sys-light-on-primary-fixed-variant, #004494);
+  background-color: transparent;
+  font-family: Roboto;
+  font-size: 1rem;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 1.25rem;
+  
+}
+li i {
+  color: #004494;
+}
+  
+.wrapper-buttons:hover,
+.wrapper-buttons:focus {
+  background: var(--material-theme-sys-light-primary-fixed-dim, #ADC6FF);
+  box-shadow: 0px 6px 30px 5px rgba(0, 0, 0, 0.12);
+  outline: none; 
+
+}
+
+.btn:focus {
+  outline: none;
+
+}

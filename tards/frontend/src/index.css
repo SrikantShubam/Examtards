@@ -21,7 +21,7 @@ body{
 }
 h1{
   font-family: 'Comfortaa';
-  font-size: 3.5625rem;
+  font-size: 2.5625rem;
 font-style: normal;
 font-weight: 400;
 line-height: 4rem;
@@ -56,4 +56,25 @@ font-size: 1.375rem;
 font-style: normal;
 font-weight: 400;
 line-height: 1.75rem; /* 127.273% */
+}
+
+#menu {
+  width: 100%;
+  margin-top: 5rem;
+}
+#menu h2{
+  color: #000;
+
+text-align: left;/* material-theme/headline/large */
+font-family: Roboto;
+font-size: 2rem;
+font-style: normal;
+font-weight: 400;
+line-height: 2.5rem; /* 125% */
+}
+#menu h2 span{
+color:#005AC1;
+}
+a:hover{
+  text-decoration: none;
 }
