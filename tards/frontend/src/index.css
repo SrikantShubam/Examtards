@@ -78,3 +78,25 @@ color:#005AC1;
 a:hover{
   text-decoration: none;
 }
+
+@media (max-width:1024px) { 
+  body{
+    margin-left: 3.69rem;
+  margin-right:3.69rem;
+  }
+  #menu h2 {
+    font-size: 2rem;
+
+    }
+}
+
+@media(max-width:430px) {
+body{
+  margin-left: .5rem;
+  margin-right:.5rem;
+}
+#menu h2{
+  font-size: 1.5rem;
+
+}
+}

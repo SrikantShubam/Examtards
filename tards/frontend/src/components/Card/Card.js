@@ -26,7 +26,7 @@ function Card({ category }) {
     
   <div className="row " style={{marginLeft:'4rem'}}>
     {exams.map((exam, index) => (
-      <div className="col-md-4" key={index}>
+      <div className="col-lg-4 col-sm-12" key={index}>
         <Link to={`/exam-detail/${encodeURIComponent(exam.name.replace(/\s/g, '-'))}`}>
          <div className="card">
           <div className="card-body">

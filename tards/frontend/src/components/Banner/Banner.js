@@ -26,12 +26,12 @@ function Banner() {
   return (
     <div className='banner'>
       <div className="row px-4">
-        <div className="col-md-7">
+        <div className="col-md-7 col-sm-12">
           <div className="content">
             <h1>Mastering Time, Unveiling Opportunities: Your Exam  Compass</h1>
           </div>
         </div>
-        <div className="col-md-4 mr-4">
+        <div className="col-md-5  col-sm-12 ">
           <form action="/search" method="GET" className="search-form" onSubmit={handleSearch}>
             <div className="input-group">
               <div className="input-group-prepend">

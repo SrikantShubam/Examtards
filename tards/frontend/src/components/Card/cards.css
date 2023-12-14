@@ -43,3 +43,38 @@ font-style: normal;
 font-weight: 500;
 line-height: 1rem; /* 133.333% */
 }
+@media(max-width:1024px) {
+    .card{
+      padding-bottom: 12rem;
+     
+    }
+    .card-title{
+        font-size: 1rem;
+        line-height: 1.25rem; /* 142.857% */
+    }
+    .card-text{
+        font-size: .9rem;
+
+    }
+}
+
+
+@media(max-width:430px) {
+    .card{
+        padding-top: -4rem;
+        margin-left: 3rem;
+        margin-top: -8.75rem;
+        margin-bottom: 10rem;
+        height:2rem;
+        padding-bottom: 8rem;
+    }
+    .card-title{
+        font-size: 1rem;
+        line-height: 1rem; /* 145.455% */ /* 142.857% */
+       
+    }
+    .card-text{
+        font-size: .7rem;
+      
+    }
+    }

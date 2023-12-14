@@ -44,3 +44,32 @@ line-height: 1.75rem; /* 127.273% */
  .title:hover,.nav-link:hover,a:hover {
     color: #005AC1!important;
   }
+
+
+ @media (max-width:1024px) { 
+.navbar{
+
+margin-top: 2.3rem;
+}
+
+
+
+ }
+ @media(max-width:430px) {
+    .navbar,.title,.nav-custom{
+    font-size: 0.875rem;
+}
+.nav-custom{
+    width: 1.375rem;
+    height: 1.375rem;
+    flex-shrink: 0;
+}
+.nav-item,.nav-link{
+    font-size: 0.875rem;
+}
+li,.nav-item,.nav-link{
+    color: #000 !important;
+margin-left: 0rem;
+margin-right: 0rem;
+}
+ }
