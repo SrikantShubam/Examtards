@@ -1,0 +1,80 @@
+#exam_details{
+    margin-top: 6.5rem;
+    margin-left: 7.5rem;
+    margin-right: 7.5rem;
+}
+
+#exam_details #banner{
+    border-radius: 0.625rem;
+background: var(--material-theme-sys-light-secondary-container, #DBE2F9);
+padding-left: 2.4rem;
+padding-right: 2.4rem;
+padding-top: 2rem;
+}
+#exam_details #banner .col-md-4 h3{
+    color: var(--material-theme-sys-light-on-primary-fixed-variant, #004494);
+    
+    
+    font-family: Roboto;
+    font-size: 1.75rem;
+    font-style: italic;
+    font-weight: 400;
+    line-height: 2.25rem; 
+}
+
+#exam_details #banner .first{
+    color: var(--material-theme-sys-light-on-primary-fixed-variant, #004494);
+margin-top: 2rem;
+/* material-theme/body/medium */
+font-family: Roboto;
+font-size: 1.35rem;
+font-style: normal;
+font-weight: 400;
+line-height: 1.25rem; /* 142.857% */
+}
+p{
+    font-family: Roboto;
+    line-height: 1rem; /* 133.333% */
+    font-size: 1rem;
+    color: var(--material-theme-sys-light-on-primary-fixed-variant, #004494);
+
+
+}
+
+#exam_details #banner .col-md-8 h3{
+    padding-top: 1rem;
+    padding-bottom: 1.5rem;
+    text-align: left;
+  
+}
+
+#exam_details .card-2{
+    border-radius: 0.625rem;
+background: var(--material-theme-sys-light-primary-fixed-dim, #ADC6FF);
+
+/* 16 dp penumbra */
+box-shadow: 0px 6px 30px 5px rgba(0, 0, 0, 0.12);
+    
+}
+
+#exam_details .col-md-4 .card-2 h4{
+    display: flex;
+
+    height: 7rem;
+    flex-direction: column;
+    justify-content: center;
+    flex-shrink: 0;
+    color: var(--material-theme-sys-light-on-primary-fixed-variant, #004494);
+    text-align: center;
+    
+    /* material-theme/headline/medium */
+    font-family: Roboto;
+    font-size: 1.75rem;
+    font-style: italic;
+    font-weight: 400;
+    line-height: 2.25rem;
+}
+#exam_details .t{
+    margin-top: 2rem;
+    margin-bottom: 1.5rem;
+}

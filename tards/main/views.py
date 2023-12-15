@@ -10,6 +10,9 @@ from .serializers import ExamSerializer
 from fuzzywuzzy import fuzz
 from django.shortcuts import render, get_object_or_404
 from urllib.parse import unquote
+from django.http import JsonResponse
+
+from urllib.parse import unquote_plus
 
 def homepage(request):
     return render(request, 'index.html')  
@@ -35,17 +38,25 @@ def search_exam(request):
     return Response(serializer.data)
 
 
+
+
 @api_view(['GET'])
 def exam_detail(request, exam_name):
     try:
-        decoded_exam_name = unquote(exam_name)  # Decode the URL-encoded exam name
-        exam = get_object_or_404(Exam, name__iexact=decoded_exam_name)
+        
+        print("OG NAME",exam_name)
+
+        decoded_exam_name = unquote_plus(exam_name) 
+        print(decoded_exam_name)
+        exam = Exam.objects.filter(name__iexact=decoded_exam_name.replace('-', ' ')).first()
+        if not exam:
+            exam = get_object_or_404(Exam, name__iexact=decoded_exam_name)
+        
         serializer = ExamSerializer(exam)
-        return Response(serializer.data)
-    except Exam.DoesNotExist:
-        return Response({"message": "Exam not found"}, status=404)
+        return JsonResponse(serializer.data)  # Return JSON response directly
     except Exception as e:
-        return Response({"error": str(e)}, status=500)
+        return JsonResponse({"error": str(e)}, status=500)
+    
     
 @api_view(['GET'])
 def get_categories(request):

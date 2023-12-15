@@ -9,7 +9,7 @@ class Exam(models.Model):
     year = models.PositiveIntegerField(null=True, blank=True)
     keywords = models.TextField(null=True, blank=True)
     CATEGORY_CHOICES = [
-        ('civil', 'Civil Exams'),
+        ('UPSC', 'UPSC'),
         ('engineering', 'Engineering'),
         ('medical', 'Medical'),
         ('popular', 'Popular'),
@@ -20,6 +20,7 @@ class Exam(models.Model):
     important_resources_1 = models.URLField(null=True, blank=True)
     important_resources_2 = models.URLField(null=True, blank=True)
     syllabus = models.TextField(null=True, blank=True)
+    exam_description = models.TextField(null=True, blank=True)   
     # Add other fields as needed
     
     def __str__(self):
