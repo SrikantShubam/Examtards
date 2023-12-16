@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import axios from 'axios'; // Import Axios
-import './ExamDetail.css'
+import axios from 'axios';
+import './ExamDetail.css';
+
 function calculateExamDuration(examDate) {
   const examDateTime = new Date(examDate);
   const now = new Date();
@@ -14,6 +15,22 @@ function calculateExamDuration(examDate) {
 
   return { days, hours, minutes };
 }
+
+function formatExamDate(examDate) {
+  const months = [
+    'January', 'February', 'March', 'April', 'May', 'June',
+    'July', 'August', 'September', 'October', 'November', 'December'
+  ];
+
+  const dateObj = new Date(examDate);
+  const day = dateObj.getDate();
+  const month = months[dateObj.getMonth()];
+  const year = dateObj.getFullYear();
+
+  return `${day} ${month} ${year}`;
+}
+
+
 
 function ExamDetail() {
   const { examName } = useParams();
@@ -29,7 +46,6 @@ function ExamDetail() {
         const response = await axios.get(apiUrl);
         setExamDetails(response.data);
 
-        // Calculate remaining time until the exam
         const { days, hours, minutes } = calculateExamDuration(response.data.exam_date);
         setRemainingTime({ days, hours, minutes });
       } catch (error) {
@@ -41,57 +57,176 @@ function ExamDetail() {
   }, [examName]);
 
   return (
-    <section id="exam_details">
-      <div>
-        {examDetails ? (
-          <div className="row" id="banner">
-            <div className="col-md-4">
-              <div>
-                <h3>{examDetails.name}</h3>
-               
-                <p className='first'>About the exam</p>
-                <p>{examDetails.exam_description}</p>
+    
+
+    <>
+  {examDetails ? (
+    <div id="exam_details">
+  
+      <div className="row" id="main">
+      
+          <div className="col-md-5">
+            <h4>{examDetails.name}</h4>
+            <h5>Exam Date: {formatExamDate(examDetails.exam_date)}</h5>
+            <h5>About the exam</h5>
+            <h6>{examDetails.exam_description}</h6>
+          </div>
+          <div className="col-md-7">
+            <h2>Time Remaining</h2>
+            <div className="row">
+              <div className="col-md-3">
+                <div className="card-2">
+                  <h2>{remainingTime.days}</h2>
+                </div>
+                <h3 className='text-center'>Days</h3>
               </div>
-            </div>
-            <div className="col-md-8">
-              <h3>Time Remaining</h3>
-              <div className="row ml-5">
-                <div className="col-md-4">
-                  <div className="card-2 text-center">
-                    <h4 className='d-flex flex-column align-items-center justify-content-center'>
-                      {remainingTime.days}
-                    </h4>
-                  </div>
-                  <h4 className='text-center t'>Days</h4>
+              <div className="col-md-3">
+                <div className="card-2">
+                  <h2>{remainingTime.hours}</h2>
                 </div>
-          
-                <div className="col-md-4">
-                  <div className="card-2 text-center">
-                    <h4 className='d-flex flex-column align-items-center justify-content-center'>
-                      {remainingTime.hours}
-                    </h4>
-                  </div>
-                  <h4 className='text-center t'>Hours</h4>
+                <h3 className='text-center'>Hours</h3>
+              </div>
+              <div className="col-md-3">
+                <div className="card-2">
+                  <h2>{remainingTime.minutes}</h2>
                 </div>
-                <div className="col-md-4">
-                  <div className="card-2 text-center">
-                    <h4 className='d-flex flex-column align-items-center justify-content-center'>
-                      {remainingTime.minutes}
-                    </h4>
-                  </div>
-                  <h4 className='text-center t'>Minutes</h4>
-                </div>
+                <h3 className='text-center'>Minutes</h3>
               </div>
             </div>
           </div>
-        ) : (
-          <p>Loading...</p>
-        )}
+        
+      </div>
+    
+      {/* <section id="second">
+        <div className="row">
+        <div className="col-md-5">
+      <h1>Eligibility</h1>
+      {examDetails && (
+        <div>
+          {examDetails.eligibility_criteria.split('\n').map((paragraph, index) => (
+            <p key={index}>{paragraph}</p>
+          ))}
+        </div>
+      )}
+    </div>
+          <div className="col-md-6 ">
+            <div className="row">
+              <div className="col-md-12" id="content">
+                <h2>Important Dates</h2>
+                <div className="text-content d-flex justify-content-between">
+                  <p>Last data of notification</p>
+                  <p>{examDetails.last_date_for_application}</p>
+                </div>
+              </div>
+              <div className="col-md-12"></div>
+            </div>
+          </div>
+        </div>
+      </section> */}
+<section id="second">
+  <div className="row">
+    <div className="col-md-5">
+      <h1>Eligibility</h1>
+      {examDetails && (
+        <div>
+          {examDetails.eligibility_criteria.split('\n').map((paragraph, index) => (
+            <p key={index}>{paragraph}</p>
+          ))}
+        </div>
+      )}
+    </div>
+    <div className="col-md-7">
+      <div className="row">
+        <div className="col-md-11 " id="content">
+          <h2>Important Dates</h2>
+          <div className="text-content">
+            <div className="d-flex justify-content-between flex-direction-column">
+              <p>Last date of notification:</p>
+              <p>{formatExamDate(examDetails.last_date_for_application)}</p>
+             
+            </div>
+            <div className="d-flex justify-content-between flex-direction-column">  <p>Date of notification:</p>
+              <p>{formatExamDate(examDetails.date_of_notification)}</p></div>
+          
+          </div>
+        </div>
+        {/* Add other col-md-12 divs similarly for other date fields */}
+     
+
+        <div className="col-md-11 mt-5" id="content">
+          <h2>Important Dates</h2>
+          <div className="text-content">
+            <div className="d-flex justify-content-between flex-direction-column">
+              <p>Last date of notification:</p>
+              <p>{formatExamDate(examDetails.last_date_for_application)}</p>
+             
+            </div>
+            <div className="d-flex justify-content-between flex-direction-column">  <p>Date of notification:</p>
+              <p>{formatExamDate(examDetails.date_of_notification)}</p></div>
+          
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<section id="third">
+      <div className="row">
+        <div className="col-md-5">
+          <div className="row">
+            <div className="col-md-12" id="content">
+              <h2 className="plus-icon">+</h2>
+              <h2 className="text-center italic-text">Download Syllabus</h2>
+            </div>
+     
+            <div className="col-md-12 mt-5" id="content">
+              <h2 className="plus-icon">+</h2>
+              <h2 className="text-center italic-text">Download Pattern</h2>
+            </div>
+          </div>
+        </div>
+        <div className="col-md-7">
+          <div className="content-2">
+            <h1>Important Resources</h1>
+         
+                {examDetails && examDetails.important_resources && (
+                  Object.entries(JSON.parse(examDetails.important_resources)).map(
+                    ([key, value]) => (
+                    //   <div className='d-flex  align-items-center'>
+                    //   <p className='align-items-center justify-content-center'>{`${key}`}</p> 
+                    //   <div className="d-flex justify-content-center align-items-center">
+                    //     <a href={`${value}`} target='_blank' className="d-flex align-items-center">
+                    //       <i className="fas fa-chevron-right"></i>
+                    //     </a>
+                    //   </div>
+                    // </div>
+                    <div className="d-flex align-items-center">
+                      <div className="text-imp">{`${key}`}</div>
+                      <div className="icon-imp">
+                      <a href={`${value}`} target='_blank'>
+                       <i className="fas fa-chevron-right"></i>
+                      </a>
+                      </div>
+                    </div>
+                    
+                    )
+                  )
+                )}
+          
+
+          </div>
+        </div>
       </div>
     </section>
 
+    </div>
+  ) : (
+    <p>Loading...</p>
+  )}
+</>
 
-    
   );
 }
 

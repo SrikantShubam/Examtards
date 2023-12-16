@@ -1,5 +1,6 @@
 from django.db import models
 
+
 class Exam(models.Model):
     name = models.CharField(max_length=100, null=True, blank=True)
     date_of_notification = models.DateField(null=True, blank=True)
@@ -21,7 +22,8 @@ class Exam(models.Model):
     important_resources_2 = models.URLField(null=True, blank=True)
     syllabus = models.TextField(null=True, blank=True)
     exam_description = models.TextField(null=True, blank=True)   
-    # Add other fields as needed
-    
+    eligibility_criteria = models.TextField(null=True, blank=True)
+    important_resources = models.TextField(null=True, blank=True)  # Store as JSON string
+
     def __str__(self):
         return self.name
