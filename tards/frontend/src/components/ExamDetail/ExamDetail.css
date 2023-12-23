@@ -78,11 +78,16 @@ margin-bottom: 1.38rem;
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 0.46569rem;
+    gap: 0.1rem;
     /* 16 dp penumbra */
     box-shadow: 0px 6px 30px 5px rgba(0, 0, 0, 0.12);
     padding: 2.6875rem 2.8125rem;
-    text-align: center; /* Added */
+    text-align: center; 
+    width: 11.5rem;
+      margin: 0 auto;
+      
+  
+  
 }
 
 #exam_details #main .col-md-7 .card-2 h2 {
@@ -271,4 +276,98 @@ color: #000!important;
   .icon-imp a{
     text-decoration: none;
     color: #000!important;
+  }
+
+
+  @media (max-width:1024px) { 
+
+ #second   #content {
+      margin-left: 2.5rem;
+    }
+    #third .content-2{
+      margin-left: 1.5rem;
+    }
+    #exam_details #main .col-md-7 .card-2 {
+      width: 100%;
+    }
+    #exam_details #main .col-md-5 h5{
+      font-size: 1.5rem;
+    }
+    #exam_details #main .col-md-5 h6{
+font-size: 1.2rem;
+line-height: 2rem;
+    }
+    #second .col-md-5  p{
+font-size:1.2rem
+    }
+  }
+
+  @media(max-width:430px) {
+    #exam_details{
+      padding-right:1rem !important;
+      padding-left:1rem !important;
+      overflow-x: none;
+    }
+
+    #third .content-2{
+      padding: 0;
+      margin-top: 2rem;
+      margin-left: -1rem;
+      margin-right: -1rem;
+
+    }
+    #exam_details .col-sm-4{
+     width: 33%;
+    }
+    #second #content{
+      margin-top: 2rem;
+      margin-left: 0;
+    }
+    .content-2{
+      padding-bottom: 2rem;
+      margin-bottom: 2rem;
+    }
+    .content-2 .text-imp,.content-2 .icon-imp{
+      padding-bottom: 2rem;
+    }
+   #exam_details #main h4{
+      font-size: 1.5rem;
+      line-height: 2rem;
+      font-family: Roboto;
+font-style: normal;
+    }
+    #exam_details #main h5{
+      color: var(--material-theme-sys-light-on-primary-fixed-variant, #004494);
+
+/* material-theme/title/small */
+font-family: Roboto;
+font-size: 0.875rem;
+font-style: normal;
+font-weight: 500;
+line-height: 1.25rem; /* 142.857% */
+    }
+    #exam_details #main h6{
+      color: var(--material-theme-sys-light-on-primary-fixed-variant, #004494);
+
+/* material-theme/body/small */
+font-family: Roboto;
+font-size: 0.75rem;
+font-style: normal;
+font-weight: 400;
+line-height: 1rem; /* 133.333% */
+    }
+    #main > div.col-md-7.col-sm-12 > h2{
+      color: var(--material-theme-sys-light-on-secondary-fixed-variant, #3F4759);
+
+/* material-theme/headline/small */
+
+font-style: normal !important;
+margin-top: 1rem;
+    }
+    .text-content p{
+      font-size: 1rem !important;
+    }
+    #second p {
+      font-size: 1rem!important;
+    }
   }

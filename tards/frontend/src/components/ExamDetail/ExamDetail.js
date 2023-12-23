@@ -55,7 +55,28 @@ function ExamDetail() {
 
     fetchExamData();
   }, [examName]);
+  const [warningMessage, setWarningMessage] = useState('');
 
+  const handleDownloadSyllabus = async (examName) => {
+    try {
+      const response = await axios.get(`http://localhost:8000/download-syllabus/${encodeURIComponent(examName)}`, {
+        responseType: 'blob', // Ensure response type is set to 'blob'
+      });
+  
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement('a');
+      const fileName = `${examName}_syllabus.pdf`; // Dynamically generate the file name
+      link.href = url;
+      link.setAttribute('download', fileName); // Use the generated file name
+      document.body.appendChild(link);
+      link.click();
+      link.parentNode.removeChild(link);
+  
+    } catch (error) {
+      console.error('Error downloading syllabus:', error);
+      // Handle other errors if needed
+    }
+  };
   return (
     
 
@@ -63,69 +84,42 @@ function ExamDetail() {
   {examDetails ? (
     <div id="exam_details">
   
-      <div className="row" id="main">
-      
-          <div className="col-md-5">
-            <h4>{examDetails.name}</h4>
-            <h5>Exam Date: {formatExamDate(examDetails.exam_date)}</h5>
-            <h5>About the exam</h5>
-            <h6>{examDetails.exam_description}</h6>
-          </div>
-          <div className="col-md-7">
-            <h2>Time Remaining</h2>
-            <div className="row">
-              <div className="col-md-3">
-                <div className="card-2">
-                  <h2>{remainingTime.days}</h2>
-                </div>
-                <h3 className='text-center'>Days</h3>
-              </div>
-              <div className="col-md-3">
-                <div className="card-2">
-                  <h2>{remainingTime.hours}</h2>
-                </div>
-                <h3 className='text-center'>Hours</h3>
-              </div>
-              <div className="col-md-3">
-                <div className="card-2">
-                  <h2>{remainingTime.minutes}</h2>
-                </div>
-                <h3 className='text-center'>Minutes</h3>
-              </div>
-            </div>
-          </div>
-        
+  
+    <div className="row" id="main">
+  <div className="col-md-5 col-sm-12">
+    <h4>{examDetails.name}</h4>
+    <h5>Exam Date: {formatExamDate(examDetails.exam_date)}</h5>
+    <h5>About the exam</h5>
+    <h6>{examDetails.exam_description}</h6>
+  </div>
+  <div className="col-md-7 col-sm-12">
+    <h2>Time Remaining</h2>
+    <div className="row">
+      <div className="col-sm-4">
+        <div className="card-2">
+          <h2>{remainingTime.days}</h2>
+        </div>
+        <h3 className='text-center mt-3'>Days</h3>
       </div>
-    
-      {/* <section id="second">
-        <div className="row">
-        <div className="col-md-5">
-      <h1>Eligibility</h1>
-      {examDetails && (
-        <div>
-          {examDetails.eligibility_criteria.split('\n').map((paragraph, index) => (
-            <p key={index}>{paragraph}</p>
-          ))}
+      <div className="col-sm-4">
+        <div className="card-2">
+          <h2>{remainingTime.hours}</h2>
         </div>
-      )}
+        <h3 className='text-center mt-3'>Hours</h3>
+      </div>
+      <div className="col-sm-4">
+        <div className="card-2">
+          <h2>{remainingTime.minutes}</h2>
+        </div>
+        <h3 className='text-center mt-3'>Minutes</h3>
+      </div>
     </div>
-          <div className="col-md-6 ">
-            <div className="row">
-              <div className="col-md-12" id="content">
-                <h2>Important Dates</h2>
-                <div className="text-content d-flex justify-content-between">
-                  <p>Last data of notification</p>
-                  <p>{examDetails.last_date_for_application}</p>
-                </div>
-              </div>
-              <div className="col-md-12"></div>
-            </div>
-          </div>
-        </div>
-      </section> */}
+  </div>
+</div>
+
 <section id="second">
   <div className="row">
-    <div className="col-md-5">
+    <div className="col-md-5 col-sm-12">
       <h1>Eligibility</h1>
       {examDetails && (
         <div>
@@ -135,9 +129,9 @@ function ExamDetail() {
         </div>
       )}
     </div>
-    <div className="col-md-7">
+    <div className="col-md-7 col-sm-12">
       <div className="row">
-        <div className="col-md-11 " id="content">
+        <div className="col-md-11 col-sm-6 " id="content">
           <h2>Important Dates</h2>
           <div className="text-content">
             <div className="d-flex justify-content-between flex-direction-column">
@@ -174,9 +168,9 @@ function ExamDetail() {
 
 <section id="third">
       <div className="row">
-        <div className="col-md-5">
+        <div className="col-md-5 col-sm-12">
           <div className="row">
-            <div className="col-md-12" id="content">
+            <div className="col-md-12" id="content" onClick={() => handleDownloadSyllabus(examName)}>
               <h2 className="plus-icon">+</h2>
               <h2 className="text-center italic-text">Download Syllabus</h2>
             </div>
@@ -187,22 +181,15 @@ function ExamDetail() {
             </div>
           </div>
         </div>
-        <div className="col-md-7">
+        <div className="col-md-7 col-sm-12">
           <div className="content-2">
             <h1>Important Resources</h1>
          
                 {examDetails && examDetails.important_resources && (
                   Object.entries(JSON.parse(examDetails.important_resources)).map(
-                    ([key, value]) => (
-                    //   <div className='d-flex  align-items-center'>
-                    //   <p className='align-items-center justify-content-center'>{`${key}`}</p> 
-                    //   <div className="d-flex justify-content-center align-items-center">
-                    //     <a href={`${value}`} target='_blank' className="d-flex align-items-center">
-                    //       <i className="fas fa-chevron-right"></i>
-                    //     </a>
-                    //   </div>
-                    // </div>
-                    <div className="d-flex align-items-center">
+                    ([key, value],index) => (
+                 
+                    <div key={index} className="d-flex align-items-center">
                       <div className="text-imp">{`${key}`}</div>
                       <div className="icon-imp">
                       <a href={`${value}`} target='_blank'>
