@@ -10,7 +10,7 @@ urlpatterns = [
     path('category-data/<str:category_name>/', views.category_data, name='category-data'),
     path('get-categories/', views.get_categories, name='get-categories'),
     path('download-syllabus/<str:exam_name>/', views.download_syllabus, name='download-syllabus'),
-
+    path('download-pattern/<str:exam_name>/', views.download_pattern, name='download-pattern'),
 ]
 
 

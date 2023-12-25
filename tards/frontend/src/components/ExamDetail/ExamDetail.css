@@ -278,6 +278,14 @@ color: #000!important;
     color: #000!important;
   }
 
+#third #content:hover{
+  cursor: pointer;
+  color: #adc6ff !important;
+  background-color: #004494!important;
+}
+#third #content:hover h2 {
+  color: #adc6ff !important;
+}
 
   @media (max-width:1024px) { 
 

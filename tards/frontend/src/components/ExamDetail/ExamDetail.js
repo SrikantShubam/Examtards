@@ -77,6 +77,26 @@ function ExamDetail() {
       // Handle other errors if needed
     }
   };
+  const handleDownloadPattern = async (examName) => {
+    try {
+      const response = await axios.get(`http://localhost:8000/download-pattern/${encodeURIComponent(examName)}`, {
+        responseType: 'blob', // Ensure response type is set to 'blob'
+      });
+  
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement('a');
+      const fileName = `${examName}_pattern.pdf`; // Dynamically generate the file name
+      link.href = url;
+      link.setAttribute('download', fileName); // Use the generated file name
+      document.body.appendChild(link);
+      link.click();
+      link.parentNode.removeChild(link);
+  
+    } catch (error) {
+      console.error('Error downloading pattern:', error);
+      // Handle other errors if needed
+    }
+  };
   return (
     
 
@@ -134,13 +154,17 @@ function ExamDetail() {
         <div className="col-md-11 col-sm-6 " id="content">
           <h2>Important Dates</h2>
           <div className="text-content">
+          {examDetails && examDetails.important_dates && (
+                  Object.entries(JSON.parse(examDetails.important_dates)).map(
+                    ([key, value],index) => (
             <div className="d-flex justify-content-between flex-direction-column">
-              <p>Last date of notification:</p>
-              <p>{formatExamDate(examDetails.last_date_for_application)}</p>
-             
+              <p>{key}</p>
+              
+              <p>{value}</p>
+           
             </div>
-            <div className="d-flex justify-content-between flex-direction-column">  <p>Date of notification:</p>
-              <p>{formatExamDate(examDetails.date_of_notification)}</p></div>
+                   )))}
+          
           
           </div>
         </div>
@@ -150,13 +174,16 @@ function ExamDetail() {
         <div className="col-md-11 mt-5" id="content">
           <h2>Important Dates</h2>
           <div className="text-content">
+          {examDetails && examDetails.important_dates && (
+                  Object.entries(JSON.parse(examDetails.important_dates)).map(
+                    ([key, value],index) => (
             <div className="d-flex justify-content-between flex-direction-column">
-              <p>Last date of notification:</p>
-              <p>{formatExamDate(examDetails.last_date_for_application)}</p>
-             
+              <p>{key}</p>
+              
+              <p>{value}</p>
+           
             </div>
-            <div className="d-flex justify-content-between flex-direction-column">  <p>Date of notification:</p>
-              <p>{formatExamDate(examDetails.date_of_notification)}</p></div>
+                   )))}
           
           </div>
         </div>
@@ -175,7 +202,7 @@ function ExamDetail() {
               <h2 className="text-center italic-text">Download Syllabus</h2>
             </div>
      
-            <div className="col-md-12 mt-5" id="content">
+            <div className="col-md-12 mt-5" id="content" onClick={() => handleDownloadPattern(examName)}>
               <h2 className="plus-icon">+</h2>
               <h2 className="text-center italic-text">Download Pattern</h2>
             </div>
