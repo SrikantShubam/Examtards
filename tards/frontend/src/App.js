@@ -15,6 +15,7 @@ function App() {
   return (
     <>
       <Header />
+   
     <Routes>
       <Route path="/exam-detail/:examName" element={<ExamDetail />} />
 
@@ -23,9 +24,9 @@ function App() {
         path="/"
         element={
           <>
-          
+             <div className="body">
             <Banner />
-            <div id="menu">
+            <div id="menu" className='mb-5'>
           <h2 className=''>Get Latest Exam <span>Details</span></h2>  
               <div className="row mt-5">
                 <div className="col-md-2 col-sm-6">
@@ -37,14 +38,16 @@ function App() {
               </div>
             </div>
            
+            </div>
       
-      
-   
             <Footer />
+          
           </>
         }
       />
-    </Routes></>
+    </Routes>
+ 
+    </>
     
   );
 }

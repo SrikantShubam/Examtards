@@ -1,7 +1,8 @@
 
 #exam_details{
     margin-top: 4rem;
-    
+    min-height: calc(100vh - 1500.8px);
+
 }
 #main{
     padding-top:  3rem!important;
@@ -286,7 +287,48 @@ color: #000!important;
 #third #content:hover h2 {
   color: #adc6ff !important;
 }
+#forth {
+  margin-top: 4rem;
+  margin-bottom: 10rem!important;
+  
+}
 
+.centered-input {
+  text-align: center;
+}
+#forth .wrapper{
+  background: var(--material-theme-sys-light-primary-container, #D8E2FF);
+  padding: 1rem 3rem;
+  border-radius: 0.625rem;
+  box-shadow: 0px 8px 10px 0px rgba(0, 0, 0, 0.20);
+}
+.centered-input input[type="text"] {
+ 
+  font-size: 16px;
+  border-radius: 0.625rem;
+  background: var(--material-theme-sys-light-primary-container, #D8E2FF); 
+  color: #000;
+  text-align: center;
+  font-family: Roboto;
+  font-size: 2rem;
+  border: 1px solid transparent; /* Add a transparent border */
+}
+
+.centered-input input[type="text"]::placeholder {
+  color: #005AC1;
+}
+
+/* Style the border color when the input is focused */
+#forth .centered-input input[type="text"]:focus {
+  border-color: #0060c0!important;
+  outline: none; /* Remove default outline */
+}
+#forth .centered-input button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  /* Add any other styles you need */
+}
   @media (max-width:1024px) { 
 
  #second   #content {
@@ -373,9 +415,9 @@ font-style: normal !important;
 margin-top: 1rem;
     }
     .text-content p{
-      font-size: 1rem !important;
+      font-size: 1.5rem !important;
     }
     #second p {
-      font-size: 1rem!important;
+      font-size: 1.3rem!important;
     }
   }

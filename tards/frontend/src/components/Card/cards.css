@@ -47,6 +47,8 @@ line-height: 1rem; /* 133.333% */
     .card{
       padding-bottom: 12rem;
       margin-bottom: 2rem;
+      margin-left: 2rem;
+      width: 17rem;
      
     }
     .card-title{
@@ -62,20 +64,21 @@ line-height: 1rem; /* 133.333% */
 
 @media(max-width:430px) {
     .card{
+      
         padding-top: -4rem;
-        margin-left: 3rem;
-        margin-top: -12.75rem;
+        margin-left: 7rem;
+        margin-top: -18.25rem;
         margin-bottom: 10rem;
         height:2rem;
-        padding-bottom: 8rem;
+      
     }
     .card-title{
-        font-size: 1rem;
-        line-height: 1rem; /* 145.455% */ /* 142.857% */
+        font-size: 1.3rem;
+        line-height: 1.7rem; /* 145.455% */ /* 142.857% */
        
     }
     .card-text{
-        font-size: .7rem;
+        font-size:1.1rem;
       
     }
     }

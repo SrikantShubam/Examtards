@@ -29,10 +29,10 @@ function Sidenav({ handleCategoryClick }) {
       <ul className='sidebar'>
         {categories.map(category => (
           <li key={category}>
-            <div className='wrapper-buttons' onClick={() => handleCategoryClick(category)} target="_blank" rel="noopener noreferrer" tabIndex="0">
-              <button className="btn">
-                {category}
-              </button>
+            <div className='wrapper-buttons ' onClick={() => handleCategoryClick(category)} target="_blank" rel="noopener noreferrer" tabIndex="0">
+              <button className="btn">{category}</button>
+                
+             
               <i className="fas fa-chevron-right"></i>
             </div>
           </li>

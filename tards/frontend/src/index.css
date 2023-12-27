@@ -7,11 +7,15 @@
 --secondary-fixed:#DBE2F9;
  
 }
+html, body, #root {
+  height: 100%;
+  margin: 0;
+}
 
 *,*::after,*::before{
   box-sizing: border-box;
 }
-body{
+.body{
   margin-left: 7.6rem;
   margin-right:7.6rem;
 }
@@ -80,7 +84,7 @@ a:hover{
 }
 
 @media (max-width:1024px) { 
-  body{
+  .body{
     margin-left: 3.69rem;
   margin-right:3.69rem;
   }
@@ -91,7 +95,7 @@ a:hover{
 }
 
 @media(max-width:430px) {
-body{
+.body{
   margin-left: .5rem;
   margin-right:.5rem;
 }

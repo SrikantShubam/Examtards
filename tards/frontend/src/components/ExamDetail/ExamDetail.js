@@ -2,7 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import './ExamDetail.css';
-
+import Footer from '../Footer/Footer';
+import '../Footer/footer.css';
 function calculateExamDuration(examDate) {
   const examDateTime = new Date(examDate);
   const now = new Date();
@@ -36,7 +37,7 @@ function ExamDetail() {
   const { examName } = useParams();
   const [examDetails, setExamDetails] = useState(null);
   const [remainingTime, setRemainingTime] = useState({ days: 0, hours: 0, minutes: 0 });
-
+  const [userInput, setUserInput] = useState('');
   useEffect(() => {
     const fetchExamData = async () => {
       try {
@@ -97,10 +98,19 @@ function ExamDetail() {
       // Handle other errors if needed
     }
   };
+  
+  const handleButtonClick = async () => {
+    const baseURL = 'https://www.perplexity.ai/search?';
+    const encodedQuery = encodeURIComponent(userInput);
+    const fullURL = baseURL + 'q=' + encodedQuery + '&copilot=false';
+    
+    window.open(fullURL, '_blank');
+  };
   return (
     
 
     <>
+    <div className="body">
   {examDetails ? (
     <div id="exam_details">
   
@@ -234,11 +244,29 @@ function ExamDetail() {
         </div>
       </div>
     </section>
-
+ 
+<section id="forth">
+<div className="centered-input col-lg-12">
+  <div className="wrapper">
+  <input
+          type="text"
+          value={userInput}
+         
+          placeholder="Any doubts ask AI"
+        />
+        <button onClick={handleButtonClick}>
+        <i className="fa-solid fa-angle-right fa-lg"></i>
+        </button>
+  </div>
+        
+      </div>
+      </section>
     </div>
   ) : (
     <p>Loading...</p>
   )}
+  </div>
+ <Footer></Footer>
 </>
 
   );
