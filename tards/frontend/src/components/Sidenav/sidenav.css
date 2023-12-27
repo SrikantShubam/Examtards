@@ -3,8 +3,7 @@
   display: inline-flex;
 padding: 3.125rem 0rem;
 flex-direction: column;
-justify-content: center;
-align-items: center;
+
 gap: 1.3125rem;
 background: #DBE2F9;
 border-radius: 0.625rem;
@@ -19,7 +18,7 @@ li {
 }
 .wrapper-buttons{
 border-radius: 5px;
-gap: 0.875rem;
+
 display: flex;
 padding: 0.25rem .8rem;
 align-items: center;
@@ -30,7 +29,7 @@ align-items: center;
   color: var(--material-theme-sys-light-on-primary-fixed-variant, #004494);
   background-color: transparent;
   font-family: Roboto;
-  font-size: 1rem;
+  font-size: 14px;
   font-style: normal;
   font-weight: 500;
   line-height: 1.25rem;
@@ -38,6 +37,7 @@ align-items: center;
 }
 li i {
   color: #004494;
+  font-size: 14px;
 }
   
 .wrapper-buttons:hover,
@@ -69,12 +69,15 @@ li i {
 
 @media(max-width:430px) {
   .sidebar{
-    width: 11rem;
+    width: 9rem;
     padding: 3.125rem 0rem;
 
   }
   .wrapper-buttons{
-    padding: 0.35rem;
+    padding: 0.15rem;
  
+  }
+  .btn{
+    padding:.375rem .55rem;
   }
 }

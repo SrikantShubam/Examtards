@@ -1,8 +1,11 @@
 
 #exam_details{
     margin-top: 4rem;
-    min-height: calc(100vh - 1500.8px);
+    min-height: 100vh;
 
+}
+.body{
+  min-height: 100vh;
 }
 #main{
     padding-top:  3rem!important;
@@ -22,7 +25,7 @@
 #exam_details {
 align-items: center;
 gap: 4.6875rem;
-height: 21rem;
+
 }
 
 #exam_details .col-md-5 h4{

@@ -3,9 +3,9 @@
     color:white;
 overflow: hidden;
 padding: 4.65rem 4.75rem;
-position: relative;
-left: 0;
-bottom: 0;
+display: block;
+
+
 }
 footer #first p{
     padding-right: 10rem;

@@ -245,7 +245,7 @@ function ExamDetail() {
       </div>
     </section>
  
-<section id="forth">
+ <section id="forth">
 <div className="centered-input col-lg-12">
   <div className="wrapper">
   <input
