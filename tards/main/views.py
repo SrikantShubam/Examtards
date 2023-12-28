@@ -132,4 +132,13 @@ def download_pattern(request, exam_name):
         response['Content-Disposition'] = f'attachment; filename="{Pattern.file_name}"'
         return response
     except FileNotFoundError:
-        return JsonResponse({"message": "Pattern file not found."}, status=404)        
+        return JsonResponse({"message": "Pattern file not found."}, status=404)
+
+
+@api_view(['GET'])
+def all_exams(request):
+    try:
+        all_exam_names = Exam.objects.values_list('name', flat=True)
+        return Response({'exam_names': list(all_exam_names)})
+    except Exception as e:
+        return Response({"error": str(e)}, status=500)

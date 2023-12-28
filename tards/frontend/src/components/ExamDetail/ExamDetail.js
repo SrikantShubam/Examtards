@@ -2,8 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import './ExamDetail.css';
-import Footer from '../Footer/Footer';
-import '../Footer/footer.css';
+
 function calculateExamDuration(examDate) {
   const examDateTime = new Date(examDate);
   const now = new Date();
@@ -38,6 +37,7 @@ function ExamDetail() {
   const [examDetails, setExamDetails] = useState(null);
   const [remainingTime, setRemainingTime] = useState({ days: 0, hours: 0, minutes: 0 });
   const [userInput, setUserInput] = useState('');
+  
   useEffect(() => {
     const fetchExamData = async () => {
       try {
@@ -266,7 +266,7 @@ function ExamDetail() {
     <p>Loading...</p>
   )}
   </div>
- <Footer></Footer>
+
 </>
 
   );

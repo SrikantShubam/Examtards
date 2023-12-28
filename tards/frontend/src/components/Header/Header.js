@@ -4,7 +4,7 @@ import Navbar from '../Navbar/Navbar'
 
  const navbarLinks = [
     
-    { text: 'Compare Syllabus', url: '/about'  },
+    { text: 'Compare Syllabus', url: '/compare-syllabus'  },
     { text: 'Login', url: '/contact'},
   ];
 const Header = () => {
