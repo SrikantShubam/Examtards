@@ -142,3 +142,77 @@ def all_exams(request):
         return Response({'exam_names': list(all_exam_names)})
     except Exception as e:
         return Response({"error": str(e)}, status=500)
+    
+@api_view(['GET']) 
+def just_say(request):
+    return Response('hey there')
+
+
+# @api_view(['GET']) 
+# def compare_syllabus(request):
+#     if request.method == 'GET':
+#         print(request)
+#         # selected_exam_names = request.GET.getlist('selected_exam_names[]')  # Receive selected exam names
+
+#         # # Fetch syllabus data for the selected exams
+#         # syllabus_data = {}
+#         # for exam_name in selected_exam_names:
+#         #     try:
+#         #         exam = Exam.objects.get(name=exam_name)
+#         #         syllabus_data[exam_name] = exam.syllabus
+#         #     except Exam.DoesNotExist:
+#         #         syllabus_data[exam_name] = None  # Handle case where exam name doesn't exist
+
+#         # # Get syllabus for exam1 and exam2
+#         # syllabus_exam1 = syllabus_data.get(selected_exam_names[0])
+#         # syllabus_exam2 = syllabus_data.get(selected_exam_names[1])
+
+#         # # Call compare_syllabus function with syllabus data of both exams
+#         # comparison_result = compare_exams(syllabus_exam1, syllabus_exam2)
+
+#         # # Return comparison result as JSON response
+#         # return JsonResponse({'comparison_result': comparison_result})
+
+#     return JsonResponse({'error': 'Invalid request method'})
+
+
+@api_view(['GET']) 
+def compare_syllabus(request):
+    if request.method == 'GET':
+        selected_exam_names = request.GET.getlist('selected_exam_names[]')  # Receive selected exam names
+
+
+        if len(selected_exam_names) != 2:
+            return JsonResponse({'error': 'Please select exactly two exams for comparison'})
+
+        exam1_name = selected_exam_names[0]
+        exam2_name = selected_exam_names[1]
+
+
+   
+        try:
+            exam1 = Exam.objects.get(name=exam1_name)
+            exam2=Exam.objects.get(name=exam2_name)
+            # print(exam1.syllabus)
+            print("the type",type(exam1),type(exam1.syllabus))
+           
+            print("exam 1 name : ",exam1)
+            if not exam1.syllabus :
+                print("lag gaye 1 ")
+                return JsonResponse({'error': 'We do not have syllabus for {}'.format(exam1_name)})
+            if not exam2.syllabus :
+                print("lag gaye 2 ")
+
+                return JsonResponse({'error': 'We do not have syllabus for {}'.format(exam2_name)})
+            
+            res=compare_exams(exam1.syllabus,exam2.syllabus)
+            print(res)
+            return JsonResponse({
+                'exam1_syllabus': 'syllabus_exam1',
+             
+            })
+
+        except Exam.DoesNotExist:
+            return JsonResponse({'error': 'One or both exams do not exist'})
+
+    return JsonResponse({'error': 'Invalid request method'})

@@ -10,12 +10,12 @@ def compare_exams(exam1,exam2):
             subjects[subject] = set(topics)
         return subjects
 
-    def find_similar_strings(base_string, strings_to_compare):
-        similar_strings = []
-        for string in strings_to_compare:
-            if fuzz.ratio(base_string.lower(), string.lower()) > 80:  # Adjust ratio threshold as needed
-                similar_strings.append(string)
-        return similar_strings
+    # def find_similar_strings(base_string, strings_to_compare):
+    #     similar_strings = []
+    #     for string in strings_to_compare:
+    #         if fuzz.ratio(base_string.lower(), string.lower()) > 80:  # Adjust ratio threshold as needed
+    #             similar_strings.append(string)
+    #     return similar_strings
 
     exam1_topics = extract_topics(exam1)
     exam2_topics = extract_topics(exam2)
