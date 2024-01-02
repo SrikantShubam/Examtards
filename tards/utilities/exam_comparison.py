@@ -2,8 +2,10 @@ from fuzzywuzzy import fuzz
 
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
+import json 
 
 def compare_exams(exam1,exam2):
+    # print("exam1 is",type(exam1))
     def extract_topics(exam):
         subjects = {}
         for subject, topics in exam.items():
@@ -16,7 +18,9 @@ def compare_exams(exam1,exam2):
     #         if fuzz.ratio(base_string.lower(), string.lower()) > 80:  # Adjust ratio threshold as needed
     #             similar_strings.append(string)
     #     return similar_strings
-
+    # print(exam1)
+    exam1=json.loads(exam1)
+    exam2=json.loads(exam2)
     exam1_topics = extract_topics(exam1)
     exam2_topics = extract_topics(exam2)
 
@@ -85,6 +89,155 @@ def compare_exams(exam1,exam2):
     # print(f"Common Topics: {common_topics}")
     # print(f"Total Common subjects Similarity Score: {final_common_similarity_score}")
     # print("Final Similarity Score:", final_similarity_score.sum())
-    return { "common_subjects":common_subjects,"common subject similarity score":common_subject_similarity,"unique subjects in exam 1":
-            unique_subjects_exam1,"Unique Subjects in Exam 2":unique_subjects_exam2,"common topics":common_topics,"common subjects similarity score"
+    num_subjects_exam1 = len(exam1)
+    total_topics_exam1 = sum(len(topics) for topics in exam1.values())
+    # num_subjects_exam1,total_topics_exam1)
+    num_subjects_exam2=len(exam2)
+    total_topics_exam2=sum(len(topics) for topics in exam2.values())
+    exam1subj=list(exam1.keys())
+    exam1subj=','.join(exam1subj)
+    subject_topic_count_e1 = {}
+
+    for subject, topics in exam1.items():
+        subject_topic_count_e1[subject] = len(topics)
+    subject_topic_count_e2 = {}
+
+    for subject, topics in exam2.items():
+        subject_topic_count_e2[subject] = len(topics)
+    exam2subj=list(exam2.keys())
+    exam2subj=','.join(exam2subj)
+
+    print(common_subject_similarity)
+    data = { "subject_topic_count_exam1":subject_topic_count_e1, "subject_topic_count_exam2":subject_topic_count_e2,"names_subjects_exam1":exam1subj,"names_subjects_exam2":exam2subj,"exam1_total_subject":num_subjects_exam1,"exam2_total_subject":num_subjects_exam2,
+            "total_topics_exam1":total_topics_exam1,"total_topics_exam2":total_topics_exam2,"common_subjects":common_subjects,"common_subject_similarity_score":common_subject_similarity,"unique_subjects_in_exam1":
+            unique_subjects_exam1,"unique_subjects_in_exam2":unique_subjects_exam2,"common_topics":common_topics,"common_subjects_similarity_score"
             :final_common_similarity_score,"Final Similarity Score": final_similarity_score.sum()}
+    # print(data)
+    return data
+
+
+
+
+#test data below:
+# exam1={
+#   "Physics": [
+#     "PHYSICS AND MEASUREMENT",
+#     "KINEMATICS",
+#     "LAWS OF MOTION",
+#     "WORK, ENERGY, AND POWER",
+#     "ROTATIONAL MOTION",
+#     "GRAVITATION",
+#     "PROPERTIES OF SOLIDS AND LIQUIDS",
+#     "THERMODYNAMICS",
+#     "KINETIC THEORY OF GASES",
+#     "OSCILLATIONS AND WAVES",
+#     "ELECTROSTATICS",
+#     "CURRENT ELECTRICITY",
+#     "MAGNETIC EFFECTS OF CURRENT AND MAGNETISM",
+#     "ELECTROMAGNETIC INDUCTION AND ALTERNATING CURRENTS",
+#     "ELECTROMAGNETIC WAVES",
+#     "OPTICS",
+#     "DUAL NATURE OF MATTER AND RADIATION",
+#     "ATOMS AND NUCLEI",
+#     "ELECTRONIC DEVICES",
+#     "EXPERIMENTAL SKILL"
+#   ],
+#   "Chemistry": [
+#     "SOME BASIC CONCEPTS IN CHEMISTRY",
+#     "ATOMIC STRUCTURE",
+#     "CHEMICAL BONDING AND MOLECULAR STRUCTURE",
+#     "CHEMICAL THERMODYNAMICS",
+#     "SOLUTIONS",
+#     "EQUILIBRIUM",
+#     "CHEMICAL KINETICS",
+#     "REDOX REACTIONS AND ELECTROCHEMISTRY",
+#     "CLASSIFICATION OF ELEMENTS AND PERIODICITY IN PROPERTIES",
+#     "P-BLOCK ELEMENTS",
+#     "D- AND F- BLOCK ELEMENTS",
+#     "COORDINATION COMPOUNDS",
+#     "PURIFICATION AND CHARACTERIZATION OF ORGANIC COMPOUNDS",
+#     "SOME BASIC PRINCIPLES OF ORGANIC CHEMISTRY",
+#     "HYDROCARBONS",
+#     "ORGANIC COMPOUNDS CONTAINING HALOGENS",
+#     "ORGANIC COMPOUNDS CONTAINING OXYGEN",
+#     "ORGANIC COMPOUNDS CONTAINING NITROGEN",
+#     "BIOMOLECULES",
+#     "PRINCIPLES RELATED TO PRACTICAL CHEMISTRY"
+#   ],
+#   "Biology": [
+#     "Diversity in Living World",
+#     "Structural Organisation in Animals and Plants",
+#     "Cell Structure and Function",
+#     "Plant Physiology",
+#     "Human Physiology",
+#     "Reproduction",
+#     "Genetics and Evolution",
+#     "Biology and Human Welfare",
+#     "Biotechnology and Its Applications",
+#     "Ecology and Environment"
+#   ]
+# }
+# exam2={
+#   "Mathematics": [
+#     "SETS, RELATIONS, AND FUNCTIONS",
+#     "COMPLEX NUMBERS AND QUADRATIC EQUATIONS",
+#     "MATRICES AND DETERMINANTS",
+#     "PERMUTATIONS AND COMBINATIONS",
+#     "BINOMIAL THEOREM AND ITS SIMPLE APPLICATIONS",
+#     "SEQUENCE AND SERIES",
+#     "LIMIT, CONTINUITY, AND DIFFERENTIABILITY",
+#     "INTEGRAL CALCULUS",
+#     "DIFFERENTIAL EQUATIONS",
+#     "COORDINATE GEOMETRY",
+#     "THREE DIMENSIONAL GEOMETRY",
+#     "VECTOR ALGEBRA",
+#     "STATISTICS AND PROBABILITY",
+#     "TRIGONOMETRY"
+#   ],
+#   "Physics": [
+#     "PHYSICS AND MEASUREMENT",
+#     "KINEMATICS",
+#     "LAWS OF MOTION",
+#     "WORK, ENERGY, AND POWER",
+#     "ROTATIONAL MOTION",
+#     "GRAVITATION",
+#     "PROPERTIES OF SOLIDS AND LIQUIDS",
+#     "THERMODYNAMICS",
+#     "KINETIC THEORY OF GASES",
+#     "OSCILLATIONS AND WAVES",
+#     "ELECTROSTATICS",
+#     "CURRENT ELECTRICITY",
+#     "MAGNETIC EFFECTS OF CURRENT AND MAGNETISM",
+#     "ELECTROMAGNETIC INDUCTION AND ALTERNATING CURRENTS",
+#     "ELECTROMAGNETIC WAVES",
+#     "OPTICS",
+#     "DUAL NATURE OF MATTER AND RADIATION",
+#     "ATOMS AND NUCLEI",
+#     "ELECTRONIC DEVICES",
+#     "EXPERIMENTAL SKILLS"
+#   ],
+#   "Chemistry": [
+#     "SOME BASIC CONCEPTS IN CHEMISTRY",
+#     "ATOMIC STRUCTURE",
+#     "CHEMICAL BONDING AND MOLECULAR STRUCTURE",
+#     "CHEMICAL THERMODYNAMICS",
+#     "SOLUTIONS",
+#     "EQUILIBRIUM",
+#     "REDOX REACTIONS AND ELECTROCHEMISTRY",
+#     "CHEMICAL KINETICS",
+#     "CLASSIFICATION OF ELEMENTS AND PERIODICITY IN PROPERTIES",
+#     "P-BLOCK ELEMENTS",
+#     "d - and f- BLOCK ELEMENTS",
+#     "COORDINATION COMPOUNDS",
+#     "PURIFICATION AND CHARACTERISATION OF ORGANIC COMPOUNDS",
+#     "SOME BASIC PRINCIPLES OF ORGANIC CHEMISTRY",
+#     "HYDROCARBONS",
+#     "ORGANIC COMPOUNDS CONTAINING HALOGENS",
+#     "ORGANIC COMPOUNDS CONTAINING OXYGEN",
+#     "ORGANIC COMPOUNDS CONTAINING NITROGEN",
+#     "BIOMOLECULES",
+#     "PRINCIPLES RELATED TO PRACTICAL CHEMISTRY"
+#   ]
+# }
+# g=compare_exams(exam1,exam2)
+# print(g)

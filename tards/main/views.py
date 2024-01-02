@@ -53,16 +53,7 @@ def exam_detail(request, exam_name):
         return JsonResponse(serializer.data)  # Return JSON response directly
     except Exception as e:
         return JsonResponse({"error": str(e)}, status=500)
-    
-    
-# @api_view(['GET'])
-# def get_categories(request):
-#     try:
-#         # Get distinct category names from the Exam model
-#         categories = Exam.objects.values_list('category', flat=True).distinct()
-#         return Response({'categories': categories})
-#     except Exception as e:
-#         return Response({"error": str(e)}, status=500)
+
     
 @api_view(['GET'])
 def get_categories(request):
@@ -194,9 +185,9 @@ def compare_syllabus(request):
             exam1 = Exam.objects.get(name=exam1_name)
             exam2=Exam.objects.get(name=exam2_name)
             # print(exam1.syllabus)
-            print("the type",type(exam1),type(exam1.syllabus))
+            # print("the type",type(exam1),type(exam1.syllabus))
            
-            print("exam 1 name : ",exam1)
+            # print("exam 1 name : ",exam1)
             if not exam1.syllabus :
                 print("lag gaye 1 ")
                 return JsonResponse({'error': 'We do not have syllabus for {}'.format(exam1_name)})
@@ -206,11 +197,8 @@ def compare_syllabus(request):
                 return JsonResponse({'error': 'We do not have syllabus for {}'.format(exam2_name)})
             
             res=compare_exams(exam1.syllabus,exam2.syllabus)
-            print(res)
-            return JsonResponse({
-                'exam1_syllabus': 'syllabus_exam1',
-             
-            })
+           
+            return Response(res)
 
         except Exam.DoesNotExist:
             return JsonResponse({'error': 'One or both exams do not exist'})
