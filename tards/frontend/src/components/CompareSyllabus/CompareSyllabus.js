@@ -1,7 +1,11 @@
-
+import React, { useRef } from 'react';
 import { Fragment, useState, useEffect } from 'react';
 import { Combobox, Transition } from '@headlessui/react';
-
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
+import ReactApexChart from 'react-apexcharts';
+import html2canvas from 'html2canvas';
+import {  XIcon, WhatsappIcon,WhatsappShareButton, TwitterShareButton } from 'react-share';
 
 import './CompareSyllabus.css';
 
@@ -15,14 +19,14 @@ function CompareSyllabus() {
   const [showMore, setShowMore] = useState(false);
 
   useEffect(() => {
-    // Fetch data from the provided endpoint
+
     fetch('http://localhost:8000/all-exams/')
       .then((response) => response.json())
       .then((data) => {
         if (data && data.exam_names) {
           setExamNames(data.exam_names);
-          setSelectedExamOne(data.exam_names[0]); // Set default selected exam for first Combobox
-          setSelectedExamTwo(data.exam_names[0]); // Set default selected exam for second Combobox
+          setSelectedExamOne(data.exam_names[0]); 
+          setSelectedExamTwo(data.exam_names[0]); 
 
         }
       })
@@ -46,9 +50,33 @@ const handleSelectExamTwo = (value) => {
     fetchComparison(selectedExamOne, selectedExamTwo);
   };
  
-  const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
-  const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+  const [showTooltip, setShowTooltip] = useState(false);
 
+  const handleMouseEnter = () => {
+    setShowTooltip(true);
+  };
+
+  const handleMouseLeave = () => {
+    setShowTooltip(false);
+  };
+
+  const chartRef = useRef(null);
+
+  const shareImage = () => {
+    html2canvas(chartRef.current).then((canvas) => {
+      const imageUrl = canvas.toDataURL('image/png');
+      const encodedImage = encodeURIComponent(imageUrl);
+      const shareTitle = 'Check out my chart!';
+      const shareUrl="https://mywebsite.com"
+      // WhatsApp sharing
+      const whatsappShareUrl = `whatsapp://send?text=Check%20out%20my%20chart!%20${encodedImage}`;
+      window.open(whatsappShareUrl, '_blank');
+  
+      // Twitter sharing
+      const twitterShareUrl = `https://twitter.com/intent/tweet?url=${encodeURIComponent(shareUrl)}&text=Check%20out%20my%20chart!&via=yourTwitterHandle&media=${encodedImage}`;
+      window.open(twitterShareUrl, '_blank');
+    });
+  };
   const fetchComparison = (examOne, examTwo) => {
  
     fetch(`http://127.0.0.1:8000/compare_syllabus/?selected_exam_names[]=${examOne}&selected_exam_names[]=${examTwo}`)
@@ -70,25 +98,24 @@ const handleSelectExamTwo = (value) => {
         
         } else {
          console.log(data);
-          setComparisonResult(data); // Set comparisonResult state with received data
+          setComparisonResult(data); 
 
         
         }
       })
       .catch(error => {
-        // Check if the error is a fetch-related error (e.g., network issues)
+        
         if (error.response && error.response.text) {
-          // Fetch response text to get the error message
+    
           error.response.text().then(errorMessage => {
             try {
               const errorObject = JSON.parse(errorMessage);
               if (errorObject.error) {
-                // Log and handle the error message received from the server
-                // alert('Server-side error:', errorObject.error);
-                return; // Exit the catch block after handling the error
+               
+                return;
               }
             } catch (e) {
-              // Handle any parsing errors or unexpected responses from the server
+              
               console.error('Error parsing server response:', e);
             }
           });
@@ -123,6 +150,9 @@ const handleSelectExamTwo = (value) => {
     ));
   };
 
+  
+
+
   const handleToggle = () => {
     setShowMore(!showMore);
   };
@@ -139,6 +169,8 @@ const filteredExamsOne =
       : examNames.filter((exam) =>
           exam.toLowerCase().includes(queryTwo.toLowerCase())
         );
+
+        const ShareURL="https://dodo.com";
 
   return (
     <>
@@ -304,10 +336,35 @@ const filteredExamsOne =
     <td>Same as previous</td>
     </tr>
     <tr>
-    <th scope="row">Common Subject Similarity
-    <button type="button" class="btn btn-secondary" data-bs-toggle="tooltip" data-bs-placement="left" data-bs-title="Tooltip on left">
-  Tooltip on left
-</button>
+    <th scope="row">Common Subject Similarity &nbsp;
+    <div style={{ position: 'relative', display: 'inline-block' }}>
+      <FontAwesomeIcon
+        icon={faQuestionCircle}
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
+        style={{ cursor: 'pointer' }}
+      />
+      {showTooltip && (
+        <div
+        style={{
+          position: 'absolute',
+          backgroundColor: 'rgba(0, 0, 0, 0.7)',
+          color: '#fff',
+          padding: '10px', // Increased padding for larger tooltip
+          borderRadius: '8px', // Adjusted border radius
+          bottom: '100%',
+          left: '50%',
+          transform: 'translateX(-50%)',
+          fontSize: '14px', // Increased font size
+          minWidth: '150px', // Set minimum width for the tooltip
+          textAlign: 'center', // Center-align text
+        }}
+      >
+          
+This metric measures topic similarity between identical subjects. Higher values suggest closer syllabus alignment
+        </div>
+      )}
+    </div>
     </th>
     <td>
 {comparisonResult.common_subjects_similarity_score}
@@ -317,7 +374,54 @@ const filteredExamsOne =
             </tbody>
             </table>
             </div>
-            <div className="col-md-4"></div>
+            <div className="col-md-4">
+            <div className="card-extra"  ref={chartRef}>
+            <ReactApexChart
+            options={{
+              chart: {
+                type: 'donut', // Set chart type to donut
+              },
+              labels: ['Similarity Score', 'Difference'],
+              colors: ['#008FFB', '#FF4560'],
+              dataLabels: {
+                enabled: false,
+              },
+              plotOptions: {
+                pie: {
+                  donut: {
+                    size: '75%', // Adjust the size of the donut
+                    labels: {
+                      show: false, // Hide labels if needed
+                    },
+                  },
+                },
+              },
+              stroke: {
+                show: false, // Set stroke color to null to remove the outline
+              },
+            }}
+            series={[comparisonResult.Final_Similarity_Score, 100 - comparisonResult.Final_Similarity_Score]}
+            type="donut" // Set chart type to donut
+            width="100%"
+          />
+<h4 className='text-center'>Similarity Score</h4>
+<h6 className='text-center'>{selectedExamOne} vs {selectedExamTwo}</h6>
+
+
+          </div>
+         
+          <WhatsappShareButton  url={ShareURL}  
+    
+        
+  
+        >
+          <WhatsappIcon size={32} round />
+        </WhatsappShareButton>
+      
+        <TwitterShareButton url={ShareURL} >
+          <XIcon size={32} round />
+        </TwitterShareButton>
+            </div>
             
             </div>
           </div>

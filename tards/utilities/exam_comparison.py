@@ -107,11 +107,11 @@ def compare_exams(exam1,exam2):
     exam2subj=list(exam2.keys())
     exam2subj=','.join(exam2subj)
 
-    print(common_subject_similarity)
+  
     data = { "subject_topic_count_exam1":subject_topic_count_e1, "subject_topic_count_exam2":subject_topic_count_e2,"names_subjects_exam1":exam1subj,"names_subjects_exam2":exam2subj,"exam1_total_subject":num_subjects_exam1,"exam2_total_subject":num_subjects_exam2,
             "total_topics_exam1":total_topics_exam1,"total_topics_exam2":total_topics_exam2,"common_subjects":common_subjects,"common_subject_similarity_score":common_subject_similarity,"unique_subjects_in_exam1":
             unique_subjects_exam1,"unique_subjects_in_exam2":unique_subjects_exam2,"common_topics":common_topics,"common_subjects_similarity_score"
-            :final_common_similarity_score,"Final Similarity Score": final_similarity_score.sum()}
+            :final_common_similarity_score,"Final_Similarity_Score": round(final_similarity_score.sum()*100)}
     # print(data)
     return data
 
