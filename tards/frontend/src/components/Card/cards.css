@@ -99,17 +99,19 @@ line-height: 1rem; /* 133.333% */
 }
 
 
-@media(max-width:430px) {
+@media(max-width:480px) {
+  #card-jum{
+    margin-top: -21rem;
+  }
     .card-body{
         padding: .5rem;
     }
   
     .card{
-        width: 15rem;
-        padding-top: -4rem;
-        margin-left: 5rem;
-        margin-top: -17.25rem;
-      height: 10rem!important;
+        width: 12rem;
+        margin-left: 6rem;
+        padding-bottom: 12rem;
+      height: 1rem!important;
        
         
       

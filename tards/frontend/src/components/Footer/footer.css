@@ -49,7 +49,7 @@ footer .L3{
     padding-left: 10rem!important;
 } 
 
-@media(max-width:430px) {
+@media(max-width:480px) {
     footer{
         padding: 3.5rem 2.6875rem;
 

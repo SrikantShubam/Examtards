@@ -15,7 +15,7 @@ function calculateExamDuration(examDate) {
 }
 function Card({ category }) {
   const [exams, setExams] = useState([]);
-  const [remainingTime, setRemainingTime] = useState({ days: 0, hours: 0, minutes: 0 });
+
   useEffect(() => {
     // Fetch exams belonging to the specified category from Django backend
     if (category) {
@@ -35,7 +35,7 @@ function Card({ category }) {
   };
   return (
     
-  <div className="row " style={{marginLeft:'4rem'}}>
+  <div className="row " id="card-jum" style={{marginLeft:'4rem'}}>
     {exams.map((exam, index) => (
       <div className="col-lg-4 col-sm-12" key={index}>
         <Link to={`/exam-detail/${encodeURIComponent(exam.name.replace(/\s/g, '-'))}`}>

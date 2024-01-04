@@ -67,7 +67,7 @@ li i {
 }
 
 
-@media(max-width:430px) {
+@media(max-width:480px) {
   .sidebar{
     width: 9rem;
     padding: 3.125rem 0rem;
@@ -79,5 +79,8 @@ li i {
   }
   .btn{
     padding:.375rem .55rem;
+  }
+  li{
+    margin-left: 0!important;
   }
 }

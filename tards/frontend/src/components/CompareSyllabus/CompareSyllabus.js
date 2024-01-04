@@ -4,7 +4,7 @@ import { Combobox, Transition } from '@headlessui/react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
 import ReactApexChart from 'react-apexcharts';
-import html2canvas from 'html2canvas';
+
 import {  XIcon, WhatsappIcon,WhatsappShareButton, TwitterShareButton } from 'react-share';
 
 import './CompareSyllabus.css';
@@ -12,6 +12,8 @@ import './CompareSyllabus.css';
 function CompareSyllabus() {
   const [selectedExamOne, setSelectedExamOne] = useState('');
   const [selectedExamTwo, setSelectedExamTwo] = useState('');
+  
+
   const [queryOne, setQueryOne] = useState('');
   const [queryTwo, setQueryTwo] = useState('');
   const [examNames, setExamNames] = useState([]);
@@ -26,6 +28,7 @@ function CompareSyllabus() {
         if (data && data.exam_names) {
           setExamNames(data.exam_names);
           setSelectedExamOne(data.exam_names[0]); 
+          
           setSelectedExamTwo(data.exam_names[0]); 
 
         }
@@ -36,14 +39,20 @@ function CompareSyllabus() {
       });
   }, []); // Run this effect only once, similar to componentDidMount
 
-const handleSelectExamOne = (value) => {
-    setSelectedExamOne(value);
-    setQueryOne(''); // Clear query after selecting an item
+  const handleSelectExamOne = (value) => {
+    // Check if the value is different from the current selectedExamTwo before updating the state
+    if (value !== selectedExamTwo) {
+      setSelectedExamOne(value);
+      setQueryOne(''); // Clear query after selecting an item
+    }
   };
 
-const handleSelectExamTwo = (value) => {
-    setSelectedExamTwo(value);
-    setQueryTwo(''); // Clear query after selecting an item
+  const handleSelectExamTwo = (value) => {
+    // Check if the value is different from the current selectedExamTwo before updating the state
+    if (value !== selectedExamTwo) {
+      setSelectedExamTwo(value);
+      setQueryTwo(''); // Clear query after selecting an item
+    }
   };
   const handleComparison = () => {
     // Make an API call to pass selected exams to compare_syllabus endpoint
@@ -62,21 +71,7 @@ const handleSelectExamTwo = (value) => {
 
   const chartRef = useRef(null);
 
-  const shareImage = () => {
-    html2canvas(chartRef.current).then((canvas) => {
-      const imageUrl = canvas.toDataURL('image/png');
-      const encodedImage = encodeURIComponent(imageUrl);
-      const shareTitle = 'Check out my chart!';
-      const shareUrl="https://mywebsite.com"
-      // WhatsApp sharing
-      const whatsappShareUrl = `whatsapp://send?text=Check%20out%20my%20chart!%20${encodedImage}`;
-      window.open(whatsappShareUrl, '_blank');
-  
-      // Twitter sharing
-      const twitterShareUrl = `https://twitter.com/intent/tweet?url=${encodeURIComponent(shareUrl)}&text=Check%20out%20my%20chart!&via=yourTwitterHandle&media=${encodedImage}`;
-      window.open(twitterShareUrl, '_blank');
-    });
-  };
+
   const fetchComparison = (examOne, examTwo) => {
  
     fetch(`http://127.0.0.1:8000/compare_syllabus/?selected_exam_names[]=${examOne}&selected_exam_names[]=${examTwo}`)
@@ -170,7 +165,7 @@ const filteredExamsOne =
           exam.toLowerCase().includes(queryTwo.toLowerCase())
         );
 
-        const ShareURL="https://dodo.com";
+        const ShareURL="https://examtards.com";
 
   return (
     <>
@@ -178,7 +173,7 @@ const filteredExamsOne =
         <div className='banner'>
           <div className="row px-4">
             <div className="col-md-7 col-sm-12">
-              <div className="content mt-5">
+              <div className="content c-2 mt-5">
                 <h1 className='mt-5'>Compare Syllabus</h1>
               </div>
             </div>
@@ -186,7 +181,7 @@ const filteredExamsOne =
         </div>
         <section id="inputs">
         <div className="row mt-5">
-          <div className="col-md-6 ">
+          <div className="col-md-6 col-sm-12">
           <label className='text-align-left'>Choose your exam</label>
           <div className="text-center align-items-center ">
             <Combobox value={selectedExamOne} onChange={handleSelectExamOne}>
@@ -221,12 +216,12 @@ const filteredExamsOne =
           </div>
           </div>
           <div className="col-md-6 ">
-          <label className='text-align-left'>Choose your exam</label>
+          <label className='text-align-left f2'>Choose your exam</label>
           <div className="text-center align-items-center">
           <Combobox value={selectedExamTwo} onChange={handleSelectExamTwo}>
           <Combobox.Input
             onChange={(event) => setQueryTwo(event.target.value)}
-            className="form-control" 
+            className="form-control " 
           />
           <Transition
             show={queryTwo.length > 0 && filteredExamsTwo.length > 0}
@@ -264,13 +259,16 @@ const filteredExamsOne =
          
 
             <div className="row mt-5">
-            <div className="col-md-8">
-            <table className="table">
+            <div className="col-md-8 col-sm-12 order-sm-2">
+            <div className="table-responsive">
+            <table className="table  table-sm">
             <thead>
               <tr>
-                <th></th>
-                <th>{selectedExamOne}</th>
-                <th>{selectedExamTwo}</th>
+               
+                <th scope="col"></th>
+                <th scope="col">{selectedExamOne}</th>
+             
+                <th scope="col">{selectedExamTwo}</th>
               </tr>
             </thead>
             <tbody>
@@ -350,14 +348,16 @@ const filteredExamsOne =
           position: 'absolute',
           backgroundColor: 'rgba(0, 0, 0, 0.7)',
           color: '#fff',
-          padding: '10px', // Increased padding for larger tooltip
-          borderRadius: '8px', // Adjusted border radius
-          bottom: '100%',
-          left: '50%',
+          padding: '10px',
+          borderRadius: '8px',
+          bottom: 'calc(100% + 10px)', // Position it above the element
+          left: '75px',
           transform: 'translateX(-50%)',
-          fontSize: '14px', // Increased font size
-          minWidth: '150px', // Set minimum width for the tooltip
-          textAlign: 'center', // Center-align text
+          fontSize: '14px',
+          minWidth: '150px',
+          textAlign: 'center',
+          zIndex: '999', // Ensure it's on top of other elements
+          boxShadow: '0 0 10px rgba(0,0,0,0.3)', // Optional: Add a shadow for better visibility
         }}
       >
           
@@ -372,9 +372,9 @@ This metric measures topic similarity between identical subjects. Higher values 
     <td>Same as previous</td>
     </tr>
             </tbody>
-            </table>
+            </table></div>
             </div>
-            <div className="col-md-4">
+            <div className="col-md-4 col-sm-12 order-sm-1">
             <div className="card-extra"  ref={chartRef}>
             <ReactApexChart
             options={{
@@ -404,23 +404,33 @@ This metric measures topic similarity between identical subjects. Higher values 
             type="donut" // Set chart type to donut
             width="100%"
           />
-<h4 className='text-center'>Similarity Score</h4>
+<h4 className='text-center mt-3'>Similarity Score</h4>
 <h6 className='text-center'>{selectedExamOne} vs {selectedExamTwo}</h6>
+<p className='text-center'>The exams are {comparisonResult.Final_Similarity_Score}% similar.</p>
+<div className="text-center"><WhatsappShareButton  url={ShareURL}   title={
+  "The syllabus similarity between " +
+  selectedExamOne +
+  " and " +
+  selectedExamTwo +
+  " is " +
+  (comparisonResult ? comparisonResult.Final_Similarity_Score + "%" : "0%.") +
+  " Compare more such exams syllabus on :"
+}
+
+
+
+>
+<WhatsappIcon size={32} round className='mx-2' />
+</WhatsappShareButton>
+
+<TwitterShareButton url={ShareURL}  className='mx-2' >
+<XIcon size={32} round />
+</TwitterShareButton></div>
 
 
           </div>
          
-          <WhatsappShareButton  url={ShareURL}  
-    
-        
-  
-        >
-          <WhatsappIcon size={32} round />
-        </WhatsappShareButton>
       
-        <TwitterShareButton url={ShareURL} >
-          <XIcon size={32} round />
-        </TwitterShareButton>
             </div>
             
             </div>

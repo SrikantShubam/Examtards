@@ -43,4 +43,26 @@ font-size: 16px;
 .card-extra{
     border-radius: 1rem;
 background: var(--material-theme-sys-light-primary-fixed-dim, #ADC6FF);
+padding: 1rem;
+}
+
+
+@media(max-width:480px) {
+.comparison {
+    margin-top: 4rem;
+}
+.comparison .row {
+    display: flex;
+    flex-direction: column-reverse; /* Reverse the order for smaller screens */
+  }
+  .card-extra{
+    margin-bottom: 6rem;
+  }
+  .f2{
+    margin-top: 2rem;
+  }
+  .c-2 h1{
+    font-size: 3.2rem;
+    line-height: 4rem  ;
+  }
 }
