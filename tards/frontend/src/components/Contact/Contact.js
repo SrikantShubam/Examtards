@@ -1,0 +1,170 @@
+import React, { useState } from 'react';
+import './Contact.css';
+import emailjs from '@emailjs/browser';
+
+const Contact = () => {
+  const [formData, setFormData] = useState({
+    name: '',
+    surname: '',
+    email: '',
+    need: 'Add New Exam',
+    message: ''
+  });
+  const [messageStatus, setMessageStatus] = useState('');
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+
+
+    emailjs.sendForm("service_dqxz6ww", "template_2ak9rck", e.target, 'z3PqqWjEbAZGgrJtT')
+      .then((result) => {
+        console.log(result.text);
+        setMessageStatus('Message sent successfully!');
+        // Optionally reset form fields here after successful submission
+        setFormData({
+          name: '',
+          surname: '',
+          email: '',
+          need: 'Add New Exam',
+          message: ''
+        });
+      })
+      .catch((error) => {
+        console.log(error.text);
+        setMessageStatus('Failed to send message. Please try again later.');
+      });
+  };
+
+  return (
+    <div className="body">
+    <div className='banner'>
+    <div className="row px-4">
+      <div className="col-md-7 col-sm-12">
+        <div className="content c-2 mt-5">
+          <h1 className=''>Request an Exam</h1>
+          <h5>Hey we know , that there ain't a lot of exams in the database yet. So please request a specific exam to go it asap.</h5>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+<section id="contact">
+<div className="row">
+      <div className="col-lg-7 col-md-10 col-sm-12 mx-auto">
+        <div className="card mt-2 mx-auto p-4 bg-light">
+          <div className="card-body">
+            <form id="contact-form" role="form" onSubmit={handleSubmit}>
+              <div className="row">
+                <div className="col-md-6">
+                  <div className="form-group">
+                    <label htmlFor="form_name">Firstname *</label>
+                    <input
+                      id="form_name"
+                      type="text"
+                      name="name"
+                      className="form-control"
+                      placeholder="Please enter your firstname *"
+                      required="required"
+                      data-error="Firstname is required."
+                    />
+                  </div>
+                </div>
+                <div className="col-md-6">
+                  <div className="form-group">
+                    <label htmlFor="form_lastname">Lastname *</label>
+                    <input
+                      id="form_lastname"
+                      type="text"
+                      name="surname"
+                      className="form-control"
+                      placeholder="Please enter your lastname *"
+                      required="required"
+                      data-error="Lastname is required."
+                    />
+                  </div>
+                </div>
+              </div>
+              <div className="row">
+                <div className="col-md-6">
+                  <div className="form-group">
+                    <label htmlFor="form_email">Email *</label>
+                    <input
+                      id="form_email"
+                      type="email"
+                      name="email"
+                      className="form-control"
+                      placeholder="Please enter your email *"
+                      required="required"
+                      data-error="Valid email is required."
+                    />
+                  </div>
+                </div>
+                <div className="col-md-6">
+                  <div className="form-group">
+                    <label htmlFor="form_need">Please specify your need *</label>
+                    <select
+                      id="form_need"
+                      name="need"
+                      className="form-control"
+                      required="required"
+                      data-error="Please specify your need."
+                    >
+                      <option value="none"  disabled>-- Your Issue--</option>
+                      <option value="Add New Exam">Add New Exam</option>
+                      <option value="Report Bug">Report Bug</option>
+                      <option value="Collaborate">Collaborate</option>
+                      <option value="New Feature Required">New Feature Required</option>
+                      <option value="Something Else">Something Else</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+              <div className="row">
+                <div className="col-md-12">
+                  <div className="form-group">
+                    <label htmlFor="form_message">Message *</label>
+                    <textarea
+                      id="form_message"
+                      name="message"
+                      className="form-control"
+                      placeholder="Write your message here."
+                      rows="4"
+                      required="required"
+                      data-error="Please, leave us a message."
+                    ></textarea>
+                  </div>
+                </div>
+                <div className="col-md-12">
+
+                  <input
+                    type="submit"
+                    className="btn btn-primary btn-send pt-2 btn-block"
+                    value="Send Message"
+                  />
+                  {messageStatus && (
+                    <div className={`alert ${messageStatus.includes('Failed') ? 'alert-danger' : 'alert-success'}`} role="alert">
+                      {messageStatus}
+                    </div>
+                  )}
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div></section>
+
+  
+
+    </div>
+  );
+};
+
+export default Contact;

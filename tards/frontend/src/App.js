@@ -1,9 +1,9 @@
 import React , { useState } from 'react';
 import './App.css';
 import { Routes, Route} from 'react-router-dom';
-// import ExamDetail from '../src/components/ExamDetail/ExamDetail';
-import {Header,Banner,Card,Sidenav,Footer,CompareSyllabus,ExamDetail} from './components';
-// import CompareSyllabus from './components/CompareSyllabus/CompareSyllabus';
+
+import {Header,Banner,Card,Sidenav,Footer,CompareSyllabus,ExamDetail,Contact,Disclaimer} from './components';
+
 
 
 function App() {
@@ -20,7 +20,8 @@ function App() {
     <Route path="/compare-syllabus" element={<CompareSyllabus />} />
 
       <Route path="/exam-detail/:examName" element={<ExamDetail />} />
-
+      <Route path="/contact-us" element={<Contact />} />
+<Route path="/disclaimer" element={<Disclaimer />}/>
     
       <Route
         path="/"

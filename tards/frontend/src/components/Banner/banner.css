@@ -107,6 +107,9 @@ line-height: 3.25rem;
      }
 
      @media(max-width:480px) {
+      .content{
+        padding: 1.5rem 1.5rem 0rem 1.5rem;
+      }
     .content h1{
       font-size: 2rem;
       font-family: 'Comfortaa';

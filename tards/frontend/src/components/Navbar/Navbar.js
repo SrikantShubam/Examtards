@@ -1,17 +1,20 @@
-import React from 'react'
-import mainlogo from '../../assets/images/mainlogo.png'
-import "./navbar.css"
+import React from 'react';
+import mainlogo from '../../assets/images/mainlogo.png';
+import { Link } from 'react-router-dom';
+
+import "./navbar.css";
 function Navbar(props) {
   return (
+  
     <nav className="navbar navbar-expand-lg navbar-light">
-<a className="navbar-brand " href="#">
+<Link to="/" className="navbar-brand ">
 <div className="nav-custom">
 <img src={mainlogo}/>
 <div className="title">Exam Tards</div>
 </div>
 
  
-</a>
+</Link>
 <button
   className="navbar-toggler"
   type="button"

@@ -5,5 +5,6 @@ import Sidenav from "./Sidenav/Sidenav";
 import Footer from './Footer/Footer';
 import ExamDetail from './ExamDetail/ExamDetail';
 import CompareSyllabus from './CompareSyllabus/CompareSyllabus';
-
-export {Header,Banner,Card,Sidenav,Footer,ExamDetail,CompareSyllabus};
+import Contact from './Contact/Contact';
+import Disclaimer from './Disclaimer/Disclaimer';
+export {Header,Banner,Card,Sidenav,Footer,ExamDetail,CompareSyllabus,Contact,Disclaimer};

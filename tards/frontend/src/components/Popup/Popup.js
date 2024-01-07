@@ -40,7 +40,7 @@ function Popup({ searchResults, closePopup }) {
                 Did not find what you were looking for?
               </div>
               <div className='t2'>
-                <a href="/">Click here.</a>
+                <Link to="/contact-us">Click here.</Link>
               </div>
         
         
@@ -50,5 +50,8 @@ function Popup({ searchResults, closePopup }) {
     
   );
 }
+
+
+
 
 export default Popup;

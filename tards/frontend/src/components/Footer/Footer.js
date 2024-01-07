@@ -1,5 +1,7 @@
 import React from 'react'
 import './footer.css';
+import { Link } from 'react-router-dom';
+
 function Footer() {
   return (
     <>
@@ -14,7 +16,8 @@ function Footer() {
       </div>
       <div className="col-md-4 col-sm-12 mb-4  L2" >
         <h3>Legal</h3>
-        <h4 className='mt-3'>Disclaimer</h4>
+        
+        <Link to="/disclaimer"><h4 className='mt-3'>Disclaimer</h4></Link>
         <h4 className='mt-3'>Disclaimer</h4>
       </div>
       <div className="col-md-4   col-sm-12 L3 ">
