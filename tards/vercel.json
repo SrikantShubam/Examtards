@@ -1,13 +1,13 @@
 {
     "builds": [{
-        "src": "tards/wsgi.py",
+        "src": "tards/tards/wsgi.py",
         "use": "@vercel/python",
         "config": { "maxLambdaSize": "15mb", "runtime": "python3.12.0b3" }
     }],
     "routes": [
         {
             "src": "/(.*)",
-            "dest": "tards/wsgi.py"
+            "dest": "tards/tards/wsgi.py"
         }
     ]
 }
