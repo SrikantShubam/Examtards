@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import './Contact.css';
 import emailjs from '@emailjs/browser';
-
+import { Helmet } from 'react-helmet';
+import mainlogo from '../../assets/images/favicon.ico';
 const Contact = () => {
   const [formData, setFormData] = useState({
     name: '',
@@ -43,6 +44,17 @@ const Contact = () => {
 
   return (
     <div className="body">
+    <Helmet>
+    <title>Exam Tards | Contact Us</title>
+    <meta
+      name="description"
+      content="Contact Exam Tards and helo in contributing towards the best place an aspirant can have." 
+    />
+    <meta name="keywords" content="contact us,examtards contact us,request an exam examtards,colab examtards,report a bug"></meta>
+    <meta property="og:title" content="Exam Tards | Contact Us"></meta>
+  <meta property="og:description" content="Contact Exam Tards and helo in contributing towards the best place an aspirant can have."  ></meta>
+<meta property="og:image" content={mainlogo}></meta>
+  </Helmet>
     <div className='banner'>
     <div className="row px-4">
       <div className="col-md-7 col-sm-12">

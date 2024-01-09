@@ -1,5 +1,5 @@
 import React from 'react';
-import mainlogo from '../../assets/images/mainlogo.png';
+import mainlogo from '../../assets/images/favicon.ico';
 import { Link } from 'react-router-dom';
 
 import "./navbar.css";

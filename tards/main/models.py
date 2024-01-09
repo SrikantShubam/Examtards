@@ -38,6 +38,7 @@ class Exam(models.Model):
     more_info = models.TextField(null=True, blank=True)
     exam_description = models.TextField(null=True, blank=True)   
     eligibility_criteria = models.TextField(null=True, blank=True)
+    seo_description=models.TextField(null=True, blank=True)
     important_resources = models.TextField(null=True, blank=True)  # Store as JSON string
     important_dates=models.TextField(null=True, blank=True)
     def __str__(self):

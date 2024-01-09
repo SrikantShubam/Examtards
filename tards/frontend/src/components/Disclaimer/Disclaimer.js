@@ -1,9 +1,22 @@
 import React from 'react'
-
+import { Helmet } from 'react-helmet';
+import mainlogo from '../../assets/images/favicon.ico';
 function Disclaimer() {
   return (
     <>
     <div class="body mt-5">
+    <Helmet>
+    <title>Exam Tards | Disclaimer</title>
+    <meta
+      name="description"
+      content="Disclaimer exam tards, We are not responsible for any date changes in our website. Users and aspirants are requested to always go to the official websites for correct exam information." 
+    />
+    <meta name="keywords" content="Exam Tards | Disclaimer"></meta>
+    <meta property="og:title" content="Exam Tards | Disclaimer"></meta>
+  <meta property="og:description"       content="Disclaimer exam tards, We are not responsible for any date changes in our website. Users and aspirants are requested to always go to the official websites for correct exam information." 
+  ></meta>
+<meta property="og:image" content={mainlogo}></meta>
+  </Helmet>
   <div class="jumbotron">
     <h1>Welcome to ExamTards</h1>
     <p class="lead">Your go-to platform for accurate and reliable examination information sourced directly from official resources.</p>

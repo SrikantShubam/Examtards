@@ -2,7 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import './ExamDetail.css';
-
+import { Helmet } from 'react-helmet';
+import mainlogo from '../../assets/images/favicon.ico';
 function calculateExamDuration(examDate) {
   const examDateTime = new Date(examDate);
   const now = new Date();
@@ -110,11 +111,22 @@ function ExamDetail() {
     
 
     <>
+  
     <div className="body">
   {examDetails ? (
     <div id="exam_details">
   
-  
+    <Helmet>
+    <title>Exam Tards | {examDetails.name} exam details</title>
+    <meta
+      name="description"
+      content={examDetails.seo_description} 
+    />
+    <meta name="keywords" content={examDetails.keywords}></meta>
+    <meta property="og:title" content={examDetails.name}></meta>
+  <meta property="og:description" content={examDetails.seo_description} ></meta>
+<meta property="og:image" content={mainlogo}></meta>
+  </Helmet>
     <div className="row" id="main">
   <div className="col-md-5 col-sm-12">
     <h4>{examDetails.name}</h4>

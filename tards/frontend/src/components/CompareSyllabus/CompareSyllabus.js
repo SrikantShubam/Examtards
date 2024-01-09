@@ -6,7 +6,8 @@ import { faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
 import ReactApexChart from 'react-apexcharts';
 
 import {  XIcon, WhatsappIcon,WhatsappShareButton, TwitterShareButton } from 'react-share';
-
+import { Helmet } from 'react-helmet';
+import mainlogo from '../../assets/images/favicon.ico';
 import './CompareSyllabus.css';
 
 function CompareSyllabus() {
@@ -170,6 +171,18 @@ const filteredExamsOne =
   return (
     <>
       <div className="body">
+      <Helmet>
+      <title>Exam Tards | Compare Syllabus</title>
+      <meta
+        name="description"
+        content="Compare Syllabus of different exams and dive into your aspirant journey." 
+      />
+      <meta name="keywords" content="Compare exams,Compare syllabus,Examtards Compare Exams"></meta>
+      <meta property="og:title" content="Exam Tards | Compare Syllabus"></meta>
+    <meta property="og:description"         content="Compare Syllabus of different exams and dive into your aspirant journey." 
+    ></meta>
+  <meta property="og:image" content={mainlogo}></meta>
+    </Helmet>
         <div className='banner'>
           <div className="row px-4">
             <div className="col-md-7 col-sm-12">
