@@ -140,7 +140,7 @@ font-style: italic;
 font-weight: 400;
 line-height: 2.25rem; /* 128.571% */
 padding-top: 1.94rem;
-padding-bottom: 1rem;
+
 padding-left: 1.56rem;
 }
 #second .col-md-5 p{
@@ -155,7 +155,7 @@ padding-left: 1.56rem;
     line-height: 1.705rem; 
 padding-left: 1.5rem;
 padding-right: 1.5rem;
-padding-bottom: 1rem;
+
 }
 
 #second #content{
@@ -332,6 +332,9 @@ color: #000!important;
   cursor: pointer;
   /* Add any other styles you need */
 }
+.text-content h6{
+  font-size: 1rem;
+}
   @media (max-width:1024px) { 
 
  #second   #content {
@@ -422,5 +425,14 @@ margin-top: 1rem;
     }
     #second p {
       font-size: 1.3rem!important;
+    }
+    #second .col-md-5 p{
+      font-size: 1rem!important;
+      
+      
+    }
+    #second .col-md-5{
+      margin-bottom: 2rem;
+      
     }
   }

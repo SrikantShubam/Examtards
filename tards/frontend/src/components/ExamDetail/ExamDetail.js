@@ -150,10 +150,10 @@ function ExamDetail() {
 <section id="second">
   <div className="row">
     <div className="col-md-5 col-sm-12">
-      <h1>Eligibility</h1>
+      <h1>More Info</h1>
       {examDetails && (
         <div>
-          {examDetails.eligibility_criteria.split('\n').map((paragraph, index) => (
+          {examDetails.more_info.split('\n').map((paragraph, index) => (
             <p key={index}>{paragraph}</p>
           ))}
         </div>
@@ -178,23 +178,20 @@ function ExamDetail() {
           
           </div>
         </div>
-        {/* Add other col-md-12 divs similarly for other date fields */}
+       
      
 
         <div className="col-md-11 mt-5" id="content">
-          <h2>Important Dates</h2>
+          <h2>Eligibility</h2>
           <div className="text-content">
-          {examDetails && examDetails.important_dates && (
-                  Object.entries(JSON.parse(examDetails.important_dates)).map(
-                    ([key, value],index) => (
-            <div className="d-flex justify-content-between flex-direction-column">
-              <p>{key}</p>
-              
-              <p>{value}</p>
-           
+        
+          {examDetails && (
+            <div>
+              {examDetails.eligibility_criteria.split('\n').map((paragraph, index) => (
+                <h6 key={index}>{paragraph}</h6>
+              ))}
             </div>
-                   )))}
-          
+          )}
           </div>
         </div>
       </div>
@@ -246,20 +243,7 @@ function ExamDetail() {
     </section>
  
  <section id="forth">
-<div className="centered-input col-lg-12">
-  <div className="wrapper">
-  <input
-          type="text"
-          value={userInput}
-         
-          placeholder="Any doubts ask AI"
-        />
-        <button onClick={handleButtonClick}>
-        <i className="fa-solid fa-angle-right fa-lg"></i>
-        </button>
-  </div>
-        
-      </div>
+
       </section>
     </div>
   ) : (

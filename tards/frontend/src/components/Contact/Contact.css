@@ -43,4 +43,11 @@ label {
         width: 24rem;
   height: 40rem!important;
     }
+    .c-2 h1{
+        font-size: 3rem;
+        line-height: 3.7rem  ;
+      }
+      .c-2 h5{
+        display: none;
+      }
 }
