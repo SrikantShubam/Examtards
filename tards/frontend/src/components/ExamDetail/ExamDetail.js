@@ -57,7 +57,7 @@ function ExamDetail() {
 
     fetchExamData();
   }, [examName]);
-  const [warningMessage, setWarningMessage] = useState('');
+ 
 
   const handleDownloadSyllabus = async (examName) => {
     try {
@@ -75,10 +75,25 @@ function ExamDetail() {
       link.parentNode.removeChild(link);
   
     } catch (error) {
-      console.error('Error downloading syllabus:', error);
-      // Handle other errors if needed
+    if (error.response) {
+
+if(error.response.status===404){
+  alert("Sorry we don't have this exam's syllabus right now ");
+}
+else if(error.response.status===500){
+  alert("Hey someone messed up why don't you try again after sometime while we scold the developer ");
+}
+    }  
+
     }
-  };
+   };
+
+
+    
+  
+  
+  
+  
   const handleDownloadPattern = async (examName) => {
     try {
       const response = await axios.get(`http://localhost:8000/download-pattern/${encodeURIComponent(examName)}`, {
@@ -95,8 +110,15 @@ function ExamDetail() {
       link.parentNode.removeChild(link);
   
     } catch (error) {
-      console.error('Error downloading pattern:', error);
-      // Handle other errors if needed
+      if (error.response) {
+
+        if(error.response.status===404){
+          alert("Sorry we don't have exam's pattern right now ");
+        }
+        else if(error.response.status===500){
+          alert("Hey someone messed up why don't you try again after sometime while we scold the developer ");
+        }
+            } 
     }
   };
   

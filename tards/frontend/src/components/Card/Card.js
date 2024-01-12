@@ -19,7 +19,7 @@ function Card({ category }) {
   useEffect(() => {
     // Fetch exams belonging to the specified category from Django backend
     if (category) {
-      axios.get(`http://127.0.0.1:8000/category-data/${category}/`)
+      axios.get(`http://localhost:8000/category-data/${category}/`)
         .then(response => {
           setExams(response.data);
         })

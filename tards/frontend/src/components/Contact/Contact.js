@@ -13,17 +13,15 @@ const Contact = () => {
   });
   const [messageStatus, setMessageStatus] = useState('');
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
-  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
+    const serviceId = process.env.REACT_APP_EMAILJS_SERVICE_ID;
+    const templateId = process.env.REACT_APP_EMAILJS_TEMPLATE_ID;
+    const userId = process.env.REACT_APP_EMAILJS_USER_ID;
 
-
-    emailjs.sendForm("service_dqxz6ww", "template_2ak9rck", e.target, 'z3PqqWjEbAZGgrJtT')
+    emailjs.sendForm(serviceId, templateId, e.target, userId)
       .then((result) => {
         console.log(result.text);
         setMessageStatus('Message sent successfully!');
@@ -72,7 +70,7 @@ const Contact = () => {
       <div className="col-lg-7 col-md-10 col-sm-12 mx-auto">
         <div className="card mt-2 mx-auto p-4 bg-light">
           <div className="card-body">
-            <form id="contact-form" role="form" onSubmit={handleSubmit}>
+            <form id="contact-form" role="form" onSubmit={handleSubmit} >
               <div className="row">
                 <div className="col-md-6">
                   <div className="form-group">

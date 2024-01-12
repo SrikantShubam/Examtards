@@ -1,16 +1,21 @@
 from django.db import models
-import uuid 
+import uuid
 class Category(models.Model):
-    name = models.CharField(max_length=50, choices=[
-        ('UPSC', 'UPSC'),
-        ('engineering', 'Engineering'),
-        ('medical', 'Medical'),
-        ('popular', 'Popular'),
-        # Add more categories as needed
-    ], unique=True)
+    name = models.CharField(max_length=50, unique=True)
 
     def __str__(self):
-        return self.name
+        return self.name 
+# class Category(models.Model):
+#     name = models.CharField(max_length=50, choices=[
+#         ('UPSC', 'UPSC'),
+#         ('engineering', 'Engineering'),
+#         ('medical', 'Medical'),
+#         ('popular', 'Popular'),
+#         # Add more categories as needed
+#     ], unique=True)
+
+#     def __str__(self):
+#         return self.name
 
 class Exam(models.Model):
     exam_id = models.UUIDField(default=uuid.uuid4, editable=False)

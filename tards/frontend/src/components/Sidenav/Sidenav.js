@@ -7,7 +7,7 @@ function Sidenav({ handleCategoryClick }) {
 
   useEffect(() => {
     // Fetch categories from Django backend
-    axios.get('http://127.0.0.1:8000/get-categories/')
+    axios.get('http://localhost:8000/get-categories/')
       .then(response => {
         // Sort the categories to have 'Popular' at the top
         const sortedCategories = response.data.categories.sort((a, b) => {

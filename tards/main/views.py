@@ -6,11 +6,13 @@ from utilities.exam_comparison import compare_exams
 from .serializers import ExamSerializer
 from fuzzywuzzy import fuzz
 from django.shortcuts import render, get_object_or_404
-from urllib.parse import unquote
+
 from django.http import JsonResponse,FileResponse
 from .models import Exam, SyllabusFile, PatternFile,Category
 from urllib.parse import unquote_plus
+from django.http import HttpResponse
 
+import requests
 def homepage(request):
     return render(request, 'index.html')  
 
@@ -84,13 +86,34 @@ def category_data(request, category_name):
         return Response({"error": str(e)}, status=500)
     
     
+# @api_view(['GET'])
+# def download_syllabus(request, exam_name):
+#     decoded_exam_name = unquote_plus(exam_name)
+#     exam = Exam.objects.filter(name__iexact=decoded_exam_name.replace('-', ' ')).first()
+
+#     if not exam:
+#         return JsonResponse({"message": "Exam not found."}, status=404)
+
+#     syllabus = SyllabusFile.objects.filter(exam=exam).first()
+
+#     if not syllabus:
+#         return JsonResponse({"message": "No syllabus found for this exam."}, status=404)
+
+#     try:
+#         response = FileResponse(open(syllabus.file_path, 'rb'))
+#         response['Content-Disposition'] = f'attachment; filename="{syllabus.file_name}"'
+#         return response
+#     except FileNotFoundError:
+#         return JsonResponse({"message": "Syllabus file not found."}, status=404)
+
 @api_view(['GET'])
 def download_syllabus(request, exam_name):
     decoded_exam_name = unquote_plus(exam_name)
     exam = Exam.objects.filter(name__iexact=decoded_exam_name.replace('-', ' ')).first()
 
     if not exam:
-        return JsonResponse({"message": "Exam not found."}, status=404)
+        return JsonResponse({"message": "Exam not found."}, status=404, safe=False)
+
 
     syllabus = SyllabusFile.objects.filter(exam=exam).first()
 
@@ -98,12 +121,15 @@ def download_syllabus(request, exam_name):
         return JsonResponse({"message": "No syllabus found for this exam."}, status=404)
 
     try:
-        response = FileResponse(open(syllabus.file_path, 'rb'))
+        response = HttpResponse(requests.get(syllabus.file_path).content, content_type='application/pdf')
         response['Content-Disposition'] = f'attachment; filename="{syllabus.file_name}"'
         return response
-    except FileNotFoundError:
-        return JsonResponse({"message": "Syllabus file not found."}, status=404)
+    except Exception as e:
+        return JsonResponse({"message": f"Error: {str(e)}"}, status=500)
+    
 
+
+    
 
 @api_view(['GET'])
 def download_pattern(request, exam_name):
@@ -111,20 +137,20 @@ def download_pattern(request, exam_name):
     exam = Exam.objects.filter(name__iexact=decoded_exam_name.replace('-', ' ')).first()
 
     if not exam:
-        return JsonResponse({"message": "Exam not found."}, status=404)
+        return JsonResponse({"message": "Exam not found."}, status=404, safe=False)
 
-    Pattern = PatternFile.objects.filter(exam=exam).first()
 
-    if not Pattern:
-        return JsonResponse({"message": "No Pattern found for this exam."}, status=404)
+    pattern = PatternFile.objects.filter(exam=exam).first()
+
+    if not pattern:
+        return JsonResponse({"message": "No pattern found for this exam."}, status=404)
 
     try:
-        response = FileResponse(open(Pattern.file_path, 'rb'))
-        response['Content-Disposition'] = f'attachment; filename="{Pattern.file_name}"'
+        response = HttpResponse(requests.get(pattern.file_path).content, content_type='application/pdf')
+        response['Content-Disposition'] = f'attachment; filename="{pattern.file_name}"'
         return response
-    except FileNotFoundError:
-        return JsonResponse({"message": "Pattern file not found."}, status=404)
-
+    except Exception as e:
+        return JsonResponse({"message": f"Error: {str(e)}"}, status=500)
 
 @api_view(['GET'])
 def all_exams(request):

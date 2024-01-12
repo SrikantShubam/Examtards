@@ -11,7 +11,7 @@ function Banner() {
     e.preventDefault();
 
     try {
-      const response = await axios.get(`http://localhost:8000/search/?search_query=${searchQuery}`);
+      const response = await axios.get(`http://localhost:3000/search/?search_query=${searchQuery}`);
       setSearchResults(response.data);
       setShowPopup(true); 
       document.body.classList.add('popup-open');

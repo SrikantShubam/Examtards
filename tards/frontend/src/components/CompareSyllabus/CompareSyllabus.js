@@ -75,7 +75,7 @@ function CompareSyllabus() {
 
   const fetchComparison = (examOne, examTwo) => {
  
-    fetch(`http://127.0.0.1:8000/compare_syllabus/?selected_exam_names[]=${examOne}&selected_exam_names[]=${examTwo}`)
+    fetch(`http://localhost:8000/compare_syllabus/?selected_exam_names[]=${examOne}&selected_exam_names[]=${examTwo}`)
       .then(response => {
         if (response.ok) {
          
