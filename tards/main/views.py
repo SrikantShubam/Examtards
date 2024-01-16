@@ -11,6 +11,7 @@ from django.http import JsonResponse,FileResponse
 from .models import Exam, SyllabusFile, PatternFile,Category
 from urllib.parse import unquote_plus
 from django.http import HttpResponse
+from django.views.decorators.http import require_GET
 
 import requests
 def homepage(request):
@@ -66,7 +67,39 @@ def get_categories(request):
     except Exception as e:
         return Response({"error": str(e)}, status=500)
     
-
+@require_GET
+def serve_static_sitemap(request):
+    xml_content = """<?xml version="1.0" encoding="UTF-8"?>
+        <!-- created with www.mysitemapgenerator.com -->
+        <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+            <url>
+                <loc>https://www.examtards.com/</loc>
+                <lastmod>2024-01-16T11:18:07+01:00</lastmod>
+                <priority>0.6</priority>
+            </url>
+            <url>
+                <loc>https://www.examtards.com/exam-detail/</loc>
+                <lastmod>2024-01-16T11:18:07+01:00</lastmod>
+                <priority>0.8</priority>
+            </url>
+            <url>
+                <loc>https://www.examtards.com/contact-us</loc>
+                <lastmod>2024-01-16T11:18:07+01:00</lastmod>
+                <priority>1.0</priority>
+            </url>
+            <url>
+                <loc>https://www.examtards.com/disclaimer</loc>
+                <lastmod>2024-01-16T11:18:07+01:00</lastmod>
+                <priority>1.0</priority>
+            </url>
+            <url>
+                <loc>https://www.examtards.com/compare-syllabus</loc>
+                <lastmod>2024-01-16T11:18:07+01:00</lastmod>
+                <priority>1.0</priority>
+            </url>
+        </urlset>
+    """
+    return HttpResponse(xml_content, content_type='application/xml')
     
 @api_view(['GET'])
 def category_data(request, category_name):
@@ -86,25 +119,7 @@ def category_data(request, category_name):
         return Response({"error": str(e)}, status=500)
     
     
-# @api_view(['GET'])
-# def download_syllabus(request, exam_name):
-#     decoded_exam_name = unquote_plus(exam_name)
-#     exam = Exam.objects.filter(name__iexact=decoded_exam_name.replace('-', ' ')).first()
 
-#     if not exam:
-#         return JsonResponse({"message": "Exam not found."}, status=404)
-
-#     syllabus = SyllabusFile.objects.filter(exam=exam).first()
-
-#     if not syllabus:
-#         return JsonResponse({"message": "No syllabus found for this exam."}, status=404)
-
-#     try:
-#         response = FileResponse(open(syllabus.file_path, 'rb'))
-#         response['Content-Disposition'] = f'attachment; filename="{syllabus.file_name}"'
-#         return response
-#     except FileNotFoundError:
-#         return JsonResponse({"message": "Syllabus file not found."}, status=404)
 
 @api_view(['GET'])
 def download_syllabus(request, exam_name):

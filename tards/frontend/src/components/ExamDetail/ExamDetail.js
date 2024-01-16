@@ -14,6 +14,9 @@ function calculateExamDuration(examDate) {
   const hours = Math.floor((timeDiff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
   const minutes = Math.floor((timeDiff % (1000 * 60 * 60)) / (1000 * 60));
 
+ 
+
+
   return { days, hours, minutes };
 }
 
@@ -158,6 +161,11 @@ else if(error.response.status===500){
   </div>
   <div className="col-md-7 col-sm-12">
     <h2>Time Remaining</h2>
+    {calculateExamDuration(examDetails.exam_date).days < 0 ? (
+      <div className="col-sm-12 text-danger">
+        <p>The exam is over.</p>
+      </div>
+    ) : (
     <div className="row">
       <div className="col-sm-4">
         <div className="card-2">
@@ -178,7 +186,9 @@ else if(error.response.status===500){
         <h3 className='text-center mt-3'>Minutes</h3>
       </div>
     </div>
+    )}
   </div>
+  
 </div>
 
 <section id="second">

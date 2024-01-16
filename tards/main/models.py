@@ -1,21 +1,14 @@
 from django.db import models
 import uuid
+from django.urls import reverse
+
 class Category(models.Model):
     name = models.CharField(max_length=50, unique=True)
 
     def __str__(self):
         return self.name 
-# class Category(models.Model):
-#     name = models.CharField(max_length=50, choices=[
-#         ('UPSC', 'UPSC'),
-#         ('engineering', 'Engineering'),
-#         ('medical', 'Medical'),
-#         ('popular', 'Popular'),
-#         # Add more categories as needed
-#     ], unique=True)
+ 
 
-#     def __str__(self):
-#         return self.name
 
 class Exam(models.Model):
     exam_id = models.UUIDField(default=uuid.uuid4, editable=False)
@@ -50,6 +43,12 @@ class Exam(models.Model):
         return self.name
     def get_exam_id(self):
         return str(self.exam_id)
+    def get_absolute_url(self):
+        # Replace 'exam_detail' with the name of your view for displaying a single exam
+        return reverse('exam-detail', args=[str(self.name).replace(' ', '-')])
+        
+    
+   
 
 
 
@@ -65,6 +64,11 @@ class SyllabusFile(models.Model):
 
     def __str__(self):
         return f"{self.exam.name} - {self.file_name}"
+    def get_absolute_url(self):
+    # Replace 'download-syllabus' with the name of your view for downloading the syllabus
+        return reverse('download-syllabus', args=[str(self.exam.name).replace(' ', '-')])
+
+
     
 
 class PatternFile(models.Model):
@@ -78,3 +82,6 @@ class PatternFile(models.Model):
 
     def __str__(self):
         return f"{self.exam.name} - {self.file_name}"    
+    def get_absolute_url(self):
+    # Replace 'download-syllabus' with the name of your view for downloading the syllabus
+        return reverse('download-pattern', args=[str(self.exam.name).replace(' ', '-')])

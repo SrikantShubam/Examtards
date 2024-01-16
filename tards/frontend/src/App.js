@@ -1,7 +1,8 @@
-import React , { useState } from 'react';
+import React , { useState,useEffect } from 'react';
 import './App.css';
 import { Routes, Route} from 'react-router-dom';
-
+import ScrollToTop from "react-scroll-to-top";
+import { ReactComponent as MySVG } from "./up.svg";
 import {Header,Banner,Card,Sidenav,Footer,CompareSyllabus,ExamDetail,Contact,Disclaimer} from './components';
 
 
@@ -12,6 +13,15 @@ function App() {
   const handleCategoryClick = (category) => {
     setSelectedCategory(category);
   };
+  useEffect(() => {
+    // Make an HTTP request to the Django sitemap URL
+    fetch('http://127.0.0.1:8000/sitemap.xml')
+        .then(response => response.text())
+        .then(data => {
+            // Handle the sitemap XML data as needed
+            console.log(data);
+        });
+}, []);
   return (
     <>
       <Header />
@@ -40,7 +50,8 @@ function App() {
                 </div>
               </div>
             </div>
-           
+            <ScrollToTop smooth component={<MySVG />} />
+            
             </div>
       
      
