@@ -19,7 +19,7 @@ function App() {
         .then(response => response.text())
         .then(data => {
             // Handle the sitemap XML data as needed
-            console.log(data);
+            // console.log(data);
         });
 }, []);
   return (
