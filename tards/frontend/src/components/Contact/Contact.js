@@ -7,13 +7,11 @@ import mainlogo from '../../assets/images/favicon.ico';
 import { ReactComponent as MySVG } from "../../up.svg";
 import ScrollToTop from "react-scroll-to-top";
 import * as EmailValidator from 'email-validator';
-// const serviceId = process.env.REACT_APP_EMAILJS_SERVICE_ID;
-// const templateId = process.env.REACT_APP_EMAILJS_TEMPLATE_ID;
-// const userId = process.env.REACT_APP_EMAILJS_USER_ID;
+const serviceId = process.env.REACT_APP_EMAILJS_SERVICE_ID;
+const templateId = process.env.REACT_APP_EMAILJS_TEMPLATE_ID;
+const userId = process.env.REACT_APP_EMAILJS_USER_ID;
 
-const serviceId="service_dqxz6ww"
-const templateId="template_2ak9rck"
-const userId ="z3PqqWjEbAZGgrJtT"
+
 
 
 const Contact = () => {

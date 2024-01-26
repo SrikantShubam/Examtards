@@ -2,6 +2,38 @@ nav{
     margin-left: 7.6rem;
     margin-right: 7.6rem;
 }
+.navbar-expand-lg{
+    justify-content: space-between!important;
+}
+.profile-image {
+    width: 40px; 
+    height: 40px; 
+    object-fit: cover; 
+    border-radius: 50%; 
+    border: 2px solid #fff; 
+    cursor: pointer; 
+    transition: transform 0.2s ease-in-out; 
+  }
+  
+
+  .profile-image:hover {
+    transform: scale(1.1); 
+  }
+  .dropdown-menu.show{
+    position: absolute;
+    min-width: 7rem!important;
+    /* margin-right: 14rem!important; */
+  top: 50px;
+    margin: 0 auto;
+    left: -70px;
+  }
+.navbar{
+
+    margin-top: 2.5rem;
+    }
+.navbar-nav .nav-link:hover{
+    color: var(--material-theme-sys-light-primary, #005AC1) !important;
+}
 .title {
     display: flex;
 width: 7.625rem;
@@ -20,32 +52,47 @@ gap: 0.8125rem;
 }
 
 .nav-custom{
-    display: inline-flex;
+    display: flex!important;
 align-items: center;
 gap: 0.8125rem;
 
+}
+.login-link{
+    border-radius: 0.625rem;
+background: var(--material-theme-sys-light-primary, #005AC1);
+justify-content: center;
+text-align: center;
+color: white!important;
+padding: 0.625rem 2.1875rem!important;
+
+}
+.login-link:hover{
+
+    background: var(--material-theme-sys-dark-on-primary-fixed, #001A41);
 }
 .nav-custom img{
     width: 1.5rem;
 height: 1.5rem;
 }
 li,.nav-item,.nav-link{
-    color: #000 !important;
-margin-left: 2rem;
-margin-right: 2rem;
+    color: #000 ;
+
 /* material-theme/title/large */
 font-family: Roboto;
-font-size: 1.375rem;
+
 font-style: normal;
 font-weight: 400;
-line-height: 1.75rem; /* 127.273% */
+
+}
+
+.dropdown-menu.show li:hover{
+  cursor: pointer;
+ 
 }
 
 
-
-
  .title:hover,.nav-link:hover,a:hover {
-    color: #005AC1!important;
+    color: #005AC1;
   }
 
 
@@ -62,26 +109,76 @@ margin-top: 2.3rem;
 
 
  }
- @media(max-width:430px) {
-    nav{
+
+@media (max-width: 430px) {
+    nav {
         margin-left: .5rem;
         margin-right: .5rem;
     }
-    .navbar,.title,.nav-custom{
-    font-size: 1.4rem;
-}
-.nav-custom{
-    width: 1.375rem;
-    height: 1.375rem;
-    flex-shrink: 0;
-}
-.nav-item,.nav-link{
-    font-size: 0.875rem;
-}
-li,.nav-item,.nav-link{
-    color: #000 !important;
-margin-left: 0rem;
-margin-right: 0rem;
-font-size: 1.4rem;
-}
- }
+  
+    .navbar {
+      margin-top: 2.3rem;
+    }
+  
+    .brand-profile-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+    }
+  
+    .nav-custom {
+      width: 1.375rem;
+      height: 1.375rem;
+      flex-shrink: 0;
+      margin-right: 1rem; /* Adjust the margin as needed */
+    }
+  
+    .profile-image {
+     
+      width: 40px;
+      height: 40px;
+      object-fit: cover;
+      border-radius: 50%;
+      border: 2px solid #fff;
+      cursor: pointer;
+      transition: transform 0.2s ease-in-out;
+      
+    }
+  
+    .login-link {
+      margin-left: auto; /* Move the login link to the right */
+    }
+    
+    .navbar-nav .nav-link {
+        padding-left: 0;
+      margin-left: 0;
+      margin-right: 0;
+      font-size: 1.4rem;
+    }
+  
+  }
+  .custom-sidebar {
+    width: 250px;
+    height: 100%;
+    position: fixed;
+    top: 0;
+    left: -250px;
+    background-color: #333;
+    color: #fff;
+    transition: left 0.3s ease;
+  }
+  
+  .custom-sidebar.open {
+    left: 0;
+  }
+  
+  .sidebar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    background-color: #555;
+  }
+  
+ 

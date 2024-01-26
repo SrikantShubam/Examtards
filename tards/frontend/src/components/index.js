@@ -7,4 +7,6 @@ import ExamDetail from './ExamDetail/ExamDetail';
 import CompareSyllabus from './CompareSyllabus/CompareSyllabus';
 import Contact from './Contact/Contact';
 import Disclaimer from './Disclaimer/Disclaimer';
-export {Header,Banner,Card,Sidenav,Footer,ExamDetail,CompareSyllabus,Contact,Disclaimer};
+import Login from './Login/Login';
+import Userpanel from './Userpanel/Userpanel';
+export {Header,Banner,Card,Sidenav,Footer,ExamDetail,CompareSyllabus,Contact,Disclaimer,Login,Userpanel};
