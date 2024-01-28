@@ -1,0 +1,211 @@
+
+.main-container {
+      justify-content: center;
+      align-items: center;
+      background-color: #fff;
+      display: flex;
+      flex-direction: column;
+      padding: 50px 60px;
+      margin-bottom: 10rem;
+    }
+    .div-8,
+.div-10 {
+  background-color: #d9d9d9;
+  display: flex;
+  height: 50px;
+  flex-direction: column;
+  width: 100%; /* Make the input take full width */
+}
+    .form-group {
+      width: 100%;
+      margin-top: 26px;
+    }
+    .inside-main-container {
+      margin-top: 22px;
+      width: 100%;
+      max-width: 1043px;
+    }
+    .inside-main-container-2 {
+      gap: 20px;
+      display: flex;
+    }
+    .column-1 {
+      display: flex;
+      flex-direction: column;
+      line-height: normal;
+      width: 55%;
+      margin-left: 0px;
+    }
+
+    .cover-img {
+      aspect-ratio: 0.72;
+      object-fit: contain;
+      object-position: center;
+      width: 100%;
+      overflow: hidden;
+      flex-grow: 1;
+    }
+
+    .column-2 {
+      display: flex;
+      flex-direction: column;
+      line-height: normal;
+      width: 45%;
+      margin-left: 20px;
+    }
+
+    .main-text-content {
+      display: flex;
+      flex-direction: column;
+      margin: auto 0;
+    }
+
+    
+    .t-5 {
+      color: var(--material-theme-black, #000);
+      font: 400 32px/40px Roboto, -apple-system, Roboto, Helvetica,
+        sans-serif;
+    }
+
+    .t-6 {
+      color: var(--material-theme-black, #000);
+      margin-top: 26px;
+      font: 600 16px/24px Roboto, -apple-system, Roboto, Helvetica,
+        sans-serif;
+    }
+
+    .t-7 {
+      color: var(--material-theme-black, #000);
+      margin-top: 26px;
+      font: 500 14px/143% Roboto, -apple-system, Roboto, Helvetica,
+        sans-serif;
+    }
+
+   #login .div-8 {
+      background-color: #D8E2FF;
+      border: none;
+      border-radius: 10px;
+      display: flex;
+      margin-top: 26px;
+      height: 50px;
+      flex-direction: column;
+      padding: 0.7rem; /* Adjust the padding value as needed */
+
+    }
+    .div-9 {
+      color: var(--material-theme-black, #000);
+      margin-top: 26px;
+      font: 500 14px/143% Roboto, -apple-system, Roboto, Helvetica,
+        sans-serif;
+    }
+    .div-10 {
+      background-color: #d9d9d9;
+      display: flex;
+      margin-top: 26px;
+      height: 50px;
+      flex-direction: column;
+    }
+    .div-11 {
+      color: var(--material-theme-black, #000);
+      margin-top: 26px;
+      font: 500 14px/143% Roboto, -apple-system, Roboto, Helvetica,
+        sans-serif;
+        width: 100%; 
+    }
+    .div-12 {
+      color: var(--material-theme-black, #000);
+      white-space: nowrap;
+      justify-content: center;
+      align-items: center;
+      border-radius: 4px;
+      background-color: var(
+        --material-theme-sys-light-primary-container,
+        #d8e2ff
+      );
+    
+    }
+
+    .sign-in-btn{
+      padding: 0.62rem;
+      border-radius: 0.25rem;
+  background: var(--material-theme-sys-light-primary-container, #D8E2FF);
+      border:none ;
+      width: 100%; 
+  }
+  .sign-in-btn:hover{
+      cursor: pointer;
+      background-color: black;
+      color: white!important;
+  }
+    
+      .text {
+        color: var(--material-theme-black, #000);
+        align-self: stretch;
+        flex-grow: 1;
+        white-space: nowrap;
+     
+      }
+    @media (max-width: 991px) {
+      .main-container {
+        padding: 0 ;
+      }
+      .inside-main-container {
+        max-width: 100%;
+      }
+      .inside-main-container-2 {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0px;
+      }
+      .column-1 {
+       display: none;
+      }
+      .cover-img {
+        max-width: 100%;
+        margin-top: 40px;
+      }
+      .column-2 {
+        width: 100%;
+        margin-left: 0;
+      }
+      .main-text-content {
+        max-width: 100%;
+        margin-top: 40px;
+      }
+      .t-5 {
+        max-width: 100%;
+      }
+      .t-6 {
+        max-width: 100%;
+      }
+      .t-7 {
+        max-width: 100%;
+      }
+      .div-8 {
+        max-width: 100%;
+      }
+      .div-9 {
+        max-width: 100%;
+      }
+      .div-10 {
+        max-width: 100%;
+      }
+      .div-8,
+      .div-10,
+      .div-11,
+      .sign-in-btn {
+        max-width: 100%;
+      }
+      .div-12 {
+        white-space: initial;
+        max-width: 100%;
+        padding: 0 20px;
+      }
+      .text{
+        white-space: initial;
+      }
+    }
+   
+
+   
+ 

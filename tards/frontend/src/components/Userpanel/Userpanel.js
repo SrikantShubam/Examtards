@@ -1,16 +1,24 @@
-import React from 'react';
+import React,{useEffect,useState} from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
-import { getAuth, signOut } from 'firebase/auth';
-
+import { getAuth, signOut, onAuthStateChanged} from 'firebase/auth';
+import {auth,provider} from '../SignUp/config';
 function Userpanel() {
     
 const location = useLocation();
 const navigate = useNavigate();
 // const userData = location.state && location.state.userData;
-console.log('Location state:', location.state)
-const userData = JSON.parse(localStorage.getItem('userData'));
-console.log('the data is',userData);
+
+const [user, setUser] = useState(null);
+
+useEffect(() => {
+  const unsubscribe = onAuthStateChanged(auth, (user) => {
+    setUser(user);
+  });
+
+  return () => unsubscribe();
+}, []);
+
 // Check if props.location.state is defined before accessing its properties
 
   const handleLogout = async () => {
@@ -20,6 +28,7 @@ console.log('the data is',userData);
         await signOut(auth);
 
       // Redirect to the login page after logout
+    
       navigate('/login');
     } catch (error) {
       console.error('Error during logout:', error.message);
@@ -30,11 +39,16 @@ console.log('the data is',userData);
   return (
     <div className='body'>
       <h1>Welcome to Userpanel</h1>
-      <p>User Name: {userData.displayName}</p>
-      <p>Email: {userData.email}</p>
-      <img src={userData.photoURL} alt="Profile" />
-   
-      <button className='btn btn-dark' onClick={handleLogout}>Logout</button>
+      {user ? (
+        <React.Fragment>
+          <h4>{user.email}</h4>
+          <button className='btn btn-dark' onClick={handleLogout}>
+            Logout
+          </button>
+        </React.Fragment>
+      ) : (
+        <p>Loading...</p>
+      )}
       {/* Rest of your Userpanel component */}
     </div>
   );

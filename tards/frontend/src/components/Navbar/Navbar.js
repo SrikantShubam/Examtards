@@ -72,8 +72,8 @@ function Navbar(props) {
         aria-controls="offcanvasNavbar"
         aria-label="Toggle navigation"
       >
-        <span className="navbar-toggler-icon">
-        <i class="fa-solid fa-bars"></i></span>
+   
+        <i className="fa-solid fa-bars"></i>
       </button>
 
       <Link to="/" className="navbar-brand">

@@ -1,15 +1,13 @@
 import React,{useEffect,useState} from 'react'
-import "./Login.css";
+import "./SignUp.css";
 import { useNavigate,Link } from 'react-router-dom'; // Import useNavigate
 
-import {auth,provider} from '../SignUp/config';
+import {auth,provider} from './config';
 
 
-import { signInWithPopup,onAuthStateChanged,signInWithEmailAndPassword  } from 'firebase/auth';
-function Login() {
-  const navigate = useNavigate(); 
-  const [errorMessage, setErrorMessage] = useState('');
-
+import { signInWithPopup,onAuthStateChanged,createUserWithEmailAndPassword } from 'firebase/auth';
+function SignUp() {
+  const navigate = useNavigate(); // Initialize useNavigate
   const [user, setUser] = useState(null);
   const handleEmailLogin = async (e) => {
     e.preventDefault(); // Prevent the default form submission behavior
@@ -17,13 +15,11 @@ function Login() {
       const email = document.getElementById('email').value;
       const password = document.getElementById('password').value;
 
-      await signInWithEmailAndPassword (auth, email, password);
+      await createUserWithEmailAndPassword(auth, email, password);
       console.log("user created!");
       navigate('/user-panel');
     } catch (error) {
-      console.error('Error', error.message);
-      setErrorMessage('Invalid email or password. Please try again.');
-
+      console.error('Error creating user with email/password:', error.message);
       // Handle error, e.g., show an error message to the user
     }
   };
@@ -67,14 +63,13 @@ function Login() {
         <div className="column-2">
           <div className="main-text-content">
             <div className="t-5">
-              Welcome to Examtards,
+            SignUp to ExamTards.
               <br />
-              Log In to Continue.
+           And start up your exam journey!
             </div>
             <div className="t-6">
-           Don’t have an account ? Create an account it takes less than a
-           minute.<Link to="/sign-up">Sign Up for free</Link>
-         </div>
+           Already have an account ? <Link to='/login'>Login Now</Link>
+            </div>
             <form id="login" onSubmit={handleEmailLogin}>
             <div className="">
               <label htmlFor="email" className="t-7">Email</label>
@@ -87,7 +82,7 @@ function Login() {
             </div>
           
             <div className="form-group">
-              <Link to="/forgot-password" className="div-11">Forgot Password?</Link>
+              <Link to="" className="div-11">Forgot Password?</Link>
             </div>
           
             <button type="submit"   className="sign-in-btn mt-5 d-flex flex-row justify-content-center align-items-center">
@@ -110,11 +105,7 @@ function Login() {
     
        
         </div>
-        {errorMessage && (
-          <div className="alert alert-danger mt-3" role="alert">
-            {errorMessage}
-          </div>
-        )}
+        
           
           </div>
         </div>
@@ -128,4 +119,4 @@ function Login() {
   )
 }
 
-export default Login
+export default SignUp
