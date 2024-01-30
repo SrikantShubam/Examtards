@@ -3,7 +3,7 @@ import mainlogo from '../../assets/images/favicon.ico';
 import { Link } from 'react-router-dom';
 import { onAuthStateChanged } from 'firebase/auth';
 import { getAuth , signOut } from 'firebase/auth';
-
+import defaultuser from '../../assets/images/usercute.webp';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 import "./navbar.css";
@@ -84,15 +84,19 @@ function Navbar(props) {
       </Link>
 
       <div className="nav-item dropdown">
-        {user && (
-          <div className="profile-image-container" onClick={handleDropdownToggle}>
-          <img
-          src={user.photoURL}
-          alt="User"
-          className="profile-image"
-        />
-          </div>
-        )}
+      {user && (
+        <div className="profile-image-container" onClick={handleDropdownToggle}>
+          {user.photoURL ? (
+            <img src={user.photoURL} alt="User" className="profile-image" />
+          ) : (
+            <img
+              src={defaultuser}  
+              alt="Default User"
+              className="profile-image"
+            />
+          )}
+        </div>
+      )}
 
         {!user && (
           <Link to="/login" className="nav-link login-link">

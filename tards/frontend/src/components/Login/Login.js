@@ -60,7 +60,7 @@ function Login() {
         <div className="column-1">
           <img
             loading="lazy"
-            srcSet="https://images.unsplash.com/photo-1600195077077-7c815f540a3d?q=80&w=1889&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+            srcSet="https://images.unsplash.com/photo-1567168539593-59673ababaae?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
             className="cover-img" alt="Login "
           />
         </div>

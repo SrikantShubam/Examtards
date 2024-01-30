@@ -41,7 +41,9 @@ useEffect(() => {
       <h1>Welcome to Userpanel</h1>
       {user ? (
         <React.Fragment>
+        <h4>{user.displayName}</h4>
           <h4>{user.email}</h4>
+          
           <button className='btn btn-dark' onClick={handleLogout}>
             Logout
           </button>

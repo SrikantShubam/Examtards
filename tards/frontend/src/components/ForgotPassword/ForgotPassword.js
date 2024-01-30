@@ -72,7 +72,7 @@ function ForgotPassword() {
       
       </div>
     </div>
-        <div className="column-1">
+        <div className="fg-column-1">
          <h6 className='py-4 '>This is Doug.
          He also forgets his password but we got him.</h6>
         </div>
