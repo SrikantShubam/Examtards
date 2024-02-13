@@ -30,7 +30,7 @@ function Login() {
   const handleGoogleLogin = () => {
     signInWithPopup(auth, provider).then((data) => {
   
-      navigate('/user-panel');
+      navigate('/dashboard');
     });
   };
 
@@ -43,7 +43,7 @@ function Login() {
       
       
 
-        navigate('/user-panel');
+        navigate('/dashboard');
         ;
       }
     });

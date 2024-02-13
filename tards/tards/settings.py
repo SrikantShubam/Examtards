@@ -1,6 +1,6 @@
 
 import os
-
+import urllib.parse as up
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -31,6 +31,7 @@ INSTALLED_APPS = [
     'main',
     'corsheaders',
     'django.contrib.sitemaps',
+    'import_export'
 ]
 
 MIDDLEWARE = [
@@ -70,12 +71,16 @@ WSGI_APPLICATION = 'tards.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
-
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+  'default': {
+    'ENGINE': 'django.db.backends.postgresql',
+    'NAME': 'exam_70zb',
+    'USER': 'exam_70zb_user',
+    'PASSWORD': '2Vcc8h7tq6Mb9bR6QQmQXltpHQk5riGv',
+    'HOST': 'dpg-cn26qc6d3nmc739avrp0-a.singapore-postgres.render.com',
+    'PORT': '5432',
+   
+  }
 }
 
 

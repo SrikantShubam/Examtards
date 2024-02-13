@@ -6,6 +6,7 @@ from utilities.exam_comparison import compare_exams
 from .serializers import ExamSerializer
 from fuzzywuzzy import fuzz
 from django.shortcuts import render, get_object_or_404
+from collections import OrderedDict
 
 from django.http import JsonResponse,FileResponse
 from .models import Exam, SyllabusFile, PatternFile,Category
@@ -34,8 +35,15 @@ def search_exam(request):
         ]
     print("kuch toh mila hai")
     serializer = ExamSerializer(exams, many=True)
-    print(serializer.data)
-    return Response(serializer.data)
+
+    print(type(serializer.data))
+
+    result_dict = {
+    'name': serializer.data[0]['name'],
+    'exam_date': serializer.data[0]['exam_date']
+}
+    print(result_dict)
+    return Response([result_dict])
 
 
 

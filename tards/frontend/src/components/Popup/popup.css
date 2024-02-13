@@ -102,3 +102,48 @@ font-style: italic;
 font-weight: 400;
 
  }
+
+
+
+
+
+
+.btn-green{
+  color: #ffffff;
+background-color: #219653;
+}
+.btn-danger{
+  color: #ffffff!important;
+background-color: #fa0404!important;
+}
+.btn-disabled{
+  color: #050000;
+  background-color: #6d6d6d;
+}
+.btn-add{
+
+font-family: Roboto, sans-serif;
+font-weight: 0;
+font-size: 16px;
+
+padding: 10px 30px;
+border: none;
+box-shadow: none;
+border-radius: 50px;
+transition : 0ms;
+transform: translateY(0);
+display: flex;
+flex-direction: row;
+align-items: center;
+cursor: pointer;
+}
+
+.btn-add:hover{
+
+transition : 0ms;
+
+transform : translateY(-0px);
+color: #ffffff;
+border: none;
+}
+

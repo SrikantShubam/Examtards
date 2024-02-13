@@ -50,7 +50,9 @@ font-weight: 400;
 line-height: 1.75rem; /* 127.273% */
 gap: 0.8125rem;
 }
-
+a{
+  text-decoration: none;
+}
 .nav-custom{
     display: flex!important;
 align-items: center;

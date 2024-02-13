@@ -107,8 +107,8 @@ function Navbar(props) {
         {user && (
           <div className={`dropdown-menu text-center ${isDropdownOpen ? 'show' : ''}`} aria-labelledby="userDropdownToggle">
             <li onClick={handleLogout} >Logout</li>
-            <Link to='/user-panel'><li>Dashboard</li></Link>
-            <li>Action</li>
+            <Link to='/dashboard'><li>Dashboard</li></Link>
+           <Link to='/user-panel'> <li>User Settings</li></Link>
           </div>
         )}
       </div>

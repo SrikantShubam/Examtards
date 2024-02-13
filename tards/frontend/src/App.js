@@ -3,7 +3,7 @@ import './App.css';
 import { Routes, Route} from 'react-router-dom';
 import ScrollToTop from "react-scroll-to-top";
 import { ReactComponent as MySVG } from "./up.svg";
-import {Header,Banner,Card,Sidenav,Footer,CompareSyllabus,ExamDetail,Contact,Disclaimer,SignUp,Userpanel,Login,ForgotPassword} from './components';
+import {Header,Banner,Card,Sidenav,Footer,CompareSyllabus,ExamDetail,Contact,Disclaimer,SignUp,Userpanel,Login,ForgotPassword,Dashboard} from './components';
 
 
 
@@ -29,6 +29,7 @@ function App() {
     <Routes>
     <Route path="/compare-syllabus" element={<CompareSyllabus />} />
     <Route path="/user-panel" element={<Userpanel />} />
+    <Route path="/dashboard" element={<Dashboard />} />
       <Route path="/exam-detail/:examName" element={<ExamDetail />} />
       <Route path="/contact-us" element={<Contact />} />
 <Route path="/disclaimer" element={<Disclaimer />}/>

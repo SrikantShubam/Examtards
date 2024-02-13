@@ -43,7 +43,7 @@ useEffect(() => {
         <React.Fragment>
         <h4>{user.displayName}</h4>
           <h4>{user.email}</h4>
-          
+          <img src={user.photoUrl} alt="" />
           <button className='btn btn-dark' onClick={handleLogout}>
             Logout
           </button>
@@ -51,7 +51,7 @@ useEffect(() => {
       ) : (
         <p>Loading...</p>
       )}
-      {/* Rest of your Userpanel component */}
+  
     </div>
   );
 }

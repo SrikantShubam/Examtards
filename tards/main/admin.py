@@ -1,8 +1,22 @@
-from django.contrib import admin
-from .models import Exam
-from .models import Exam,SyllabusFile,PatternFile,Category
+# In your app's admin.py
 
-admin.site.register(Exam)
-admin.site.register(SyllabusFile)
-admin.site.register(PatternFile)
-admin.site.register(Category)
+from django.contrib import admin
+from import_export.admin import ImportExportModelAdmin
+from .models import Exam, SyllabusFile, PatternFile, Category
+from .resources import ExamResource, SyllabusFileResource, PatternFileResource, CategoryResource
+
+@admin.register(Exam)
+class ExamAdmin(ImportExportModelAdmin):
+    resource_class = ExamResource
+
+@admin.register(SyllabusFile)
+class SyllabusFileAdmin(ImportExportModelAdmin):
+    resource_class = SyllabusFileResource
+
+@admin.register(PatternFile)
+class PatternFileAdmin(ImportExportModelAdmin):
+    resource_class = PatternFileResource
+
+@admin.register(Category)
+class CategoryAdmin(ImportExportModelAdmin):
+    resource_class = CategoryResource
