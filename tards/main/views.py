@@ -18,34 +18,62 @@ import requests
 def homepage(request):
     return render(request, 'index.html')  
 
+# @api_view(['GET'])
+# def search_exam(request):
+#     form = ExamSearchForm(request.GET)
+#     exams = []
+
+#     if form.is_valid():
+#         search_query = form.cleaned_data['search_query'].lower()
+#         all_exams = Exam.objects.all()
+
+#         # Use fuzzy matching to filter exams
+#         threshold = 55  # Define a threshold for fuzzy matching (you can adjust this)
+#         exams = [
+#             exam for exam in all_exams
+#             if fuzz.token_set_ratio(search_query, exam.name.lower()) > threshold
+#         ]
+#     print("kuch toh mila hai")
+#     serializer = ExamSerializer(exams, many=True)
+
+#     print(type(serializer.data))
+
+#     result_dict = {
+#     'name': serializer.data[0]['name'],
+#     'exam_date': serializer.data[0]['exam_date']
+# }
+#     print(result_dict)
+#     return Response([result_dict])
+
 @api_view(['GET'])
 def search_exam(request):
     form = ExamSearchForm(request.GET)
-    exams = []
-
+    print(form)
     if form.is_valid():
         search_query = form.cleaned_data['search_query'].lower()
         all_exams = Exam.objects.all()
 
-        # Use fuzzy matching to filter exams
-        threshold = 75  # Define a threshold for fuzzy matching (you can adjust this)
-        exams = [
-            exam for exam in all_exams
-            if fuzz.token_set_ratio(search_query, exam.name.lower()) > threshold
-        ]
-    print("kuch toh mila hai")
-    serializer = ExamSerializer(exams, many=True)
+        # Use fuzzy matching to find the exam with the closest match
+        
+        best_match = None
+        best_ratio = 55
 
-    print(type(serializer.data))
+        for exam in all_exams:
+            ratio = fuzz.token_set_ratio(search_query, exam.name.lower())
+            if ratio > best_ratio:
+                best_ratio = ratio
+                best_match = exam
 
-    result_dict = {
-    'name': serializer.data[0]['name'],
-    'exam_date': serializer.data[0]['exam_date']
-}
-    print(result_dict)
-    return Response([result_dict])
+        if best_match:
+            # If a matching exam is found, return its name and exam date
+            result_dict = {
+                'name': best_match.name,
+                'exam_date': best_match.exam_date
+            }
+            return Response([result_dict])
 
-
+    # If no matching exam is found or form is invalid, return an empty response
+    return Response([])
 
 
 @api_view(['GET'])

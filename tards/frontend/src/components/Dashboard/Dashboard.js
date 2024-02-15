@@ -5,7 +5,7 @@ import { getAuth, signOut, onAuthStateChanged} from 'firebase/auth';
 import {auth,provider} from '../SignUp/config';
 import Popup from '../Popup/Popup';
 import { getFirestore, collection, setDoc,getDoc,addDoc, query, where, getDocs, deleteDoc, doc } from 'firebase/firestore';
-
+import { Link } from 'react-router-dom';
 function Dashboard(props) {
   const [user, setUser] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
@@ -74,19 +74,30 @@ function Dashboard(props) {
       console.error('Error adding exam:', error);
     }
   };
-  const removeExam = async (examId) => {
-    const db = getFirestore(); // Get the Firebase Firestore instance
-    const examRef = doc(db, 'user-added-exams', examId);
 
+  const removeExam = async (userId, indexToRemove) => {
+    const db = getFirestore(); // Get the Firebase Firestore instance
+    const userAddedExamsRef = doc(db, 'user-added-exams', userId); // Use the userId parameter directly
+    
     try {
-      await deleteDoc(examRef);
-      // Fetch updated user-added exams after removing an exam
-      fetchUserAddedExams();
+      // Get the current data of the user's document
+      const docSnapshot = await getDoc(userAddedExamsRef);
+      const userData = docSnapshot.exists() ? docSnapshot.data() : {};
+    
+      // Remove the exam at the specified index
+      const updatedExams = userData.exams.filter((exam, index) => index !== indexToRemove);
+    
+      // Update the user's document with the updated data
+      await setDoc(userAddedExamsRef, { exams: updatedExams });
+    
       console.log('Exam removed successfully.');
     } catch (error) {
       console.error('Error removing exam:', error);
     }
   };
+  
+  
+
 
 
 
@@ -113,32 +124,33 @@ function Dashboard(props) {
   const curr_user = auth.currentUser;
   useEffect(() => {
     const fetchAllExams = async () => {
-      if (!curr_user) return; // Exit if user is not logged in
-
+      if (!user) return; // Exit if user is not logged in
+    
       const db = getFirestore();
       const userExamsRef = doc(db, 'user-added-exams', user.uid); // Assuming 'user-added-exams' is the collection where user-added exams are stored
-
+    
       try {
         const userExamsSnapshot = await getDoc(userExamsRef);
         if (!userExamsSnapshot.exists()) {
           setAllExams([]); // If the document doesn't exist, set allExams to an empty array
           return;
         }
-
+    
         const examsData = userExamsSnapshot.data().exams || [];
         setAllExams(examsData);
       } catch (error) {
         console.error('Error fetching all exams:', error);
       }
     };
+    
 
     fetchAllExams();
 
     // Cleanup function
     return () => {
-      // Cleanup code if needed
+    
     };
-  }, [user]);
+  }, [user,allExams]);
 
 /*---------------countdown------------ */
 const calculateCountdown = (examDate) => {
@@ -213,22 +225,23 @@ const calculateCountdown = (examDate) => {
                 {allExams.length > 0 ? (
                     allExams.map((exam, index) => (
              
-                        <div className="refined-content mt-4" key={index}>
+                        <div className="refined-content my-4" key={index}>
                         <div className="row ">
                         <div className="col-6">
                         <h2 className='text-start'>{exam.name} </h2>
-                        <button className='btn  btn-dark' onClick={() => removeExam(exam.id)}>Remove</button>
-                        <button className='btn  mx-5 btn-dark' onClick={() => removeExam(exam.id)}>Remove</button>
+                   
+                    
               <div className="d-flex">
               <button className="btn-view-more">
                      
-              <a href="#" className="view-more">
+              <Link to={`/exam-detail/${encodeURIComponent(exam.name.replace(/\s/g, '-'))}`} className="view-more">
                 View More
-              </a>
-              <i class="fa-solid fa-chevron-right"></i>
+              </Link>
+              <i className="fa-solid fa-chevron-right"></i>
         
           </button>
-          <button className="btn-view-more btn-danger mx-2">
+     
+          <button className="btn-view-more btn-danger mx-2" onClick={() => removeExam(user.uid,index)}>
          
        
             Remove
@@ -262,22 +275,26 @@ const calculateCountdown = (examDate) => {
                         Uh oh! You have not added in any exams
                     </div>
                 )}
-                <form action="/search" method="GET" className="search-form" onSubmit={handleSearch}>
-                    <div className="input-group">
-                        <div className="input-group-prepend">
-                            <span className="input-group-text">
-                                <i className="fas fa-search"></i>
-                            </span>
-                        </div>
-                        <input
-                            type="text"
-                            className="form-control"
-                            placeholder="Search for your exam"
-                            value={searchQuery}
-                            onChange={(e) => setSearchQuery(e.target.value)}
-                        />
-                    </div>
-                </form>
+        
+                {allExams.length < 2 ? (
+                  <form action="/search" method="GET" className="search-form" onSubmit={handleSearch}>
+                      <div className="input-group">
+                          <div className="input-group-prepend">
+                              <span className="input-group-text">
+                                  <i className="fas fa-search"></i>
+                              </span>
+                          </div>
+                          <input
+                              type="text"
+                              className="form-control"
+                              placeholder="Search for your exam"
+                              value={searchQuery}
+                              onChange={(e) => setSearchQuery(e.target.value)}
+                          />
+                      </div>
+                  </form>
+              ) : null}
+              
             </div>
             
                   
