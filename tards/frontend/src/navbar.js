@@ -14,9 +14,7 @@ function Navbar(props) {
 //   </ul>
 
 <nav className="navbar navbar-expand-lg navbar-light bg-light">
-<a className="navbar-brand" href="#">
-  Your Brand
-</a>
+
 <button
   className="navbar-toggler"
   type="button"

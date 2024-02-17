@@ -65,6 +65,33 @@
     .btn-view-more {
       white-space: initial;
     }
+    .user-wrapper img{
+      display: none;
+    }
+    .points{
+      font-size: 24px;
+    }
+    #your_exams .input-group{
+      margin-top:0!important ;
+   margin-bottom: 1rem;
+   margin-left: 0!important;
+    }
+    #your_exams h2{
+      font-size: 28px;
+      line-height: 32px;
+    }
+    .div-19{
+      margin-bottom: 5rem;
+    }
+    .column-6{
+      margin-left: 0!important;
+    }
+    .div-23{
+      padding-top: 4rem;
+    }
+    .div-27{
+      margin-bottom: 5rem;
+    }
   }
   
   .view-more {
@@ -123,7 +150,7 @@
   }
 
   .description {
-    margin-top: 17px;
+   
     font: 14px/20px Roboto, sans-serif;
   }
 

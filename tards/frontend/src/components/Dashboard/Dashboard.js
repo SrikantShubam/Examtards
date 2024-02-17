@@ -6,6 +6,7 @@ import {auth,provider} from '../SignUp/config';
 import Popup from '../Popup/Popup';
 import { getFirestore, collection, setDoc,getDoc,addDoc, query, where, getDocs, deleteDoc, doc } from 'firebase/firestore';
 import { Link } from 'react-router-dom';
+import defaultuser from '../../assets/images/usercute.webp';
 function Dashboard(props) {
   const [user, setUser] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
@@ -178,7 +179,7 @@ const calculateCountdown = (examDate) => {
                 <img
                 alt='user-profile'
                   loading="lazy"
-                  srcSet={user.photoURL}
+                  srcSet={user.photoURL || defaultuser}
                   className="img"
                 />
                 </React.Fragment>
@@ -223,58 +224,51 @@ const calculateCountdown = (examDate) => {
            
          
                 {allExams.length > 0 ? (
-                    allExams.map((exam, index) => (
-             
-                        <div className="refined-content my-4" key={index}>
-                        <div className="row ">
-                        <div className="col-6">
-                        <h2 className='text-start'>{exam.name} </h2>
-                   
-                    
-              <div className="d-flex">
-              <button className="btn-view-more">
-                     
-              <Link to={`/exam-detail/${encodeURIComponent(exam.name.replace(/\s/g, '-'))}`} className="view-more">
-                View More
-              </Link>
-              <i className="fa-solid fa-chevron-right"></i>
-        
-          </button>
-     
-          <button className="btn-view-more btn-danger mx-2" onClick={() => removeExam(user.uid,index)}>
-         
-       
-            Remove
-  
-       
-    
-      </button></div>
-                    
-                        </div>
-                   
-                        
-                        <div className="col-2"> 
-                        <div className="box"> {calculateCountdown(exam.exam_date).days}</div>
-                        <h4 className='mt-2 text-center' >days</h4>
-                        </div>
-                        <div className="col-2"> 
-                        <div className="box"> {calculateCountdown(exam.exam_date).hours}</div>
-                        <h4 className='mt-2 text-center' >hours</h4>
-                        </div>
-                        <div className="col-2"> 
-                        <div className="box"> {calculateCountdown(exam.exam_date).minutes}</div>
-                        <h4 className='mt-2 text-center ' >minutes</h4>
-                        </div>
-                        </div>
-                      
-                          
-                        </div>
-                    ))
-                ) : (
-                    <div className="div-19">
-                        Uh oh! You have not added in any exams
-                    </div>
-                )}
+                  allExams.map((exam, index) => (
+                      <div className="refined-content my-4" key={index}>
+                          <div className="row">
+                              {/* Exam Name Section */}
+                              <div className="col-lg-6">
+                                  <h2 className='text-start'>{exam.name}</h2>
+                                  <div className="d-flex my-4">
+                                      <button className="btn-view-more">
+                                          <Link to={`/exam-detail/${encodeURIComponent(exam.name.replace(/\s/g, '-'))}`} className="view-more">
+                                              View More
+                                          </Link>
+                                          <i className="fa-solid fa-chevron-right"></i>
+                                      </button>
+                                      <button className="btn-view-more btn-danger mx-2" onClick={() => removeExam(user.uid,index)}>
+                                          Remove
+                                      </button>
+                                  </div>
+                              </div>
+                              
+                              {/* Countdown Boxes Section */}
+                              <div className="col-lg-6">
+                                  <div className="row">
+                                      <div className="col-4 col-md-4">
+                                          <div className="box">{calculateCountdown(exam.exam_date).days}</div>
+                                          <h4 className='mt-2 text-center'>days</h4>
+                                      </div>
+                                      <div className="col-4 col-md-4">
+                                          <div className="box">{calculateCountdown(exam.exam_date).hours}</div>
+                                          <h4 className='mt-2 text-center'>hours</h4>
+                                      </div>
+                                      <div className="col-4 col-md-4">
+                                          <div className="box">{calculateCountdown(exam.exam_date).minutes}</div>
+                                          <h4 className='mt-2 text-center'>minutes</h4>
+                                      </div>
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+                  ))
+              ) : (
+                  <div className="div-19">
+                      Uh oh! You have not added in any exams
+                  </div>
+              )}
+              
         
                 {allExams.length < 2 ? (
                   <form action="/search" method="GET" className="search-form" onSubmit={handleSearch}>
@@ -312,8 +306,8 @@ const calculateCountdown = (examDate) => {
                   <div className="div-26">Category</div>
                 </div>
                 <div className="div-27">
-                  <div className="div-28">257</div>
-                  <div className="div-29">Medical</div>
+                  <li className="div-28">257</li>
+                  <li className="div-29">Medical</li>
                 </div>
               </div>
             </div>
@@ -415,6 +409,7 @@ const calculateCountdown = (examDate) => {
           .user-wrapper {
             max-width: 100%;
             flex-wrap: wrap;
+            flex-direction:row;
           }
         }
         .user-wrapper {
@@ -439,6 +434,7 @@ const calculateCountdown = (examDate) => {
             flex-direction: column;
             align-items: stretch;
             gap: 0px;
+            width:60%;
           }
         }
         .column {
@@ -476,7 +472,8 @@ const calculateCountdown = (examDate) => {
         }
         @media (max-width: 991px) {
           .column-2 {
-            width: 100%;
+       
+            margin-left:0;
           }
         }
         .div-5 {
@@ -497,14 +494,24 @@ const calculateCountdown = (examDate) => {
         }
         @media (max-width: 991px) {
           .div-6 {
-            font-size: 40px;
+            font-size: 24px;
+            font-weight:800;
             white-space: initial;
+          }
+          .div-7{
+            font-size: 20px;
           }
         }
         .div-7 {
           margin-top: 11px;
           font: 24px/32px Roboto, sans-serif;
         }
+        @media (max-width: 991px) {.div-7{
+          font-size: 16px;
+          line-height:21px;
+          font-weight:bold;
+        }
+      }
         .div-8 {
           display: flex;
           gap: 7px;
@@ -835,6 +842,9 @@ const calculateCountdown = (examDate) => {
         @media (max-width: 991px) {
           .div-33 {
             white-space: initial;
+          }
+          .main-container-points{
+            margin-top:33px;
           }
         }
         .div-34 {
