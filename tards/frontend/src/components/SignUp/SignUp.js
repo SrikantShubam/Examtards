@@ -1,8 +1,9 @@
-import React,{useEffect,useState} from 'react'
+import React,{useEffect,useState,useRef} from 'react'
 import "./SignUp.css";
 import { useNavigate,Link } from 'react-router-dom'; // Import useNavigate
 import {auth,provider} from './config';
 import * as EmailValidator from 'email-validator';
+import HCaptcha from '@hcaptcha/react-hcaptcha';
 import { signInWithPopup,onAuthStateChanged,createUserWithEmailAndPassword , updateProfile} from 'firebase/auth';
 var passwordValidator = require('password-validator');
 
@@ -81,7 +82,29 @@ schema.is()
 
     return () => unsubscribe();
   }, [navigate]);
-  
+   /*-------hcaptcha-------- */
+   const [token, setToken] = useState(null);
+   const captchaRef = useRef(null);
+ 
+   const onLoad = () => {
+     // Only load hCaptcha if the token is null (i.e., user has not interacted with it yet)
+     if (!token==null) {
+       captchaRef.current.execute();
+     }
+   };
+   const onCaptchaVerify = (token) => {
+     setToken(token);
+     // If token is null, hCaptcha verification failed
+     if (!token) {
+       alert('Incorrect CAPTCHA. Please try again.');
+     }
+   };
+   useEffect(() => {
+ 
+     if (token)
+       console.log(`hCaptcha Token: ${token}`);
+ 
+   }, [token]);
   return (
   <>
  
@@ -124,8 +147,17 @@ schema.is()
           <input type="password" required  value={confirmPassword}
           onChange={(e) => setConfirmPassword(e.target.value)}
         id="pass2" className="div-13" placeholder='Enter your password again'/>
+        <div className="text-center mt-3">
+        <HCaptcha
+     sitekey="9de6c6f0-8f38-417b-9eac-0cdb3dc52f34"
+     onLoad={onLoad}
+  
+     ref={captchaRef}
+     onVerify={onCaptchaVerify}
 
-          <button type="submit"   className="sign-in-btn mt-5 d-flex flex-row justify-content-center align-items-center">
+   />
+   </div>
+          <button type="submit"   className="sign-in-btn mt-4 d-flex flex-row justify-content-center align-items-center">
               <h6 className="mb-0 ml-2">Sign up</h6>
             </button>
             </form>
@@ -293,7 +325,7 @@ background-color:black;
   .div-13 {
     background-color: #D8E2FF;
     display: flex;
-    margin-top: 26px;
+    margin-top: 5px;
     height: 50px;
     flex-direction: column;
     border:none;

@@ -1,6 +1,7 @@
-import React,{useEffect,useState} from 'react'
+import React,{useEffect,useRef,useState} from 'react'
 import "./Login.css";
 import { useNavigate,Link } from 'react-router-dom'; // Import useNavigate
+import HCaptcha from '@hcaptcha/react-hcaptcha';
 
 import {auth,provider} from '../SignUp/config';
 
@@ -50,7 +51,29 @@ function Login() {
 
     return () => unsubscribe();
   }, [navigate]);
-  
+  /*-------hcaptcha-------- */
+  const [token, setToken] = useState(null);
+  const captchaRef = useRef(null);
+
+  const onLoad = () => {
+    // Only load hCaptcha if the token is null (i.e., user has not interacted with it yet)
+    if (!token==null) {
+      captchaRef.current.execute();
+    }
+  };
+  const onCaptchaVerify = (token) => {
+    setToken(token);
+    // If token is null, hCaptcha verification failed
+    if (!token) {
+      alert('Incorrect CAPTCHA. Please try again.');
+    }
+  };
+  useEffect(() => {
+
+    if (token)
+      console.log(`hCaptcha Token: ${token}`);
+
+  }, [token]);
   return (
     <>
     <div className="body">
@@ -87,10 +110,20 @@ function Login() {
             </div>
           
             <div className="form-group">
-              <Link to="/forgot-password" className="div-11">Forgot Password?</Link>
+              <Link to="/forgot-password" className="div-11"><i>Forgot Password?</i></Link>
             </div>
-          
-            <button type="submit"   className="sign-in-btn mt-5 d-flex flex-row justify-content-center align-items-center">
+            <div className="text-center mt-3">
+               <HCaptcha
+            sitekey="9de6c6f0-8f38-417b-9eac-0cdb3dc52f34"
+            onLoad={onLoad}
+         
+            ref={captchaRef}
+            onVerify={onCaptchaVerify}
+       
+          />
+          </div>
+         
+            <button type="submit"   className="sign-in-btn mt-3 d-flex flex-row justify-content-center align-items-center">
               <h6 className="mb-0 ml-2">Sign in</h6>
             </button>
           </form>
@@ -98,7 +131,7 @@ function Login() {
           <div>
        
          
-            <button onClick={handleGoogleLogin} className="sign-in-btn mt-5 d-flex flex-row justify-content-center align-items-center">
+            <button onClick={handleGoogleLogin} className="sign-in-btn mt-4 d-flex flex-row justify-content-center align-items-center">
               <img
                 alt='login now'
                 loading="lazy"
