@@ -7,7 +7,11 @@ import Popup from '../Popup/Popup';
 import { getFirestore, collection, setDoc,getDoc,addDoc, query, where, getDocs, deleteDoc, doc } from 'firebase/firestore';
 import { Link } from 'react-router-dom';
 import defaultuser from '../../assets/images/usercute.webp';
+
+
+
 function Dashboard(props) {
+
   const [user, setUser] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState([]);
@@ -54,22 +58,20 @@ function Dashboard(props) {
     }
   };
   const addExam = async (exam) => {
-    const db = getFirestore(); // Get the Firebase Firestore instance
-    const userAddedExamsRef = doc(db, 'user-added-exams', user.uid); // Set document ID to user's ID
+    const db = getFirestore();
+    const userAddedExamsRef = doc(db, 'user-added-exams', user.uid);
   
     try {
-      // Get the current data of the user's document
       const docSnapshot = await getDoc(userAddedExamsRef);
       const userData = docSnapshot.exists() ? docSnapshot.data() : {};
   
-      // Add the new exam to the user's data
       const updatedExams = [...(userData.exams || []), exam];
       
-      // Update the user's document with the new data
       await setDoc(userAddedExamsRef, { exams: updatedExams });
-      
   
-      fetchUserAddedExams();
+      // Update state immediately after adding the exam
+      setAllExams(updatedExams);
+  
       console.log('Exam added successfully.');
     } catch (error) {
       console.error('Error adding exam:', error);
@@ -77,26 +79,25 @@ function Dashboard(props) {
   };
 
   const removeExam = async (userId, indexToRemove) => {
-    const db = getFirestore(); // Get the Firebase Firestore instance
-    const userAddedExamsRef = doc(db, 'user-added-exams', userId); // Use the userId parameter directly
+    const db = getFirestore();
+    const userAddedExamsRef = doc(db, 'user-added-exams', userId);
     
     try {
-      // Get the current data of the user's document
       const docSnapshot = await getDoc(userAddedExamsRef);
       const userData = docSnapshot.exists() ? docSnapshot.data() : {};
     
-      // Remove the exam at the specified index
       const updatedExams = userData.exams.filter((exam, index) => index !== indexToRemove);
     
-      // Update the user's document with the updated data
       await setDoc(userAddedExamsRef, { exams: updatedExams });
+    
+      // Update state immediately after removing the exam
+      setAllExams(updatedExams);
     
       console.log('Exam removed successfully.');
     } catch (error) {
       console.error('Error removing exam:', error);
     }
   };
-  
   
 
 
@@ -126,32 +127,30 @@ function Dashboard(props) {
   useEffect(() => {
     const fetchAllExams = async () => {
       if (!user) return; // Exit if user is not logged in
-    
+  
       const db = getFirestore();
       const userExamsRef = doc(db, 'user-added-exams', user.uid); // Assuming 'user-added-exams' is the collection where user-added exams are stored
-    
+  
       try {
         const userExamsSnapshot = await getDoc(userExamsRef);
         if (!userExamsSnapshot.exists()) {
           setAllExams([]); // If the document doesn't exist, set allExams to an empty array
           return;
         }
-    
+  
         const examsData = userExamsSnapshot.data().exams || [];
         setAllExams(examsData);
+        console.log('Total read operations fetched:', examsData.length);
       } catch (error) {
         console.error('Error fetching all exams:', error);
       }
     };
-    
-
+  
     fetchAllExams();
-
-    // Cleanup function
-    return () => {
-    
-    };
-  }, [user,allExams]);
+  
+    // No dependencies here, so this effect will only run once after the initial render
+  }, [user]);
+  
 
 /*---------------countdown------------ */
 const calculateCountdown = (examDate) => {

@@ -8,6 +8,7 @@ import { signInWithPopup,onAuthStateChanged,createUserWithEmailAndPassword , upd
 var passwordValidator = require('password-validator');
 
 
+
 function SignUp() {
 var schema = new passwordValidator();
 schema.is()
