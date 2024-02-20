@@ -19,7 +19,7 @@ function ForgotPassword() {
 
   const triggerResetEmail = async (event) => {
     event.preventDefault();
-    console.log("the email is ..",email)
+   
     await sendPasswordResetEmail(auth, email);
     console.log("Password reset email sent")
   }

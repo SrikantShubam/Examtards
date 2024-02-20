@@ -173,11 +173,18 @@
       flex-grow: 1;
       flex-basis: auto;
     }
+   
+    .div8:hover{
+      cursor: pointer;
+    }
     .img {
       aspect-ratio: 1;
       object-fit: auto;
       object-position: center;
       width: 24px;
+    }
+    .img:hover{
+cursor: pointer;
     }
     .div10 {
       margin-top: 8px;
@@ -378,6 +385,8 @@
     @media (max-width: 991px) {
       .column4 {
         width: 100%;
+        margin-left: 0px;
+        margin-top: 4rem;
       }
     }
     .div26 {

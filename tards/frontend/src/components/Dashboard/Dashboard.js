@@ -6,6 +6,8 @@ import {auth,provider} from '../SignUp/config';
 import Popup from '../Popup/Popup';
 import { getFirestore, collection, setDoc,getDoc,addDoc, query, where, getDocs, deleteDoc, doc } from 'firebase/firestore';
 import { Link } from 'react-router-dom';
+
+
 import defaultuser from '../../assets/images/usercute.webp';
 
 

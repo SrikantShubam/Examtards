@@ -4,8 +4,6 @@ import { useNavigate,Link } from 'react-router-dom'; // Import useNavigate
 import HCaptcha from '@hcaptcha/react-hcaptcha';
 
 import {auth,provider} from '../SignUp/config';
-
-
 import { signInWithPopup,onAuthStateChanged,signInWithEmailAndPassword  } from 'firebase/auth';
 function Login() {
   const navigate = useNavigate(); 

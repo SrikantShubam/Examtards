@@ -1,16 +1,31 @@
-import React,{useEffect,useState} from 'react';
+import React,{useEffect,useState,useCallback} from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-
-import { getAuth, signOut, onAuthStateChanged} from 'firebase/auth';
+import { getAuth, signOut, sendPasswordResetEmail, onAuthStateChanged} from 'firebase/auth';
 import {auth,provider} from '../SignUp/config';
 import styles from './Userpanel.module.css';
+import star from '../../assets/images/star.svg';
+import medal from '../../assets/images/medal.svg';
+import fire from '../../assets/images/fire.svg';
+import { useDropzone } from 'react-dropzone';
+
 function Userpanel() {
 
 
 const location = useLocation();
 const navigate = useNavigate();
-// const userData = location.state && location.state.userData;
+const [email, setEmail] = useState('')
+const triggerResetEmail = async (event) => {
+  event.preventDefault();
+  console.log("the email is ..",email)
+  await sendPasswordResetEmail(auth, user.email);
+  console.log("Password reset email sent")
+  alert("Reset password instructions send on registered email");
+}
+const [isEditable, setIsEditable] = useState(false);
 
+const handleToggleEdit = () => {
+  setIsEditable(!isEditable);
+};
 const [user, setUser] = useState(null);
 
 useEffect(() => {
@@ -48,24 +63,53 @@ useEffect(() => {
   );
   const statistics = [
     {
-      imageSrc: "https://cdn.builder.io/api/v1/image/assets/TEMP/6fa47f0deb18bd06d0f4da7836062838019083e75ba0e03dd94e87e02cb33f29",
+      imageSrc: star,
       imageAlt: "Total Points Icon",
       value: "202",
       description: "Total Points",
     },
     {
-      imageSrc: "https://cdn.builder.io/api/v1/image/assets/TEMP/434244ec1ce6c5826ee44058e5c66ad58b4f844841718cb134d304748764621d",
+      imageSrc: fire,
       imageAlt: "Days Streak Icon",
       value: "202",
       description: "Days Streak",
     },
     {
-      imageSrc: "https://cdn.builder.io/api/v1/image/assets/TEMP/60ae51fa0354a590c594997e332b4c7540f0d51c5ab0f7c8049d515e09341ea6",
+      imageSrc: medal,
       imageAlt: "Current Rank Icon",
       value: "202",
       description: "Current Rank",
     },
   ];
+
+
+  /*dropzone*/
+  const [imageUrl, setImageUrl] = useState('');
+  const [uploadedImage, setUploadedImage] = useState(null);
+
+
+  const handleImageUpload = (file) => {
+    if (file) {
+      // Perform image upload logic here
+      const imageUrl = URL.createObjectURL(file);
+      setUploadedImage(imageUrl);
+      return imageUrl; // Return the URL
+    }
+  };
+  const onDrop = useCallback((acceptedFiles) => {
+    // Perform image upload logic and update state with the uploaded image URL
+    const imageUrl = handleImageUpload(acceptedFiles[0]);
+    setImageUrl(imageUrl);
+  }, []);
+
+
+  const { getRootProps, getInputProps } = useDropzone({
+    onDrop,
+    accept: 'image/*', // Accept only image files
+    maxSize: 10485760, // Maximum file size (in bytes), e.g., 10MB
+    multiple: false, // Allow only single file upload
+  });
+ 
   return (
     
     <div className='body'>
@@ -79,7 +123,7 @@ useEffect(() => {
                     <div className={styles.div5}>YOUR ACCOUNT</div>
                     <div className={styles.div6}>
                       <div className={styles.div7}>
-                        <div className={styles.div8}>
+                        <div className={styles.div8}   onClick={handleToggleEdit}>
                           <div className={styles.div9}>user-name</div>
                           <img
                             loading="lazy"
@@ -87,51 +131,104 @@ useEffect(() => {
                             className="img"
                           />
                         </div>
-                        <h3>JOE SAYS WHAT</h3>
+                        <div className="user-info">
+                        {user ? (
+                          <React.Fragment>
+                            <h3 className={`username ${isEditable ? styles.editable : ''}`} contentEditable={isEditable} style={{
+                            
+                              borderBottom: isEditable ? '1px dashed #000' : 'none',
+                            }}>
+                              {user.displayName.split(' ')[0]}
+                            </h3>
+                          </React.Fragment>
+                        ) : (
+                          <p>Loading...</p>
+                        )}
+                        </div>
                       </div>
                       <div >
-                        <div className={styles.div9}>Email</div>
-                        <h3>joe@gmail.com</h3>
+                 
+                        <div className={styles.div9}>Full name</div>
+                        {user ? (
+                          <React.Fragment>
+                          <h3>
+        {user.displayName}
+      </h3>
+                          </React.Fragment>
+                        ) : (
+                          <p>Loading...</p>
+                        )}
+                     
                       </div>
                     </div>
                     <div className={styles.div6}>
+                 
+                    
                       <div className={styles.div7}>
-                        <div className={styles.div8}>
-                          <div className={styles.div9}>full name</div>
+                        <div className={styles.div8} onClick={triggerResetEmail}>
+                          <div className={styles.div9}   >password</div>
                           <img
                             loading="lazy"
                             src="https://cdn.builder.io/api/v1/image/assets/TEMP/a97cca9b07ea7a9585c1b060a8c57071f419784a1602003f092919a09e6e3e14?apiKey=de722ffef7e043389cb3e537e0a30338&"
                             className="img"
                           />
                         </div>
-                        <h3>JOE SAYS WHAT</h3>
+                        <h3>**********</h3>
                       </div>
-                      <div >
-                        <div className={styles.div9}>password</div>
-                        <h3>joe@gmail.com</h3>
-                      </div>
+                 
+              
                     </div>
+                    
+                    <div className={styles.div6}>
+                    <div className={styles.div7}>
+                      <div className={styles.div8}>
+                        <div className={styles.div9}>Email</div>
+                      
+                      </div>
+                      {user ? (
+                        <React.Fragment>
+                        <h3>{user.email}</h3>
+                        </React.Fragment>
+                      ) : (
+                        <p>Loading...</p>
+                      )}
+                
+                    </div>
+               
+                  </div>
+     
                     <div className={styles}>
                       <div className={styles.box}>
                         <div className={styles.column2}>
+                     
+                        {uploadedImage ? (
+                          <img src={uploadedImage} alt="Uploaded" className={styles.img2} />
+                        ) : (
                           <img
                             loading="lazy"
-                            srcSet="https://cdn.builder.io/api/v1/image/assets/TEMP/2cc5200b49d0f467fe459a0947852305d7a4ff4abcb7cc3dba8874ccfee4dd16?apiKey=de722ffef7e043389cb3e537e0a30338&width=100 100w, https://cdn.builder.io/api/v1/image/assets/TEMP/2cc5200b49d0f467fe459a0947852305d7a4ff4abcb7cc3dba8874ccfee4dd16?apiKey=de722ffef7e043389cb3e537e0a30338&width=200 200w, https://cdn.builder.io/api/v1/image/assets/TEMP/2cc5200b49d0f467fe459a0947852305d7a4ff4abcb7cc3dba8874ccfee4dd16?apiKey=de722ffef7e043389cb3e537e0a30338&width=400 400w, https://cdn.builder.io/api/v1/image/assets/TEMP/2cc5200b49d0f467fe459a0947852305d7a4ff4abcb7cc3dba8874ccfee4dd16?apiKey=de722ffef7e043389cb3e537e0a30338&width=800 800w, https://cdn.builder.io/api/v1/image/assets/TEMP/2cc5200b49d0f467fe459a0947852305d7a4ff4abcb7cc3dba8874ccfee4dd16?apiKey=de722ffef7e043389cb3e537e0a30338&width=1200 1200w, https://cdn.builder.io/api/v1/image/assets/TEMP/2cc5200b49d0f467fe459a0947852305d7a4ff4abcb7cc3dba8874ccfee4dd16?apiKey=de722ffef7e043389cb3e537e0a30338&width=1600 1600w, https://cdn.builder.io/api/v1/image/assets/TEMP/2cc5200b49d0f467fe459a0947852305d7a4ff4abcb7cc3dba8874ccfee4dd16?apiKey=de722ffef7e043389cb3e537e0a30338&width=2000 2000w, https://cdn.builder.io/api/v1/image/assets/TEMP/2cc5200b49d0f467fe459a0947852305d7a4ff4abcb7cc3dba8874ccfee4dd16?apiKey=de722ffef7e043389cb3e537e0a30338&"
+                            srcSet="https://images.unsplash.com/photo-1605979399824-542335ee35d5?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
                             className={styles.img2}
                           />
+                        )}
                         </div>
                           <div className={styles.column3}>
+                          <div handleImageUpload={handleImageUpload} />
                           <div className={styles.div2}>
+                          <div {...getRootProps()} >
                             <img
                               loading="lazy"
                               src="https://cdn.builder.io/api/v1/image/assets/TEMP/2e3fe9e108ca0288b9630020840b2a273568253b320805ffa5c5e0db3bc29aa4?apiKey=de722ffef7e043389cb3e537e0a30338&"
                               className={styles.img3}
                             />
-                            <div className={styles.div2}>upload new user image</div>
+                            
+                            <input {...getInputProps()} />
+                            <p>Click to upload new user image</p>
+                          </div>
                           </div>
                         </div>
                       </div>
                     </div>
+                    
                   </div>
                 </div>
                 <div className={styles.column4}>
@@ -145,19 +242,31 @@ useEffect(() => {
                         <div className="statistics-container">
                         <div className="row">
                           {statistics.map((stat, index) => (
-                            <div className="col-md-6" key={index}>  <StatisticCard  {...stat} /></div>
+                           <StatisticCard key={index} {...stat} />
                           
                           ))}
                           </div>
                         </div>
                         <h3 className="dashboard-section-title">Achievements</h3>
                         <p className="coming-soon">Coming soon ...</p>
-                   
-                      
+                       
                         </div>
                         
        
       <style jsx>{`
+      .user-info {
+        display: flex;
+        flex-direction: column;
+      }
+      
+      .username {
+        cursor: pointer;
+       
+      }
+      
+      .username:hover {
+        background-color: #f0f0f0; /* Change background color on hover to indicate editability */
+      }
       .statistics-container {
         display: flex;
         flex-wrap: wrap;
@@ -169,6 +278,20 @@ useEffect(() => {
         .statistics-container {
           flex-direction: column;
           align-items: center;
+        }
+        .statistics-container .row {
+          display: flex;
+          flex-wrap: wrap;
+         
+          gap: 20px;
+        }
+        .statistic-card {
+          margin-top:1rem;
+          width: 100%; 
+          margin-left:0!important;
+        }
+        .coming-soon{
+          margin-bottom:4rem;
         }
       }
       
@@ -191,7 +314,10 @@ useEffect(() => {
           display: flex;
           gap: 15px;
           padding: 9px 35px;
-          margin-bottom:2rem;
+          margin-bottom: 2rem;
+          margin-left:20px;
+          width: calc(50% - 20px); /* Adjust card width for mobile devices */
+          max-width: 300px; /* Set max-width for better responsiveness */
         }
         .statistic-image {
           width: 24px;
@@ -222,13 +348,13 @@ useEffect(() => {
           margin-top: 36px;
           font-size: 16px;
           font-weight: 500;
+          
         }
       `}</style>
                      
                       </div>
                     </div>
-                    <div className={styles.div4}>Achievements</div>
-                    <div className={styles.div4}>Coming soon ...</div>
+                   
                   </div>
                 </div>
               </div>
