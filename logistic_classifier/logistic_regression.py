@@ -13,61 +13,48 @@ with open('./training-set/result.json', 'r') as f:
     data = json.load(f)
 
 # Initialize lists to store features and labels
-X = []
-y = []
 
+X = [[]]*len(data['images'])
+y = [[]]*len(data['images'])
+
+# print(X,'\n', y)
+
+# exit(1)
 # Define function to load and preprocess images
+
 def preprocess_image(image_path, bbox):
     image = cv2.imread(image_path)
-    # Resize image if needed
-    # image = cv2.resize(image, (desired_width, desired_height))
+    # cv2.imshow('image', image) 
+    # image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+    # cv2.imshow('image', image) 
     # Extract region of interest using bounding box
+    marginX = 50
+    marginY = 5
     x, y, w, h = [int(x) for x in bbox]
     # print(bbox)
+    y_start = y-marginY if(y-marginY>=0) else y
+    y_end = y+h+marginY if(y+marginY<len(image)) else y+h
+
+    x_start = x-marginX if(x-marginX>=0) else x
+    x_end = x+w+marginX if(x+marginX<len(image[0])) else x+w
+    # print(len(image[0]))    # x
+    # print(len(image))   # y
+    # print(image_path)
+
     roi = image[y:y+h, x:x+w]
-    # Perform any additional preprocessing if needed
-    # ...
-    # Return preprocessed image
+
+    background = np.zeros(image.shape, dtype=np.uint8)
+    background[0:h, 0:w] = roi
+    # cv2.imshow('background', background) 
+    # # img_mask = cv2.bitwise_and(image, roi)
+    # # cv2.imshow('roi', roi)
+    # cv2.waitKey(0)
+    # cv2.destroyAllWindows() 
     return roi
-
-def extract_features_CNN(image):
-    import numpy as np
-    from keras.applications.vgg16 import VGG16, preprocess_input
-    from keras.preprocessing import image as Image
-    # Load pre-trained VGG16 model
-    model = VGG16(weights='imagenet', include_top=False)
-    
-    # Resize image to the input size expected by VGG16
-    input_shape = (224, 224)
-    resized_image = cv2.resize(image, input_shape)
-    
-    # Preprocess input image
-    preprocessed_image = preprocess_input(resized_image)
-    
-    # Expand dimensions to match the input shape expected by the model
-    preprocessed_image = np.expand_dims(preprocessed_image, axis=0)
-    
-    # Extract features using the pre-trained model
-    features = model.predict(preprocessed_image)
-
-    
-    # Flatten the features to create a feature vector
-    feature_vector = features.flatten()
-    
-    return feature_vector
-
-def extract_features(image):
-    hist = cv2.calcHist([image], [0, 1, 2], None, [8, 8, 8], [0, 256, 0, 256, 0, 256])
-    hist = cv2.normalize(hist, hist).flatten()  # Normalize and flatten the histogram
-    return hist
 
 def augment_image(image):
     augmented_images = []
     
-    # # Flip horizontally -> mirror image doesn't make sense here for question and answer type datasets
-    # flipped_image = np.flip(image, 1)
-    # augmented_images.append(flipped_image)
-
     # Flip vertically
     flipped_image = np.flip(image, 0)
     augmented_images.append(flipped_image)
@@ -87,52 +74,92 @@ def augment_image(image):
     
     return augmented_images
 
+def get_seg_mask(image_path, bbox):
+    return 
+
+
+max_shape = ()
 # Iterate through annotations to extract features and labels
 for annotation in data['annotations']:
     image_id = annotation['image_id']
     category_id = annotation['category_id']
     bbox = annotation['bbox']
-    image_info = data['images'][image_id]
-    image_path = os.path.join(os.getcwd(),'training-set', image_info['file_name'])
-    
-    # Load and preprocess image
-    image = preprocess_image(image_path, bbox)
-    
-    # Extract features using pre-trained CNN model
-    # feature_vector = extract_features(image)
+    area = annotation['area']
 
+    image_info = []
+    for img_metadata in data['images']:
+        if img_metadata["id"] == image_id:
+            image_info = img_metadata
+            break
+    image_path = os.path.join(os.getcwd(),'training-set', image_info['file_name'])
+    # print(image_path)
     # Load and preprocess image
-    image = cv2.imread(image_path)
-    a, b, w, h = [int(x) for x in bbox]
-    roi = image[b:b+h, a:a+w]
+    # roi = preprocess_image(image_path, bbox)
+    img = cv2.imread(image_path)
+    max_shape = max(max_shape, np.array(img).shape)
 
     # extracting features
-    feature_vector = extract_features(roi)
     
-    # For illustration purposes, let's use a placeholder feature vector
-    # feature_vector = np.random.rand(1000)
-    
-    # Append feature vector to X
-    X.append(feature_vector)
+    X[image_id].append([int(x) for x in bbox])
     
     # Append category label to y
-    y.append(category_id)
+    y[image_id].append(category_id)
 
-    # Data Augmentation Part
-    for aug_image in augment_image(roi):
-        feature_vector = extract_features(aug_image)
-        X.append(feature_vector)
-        y.append(category_id)
+train_X = []
+train_Y = []
 
+print(max_shape)
+# for i in range(len(X)):
+for i in range(len(X)):
+    image_info = []
+    for img_metadata in data['images']:
+        if img_metadata["id"] == i:
+            image_info = img_metadata
+            break
+    image_path = os.path.join(os.getcwd(),'training-set', image_info['file_name'])
+    # print(image_path)
+    image = cv2.imread(image_path)
+    image_shape = np.array(image).shape
+    background = np.zeros(max_shape, dtype=np.uint8)
+    background[0:image_shape[0], 0:image_shape[1]] = image
 
+    image=background
+    # image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+
+    bbox_list = X[i]
+    print(image.shape)
+    # print(y[image_id])
+    
+    seg_mask_map = np.zeros(image.shape[:2], dtype=np.uint8)
+    # print(y[i][index])
+    for index in range(len(bbox_list)):
+        label = y[i][index]
+        bbox = bbox_list[index]
+        # roi = preprocess_image(image_path, bbox)
+        # x, y, w, h = bbox
+        seg_mask_map[bbox[1]:bbox[1]+bbox[3], bbox[0]:bbox[0]+bbox[2]] = label+1 # 1 is option 2 is question 0 is nothing
+        index+=1
+    # print(seg_mask_map)
+    train_X.append(np.array(image).flatten())
+    train_Y.append(seg_mask_map.flatten())
+
+# exit(1)
 # Convert lists to numpy arrays
-X = np.array(X)
-y = np.array(y)
+train_X = np.array(train_X)
+# X = np.reshape(X.shape[1],-1)
+# n1, nx, ny = X.shape
+# X = np.reshape(X, (n1, nx*ny))
+train_Y = np.array(train_Y)
+print(train_X.shape)
+print(train_Y.shape)
 
 
+# Computationally very expensive
+exit(1)
 
+# print(X,'\n', y)
 # Split data into training and testing sets
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+X_train, X_test, y_train, y_test = train_test_split(train_X, train_Y, test_size=0.2, random_state=42)
 
 # Initialize logistic regression model
 
@@ -140,11 +167,17 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_
 
 # n_estimators_list = [570,585] ->570 max
 
+# exit(1)
 # for n in range(n_estimators_list):
-randomForest = RandomForestClassifier(n_estimators=570, random_state=42)
+randomForest = RandomForestClassifier(n_estimators=10, random_state=42)
 
 # Train the model
 randomForest.fit(X_train, y_train)
+
+import joblib
+
+# Save the trained model
+joblib.dump(randomForest, 'random_forest_model.pkl')
 
 y_pred = randomForest.predict(X_test)
 
@@ -169,7 +202,7 @@ conf_matrix = confusion_matrix(y_test, y_pred)
 
 # Plot confusion matrix
 plt.figure(figsize=(8, 6))
-sns.heatmap(conf_matrix, annot=True, fmt='d', cmap="Blues", xticklabels=['Class 0', 'Class 1'], yticklabels=['Class 0', 'Class 1'])
+sns.heatmap(conf_matrix, annot=True, fmt='d', cmap="Blues", xticklabels=['Class 1', 'Class 2'], yticklabels=['Class 1', 'Class 2'])
 plt.xlabel('Predicted')
 plt.ylabel('Actual')
 plt.title('Confusion Matrix')

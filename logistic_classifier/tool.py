@@ -1,9 +1,7 @@
 import cv2
 import PyPDF2 
 import pytesseract
-from pytesseract import Output
 import re
-from io import BytesIO
 import joblib
 
 pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
