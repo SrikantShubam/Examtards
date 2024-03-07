@@ -11,11 +11,12 @@ function Sidenav({ handleCategoryClick }) {
       .then(response => {
         // Sort the categories to have 'Popular' at the top
         const sortedCategories = response.data.categories.sort((a, b) => {
-          if (a === 'popular') return -1;
-          if (b === 'Popular') return 1;
-          return 0;
+          if (a === 'upcoming') return -1;  // 'upcoming' comes first
+          if (b === 'upcoming') return 1;   // If 'b' is 'upcoming', it comes after 'a'
+          if (a === 'popular') return -1;  // 'popular' comes after 'upcoming'
+          if (b === 'popular') return 1;   // If 'b' is 'popular', it comes before 'a'
+          return 0;  // Default case, maintain the original order
         });
-
         setCategories(sortedCategories);
         console.log(response.data.categories);
       })

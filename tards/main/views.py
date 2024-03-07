@@ -7,43 +7,20 @@ from .serializers import ExamSerializer
 from fuzzywuzzy import fuzz
 from django.shortcuts import render, get_object_or_404
 from collections import OrderedDict
-
+from django.utils import timezone
+from datetime import timedelta
 from django.http import JsonResponse,FileResponse
 from .models import Exam, SyllabusFile, PatternFile,Category
 from urllib.parse import unquote_plus
 from django.http import HttpResponse
 from django.views.decorators.http import require_GET
+from django.db.models import Value, CharField
 
 import requests
 def homepage(request):
     return render(request, 'index.html')  
 
-# @api_view(['GET'])
-# def search_exam(request):
-#     form = ExamSearchForm(request.GET)
-#     exams = []
 
-#     if form.is_valid():
-#         search_query = form.cleaned_data['search_query'].lower()
-#         all_exams = Exam.objects.all()
-
-#         # Use fuzzy matching to filter exams
-#         threshold = 55  # Define a threshold for fuzzy matching (you can adjust this)
-#         exams = [
-#             exam for exam in all_exams
-#             if fuzz.token_set_ratio(search_query, exam.name.lower()) > threshold
-#         ]
-#     print("kuch toh mila hai")
-#     serializer = ExamSerializer(exams, many=True)
-
-#     print(type(serializer.data))
-
-#     result_dict = {
-#     'name': serializer.data[0]['name'],
-#     'exam_date': serializer.data[0]['exam_date']
-# }
-#     print(result_dict)
-#     return Response([result_dict])
 
 @api_view(['GET'])
 def search_exam(request):
@@ -72,7 +49,7 @@ def search_exam(request):
             }
             return Response([result_dict])
 
-    # If no matching exam is found or form is invalid, return an empty response
+   
     return Response([])
 
 
@@ -94,15 +71,37 @@ def exam_detail(request, exam_name):
         return JsonResponse({"error": str(e)}, status=500)
 
     
+# @api_view(['GET'])
+# def get_categories(request):
+#     try:
+#         # Get distinct category names from the Category model
+#         categories = Exam.category.through.objects.values_list('category__name', flat=True).distinct()
+#         return Response({'categories': list(categories)})
+#     except Exception as e:
+#         return Response({"error": str(e)}, status=500)
+    
+import logging
+from django.db.models import Value, CharField
+
+logger = logging.getLogger(__name__)
+from rest_framework.renderers import JSONRenderer  # Import JSONRenderer
+
 @api_view(['GET'])
 def get_categories(request):
     try:
-        # Get distinct category names from the Category model
-        categories = Exam.category.through.objects.values_list('category__name', flat=True).distinct()
-        return Response({'categories': list(categories)})
+      
+        categories = Category.objects.values_list('name', flat=True).distinct()
+
+      
+        categories = list(categories)
+        
+        categories.insert(0, 'upcoming')
+
+        return Response({'categories': categories})
     except Exception as e:
         return Response({"error": str(e)}, status=500)
-    
+
+
 @require_GET
 def serve_static_sitemap(request):
     xml_content = """<?xml version="1.0" encoding="UTF-8"?>
@@ -137,25 +136,58 @@ def serve_static_sitemap(request):
     """
     return HttpResponse(xml_content, content_type='application/xml')
     
+# @api_view(['GET'])
+# def category_data(request, category_name):
+#     try:
+#         # Get the Category object by its name
+#         category = Category.objects.get(name=category_name)
+        
+#         # Filter data based on the related Category object
+#         queryset = Exam.objects.filter(category=category)
+#         serializer = ExamSerializer(queryset, many=True)
+#         return Response(serializer.data)
+#     except Category.DoesNotExist:
+#         return Response({"message": "Category not found"}, status=404)
+#     except Exam.DoesNotExist:
+#         return Response({"message": "No data found for the given category"}, status=404)
+#     except Exception as e:
+#         return Response({"error": str(e)}, status=500)
+    
+from datetime import date, timedelta
+from rest_framework import serializers
+class ExamMinimalSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Exam
+        fields = ['name', 'exam_date']
 @api_view(['GET'])
 def category_data(request, category_name):
     try:
-        # Get the Category object by its name
-        category = Category.objects.get(name=category_name)
-        
-        # Filter data based on the related Category object
-        queryset = Exam.objects.filter(category=category)
-        serializer = ExamSerializer(queryset, many=True)
+        if category_name.lower() == 'upcoming':
+            # Calculate today's date
+            today = date.today()
+
+            # Calculate 60 days from today
+            sixty_days_from_today = today + timedelta(days=60)
+
+            # Get the exams with less than 60 days remaining until the exam date
+            queryset = Exam.objects.filter(
+                exam_date__gte=today,
+                exam_date__lte=sixty_days_from_today
+            ).order_by('exam_date')
+        else:
+            # Get the Category object by its name
+            category = Category.objects.get(name=category_name)
+
+            # Filter data based on the related Category object
+            queryset = Exam.objects.filter(category=category).order_by('exam_date')
+
+        # Serialize the queryset with the minimal serializer
+        serializer = ExamMinimalSerializer(queryset, many=True)
         return Response(serializer.data)
     except Category.DoesNotExist:
         return Response({"message": "Category not found"}, status=404)
-    except Exam.DoesNotExist:
-        return Response({"message": "No data found for the given category"}, status=404)
     except Exception as e:
         return Response({"error": str(e)}, status=500)
-    
-    
-
 
 @api_view(['GET'])
 def download_syllabus(request, exam_name):
@@ -216,32 +248,7 @@ def just_say(request):
     return Response('hey there')
 
 
-# @api_view(['GET']) 
-# def compare_syllabus(request):
-#     if request.method == 'GET':
-#         print(request)
-#         # selected_exam_names = request.GET.getlist('selected_exam_names[]')  # Receive selected exam names
 
-#         # # Fetch syllabus data for the selected exams
-#         # syllabus_data = {}
-#         # for exam_name in selected_exam_names:
-#         #     try:
-#         #         exam = Exam.objects.get(name=exam_name)
-#         #         syllabus_data[exam_name] = exam.syllabus
-#         #     except Exam.DoesNotExist:
-#         #         syllabus_data[exam_name] = None  # Handle case where exam name doesn't exist
-
-#         # # Get syllabus for exam1 and exam2
-#         # syllabus_exam1 = syllabus_data.get(selected_exam_names[0])
-#         # syllabus_exam2 = syllabus_data.get(selected_exam_names[1])
-
-#         # # Call compare_syllabus function with syllabus data of both exams
-#         # comparison_result = compare_exams(syllabus_exam1, syllabus_exam2)
-
-#         # # Return comparison result as JSON response
-#         # return JsonResponse({'comparison_result': comparison_result})
-
-#     return JsonResponse({'error': 'Invalid request method'})
 
 
 @api_view(['GET']) 
@@ -281,3 +288,27 @@ def compare_syllabus(request):
             return JsonResponse({'error': 'One or both exams do not exist'})
 
     return JsonResponse({'error': 'Invalid request method'})
+
+
+
+
+
+@api_view(['GET'])
+def upcoming_exams(request):
+    try:
+        # Calculate today's date
+        today = date.today()
+
+        # Calculate 60 days from today
+        sixty_days_from_today = today + timedelta(days=60)
+
+        # Get the exams with less than 60 days remaining until the exam date
+        upcoming_exams = Exam.objects.filter(
+            exam_date__gte=today,
+            exam_date__lte=sixty_days_from_today
+        ).order_by('exam_date')
+
+        serializer = ExamSerializer(upcoming_exams, many=True)
+        return Response(serializer.data)
+    except Exception as e:
+        return Response({"error": str(e)}, status=500)

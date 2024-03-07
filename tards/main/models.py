@@ -90,6 +90,7 @@
 from django.db import models
 import uuid
 from django.urls import reverse
+from datetime import date
 
 class Category(models.Model):
     name = models.CharField(max_length=50, unique=True)
@@ -118,7 +119,14 @@ class Exam(models.Model):
     seo_description=models.TextField(null=True, blank=True)
     important_resources = models.TextField(null=True, blank=True)  # Store as JSON string
     important_dates=models.TextField(null=True, blank=True)
-    
+
+    @property
+    def days_until_exam(self):
+        if self.exam_date:
+            today = date.today()
+            days_remaining = (self.exam_date - today).days
+            return days_remaining
+        return None
     def __str__(self):
         return str(self.name) if self.name else str(self.exam_id)
 

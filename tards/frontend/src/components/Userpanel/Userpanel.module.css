@@ -323,10 +323,10 @@ cursor: pointer;
       }
     }
     .img2 {
-      aspect-ratio: 1.03;
+     
       object-fit: auto;
       object-position: center;
-      width: 153px;
+   
       max-width: 100%;
       flex-grow: 1;
     }

@@ -2,16 +2,7 @@ import React from 'react'
 import mainlogo from './assets/images/mainlogo.png'
 function Navbar(props) {
   return (
-//     <ul className="navbar-nav">
-//     {props.links.map((link, index) => (
-//       <li key={index} className="nav-item">
-//         <a href={link.url} className="nav-link">
-//           <img src={link.image} alt={link.text} className="nav-image" />
-//           <span className="text">{link.text}</span>
-//         </a>
-//       </li>
-//     ))}
-//   </ul>
+
 
 <nav className="navbar navbar-expand-lg navbar-light bg-light">
 

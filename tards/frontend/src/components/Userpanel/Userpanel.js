@@ -1,4 +1,4 @@
-import React,{useEffect,useState,useCallback} from 'react';
+import React,{useEffect,useState,useCallback,useRef} from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { getAuth, signOut, sendPasswordResetEmail, onAuthStateChanged} from 'firebase/auth';
 import {auth,provider} from '../SignUp/config';
@@ -7,6 +7,9 @@ import star from '../../assets/images/star.svg';
 import medal from '../../assets/images/medal.svg';
 import fire from '../../assets/images/fire.svg';
 import { useDropzone } from 'react-dropzone';
+import Cropper from 'react-easy-crop'
+
+
 
 function Userpanel() {
 
@@ -81,33 +84,57 @@ useEffect(() => {
       description: "Current Rank",
     },
   ];
+/* cropper*/
+const [crop, setCrop] = useState({ x: 0, y: 0 });
+const [zoom, setZoom] = useState(1);
+const fileInputRef = useRef(null);
+const [croppedAreaPixels, setCroppedAreaPixels] = useState(null);
+const [uploadedImage, setUploadedImage] = useState(null);
 
 
-  /*dropzone*/
-  const [imageUrl, setImageUrl] = useState('');
-  const [uploadedImage, setUploadedImage] = useState(null);
+const onCropChange = useCallback((crop) => {
+  setCrop(crop);
+}, []);
 
+const onZoomChange = useCallback((zoom) => {
+  setZoom(zoom);
+}, []);
 
-  const handleImageUpload = (file) => {
-    if (file) {
-      // Perform image upload logic here
-      const imageUrl = URL.createObjectURL(file);
-      setUploadedImage(imageUrl);
-      return imageUrl; // Return the URL
-    }
-  };
-  const onDrop = useCallback((acceptedFiles) => {
-    // Perform image upload logic and update state with the uploaded image URL
-    const imageUrl = handleImageUpload(acceptedFiles[0]);
-    setImageUrl(imageUrl);
-  }, []);
+const openFileInput = () => {
+  if (fileInputRef.current) {
+    fileInputRef.current.click();
+  }
+};
 
+const onCropComplete = useCallback((croppedArea, croppedAreaPixels) => {
+  setCroppedAreaPixels(croppedAreaPixels);
+}, []);
+
+const handleImageUpload = useCallback((file) => {
+  if (file) {
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      
+    };
+    reader.readAsDataURL(file);
+  }
+}, []);
+
+const saveCroppedImage = () => {
+  // Process the cropped image using croppedAreaPixels
+  // For example, you can send croppedAreaPixels to the server for processing
+};
+
+const onDrop = useCallback((acceptedFiles) => {
+  const file = acceptedFiles[0];
+  handleImageUpload(file);
+}, [handleImageUpload]);
 
   const { getRootProps, getInputProps } = useDropzone({
     onDrop,
-    accept: 'image/*', // Accept only image files
-    maxSize: 10485760, // Maximum file size (in bytes), e.g., 10MB
-    multiple: false, // Allow only single file upload
+    accept: 'image/*',
+    maxSize: 10485760,
+    multiple: false,
   });
  
   return (
@@ -200,31 +227,46 @@ useEffect(() => {
                     <div className={styles}>
                       <div className={styles.box}>
                         <div className={styles.column2}>
-                     
+                      
+                
                         {uploadedImage ? (
-                          <img src={uploadedImage} alt="Uploaded" className={styles.img2} />
-                        ) : (
-                          <img
-                            loading="lazy"
-                            srcSet="https://images.unsplash.com/photo-1605979399824-542335ee35d5?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-                            className={styles.img2}
+                          <div>
+                            <div style={{ marginTop: '20px' }}>
+                            <Cropper
+                            image={uploadedImage}
+                            crop={crop}
+                            zoom={zoom}
+                            aspect={1}
+                            onCropChange={onCropChange}
+                            onZoomChange={onZoomChange}
+                            onCropComplete={onCropComplete}
+                            cropShape="square"
+                            showGrid={false}
                           />
-                        )}
-                        </div>
-                          <div className={styles.column3}>
-                          <div handleImageUpload={handleImageUpload} />
-                          <div className={styles.div2}>
-                          <div {...getRootProps()} >
+                            </div>
+                            <img src={uploadedImage} alt="Uploaded" className={styles.img2} />
+                            <button onClick={saveCroppedImage}>Save</button>
+          <button onClick={openFileInput}>Upload New Image</button>
+          <input
+            type="file"
+            ref={fileInputRef}
+            onChange={(event) => handleImageUpload(event.target.files[0])}
+            style={{ display: 'none' }}
+          />
+                  
+                          </div>
+                        ) : (
+                          <div {...getRootProps()} style={{ border: '2px dashed black', padding: '20px', textAlign: 'center' }}>
                             <img
                               loading="lazy"
-                              src="https://cdn.builder.io/api/v1/image/assets/TEMP/2e3fe9e108ca0288b9630020840b2a273568253b320805ffa5c5e0db3bc29aa4?apiKey=de722ffef7e043389cb3e537e0a30338&"
-                              className={styles.img3}
+                              src="https://images.unsplash.com/photo-1605979399824-542335ee35d5?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                              className={styles.img2}
                             />
-                            
                             <input {...getInputProps()} />
-                            <p>Click to upload new user image</p>
+                            <p className='pt-3'>Click to upload new user image</p>
                           </div>
-                          </div>
+                        )}
+                        
                         </div>
                       </div>
                     </div>
