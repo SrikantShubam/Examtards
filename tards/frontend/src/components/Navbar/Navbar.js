@@ -11,14 +11,16 @@ import "./navbar.css";
 function Navbar(props) {
   const auth = getAuth();
   const location = useLocation();
+  const [isPhotoURLLoaded, setIsPhotoURLLoaded] = useState(false);
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       setUser(user);
+      setIsPhotoURLLoaded(!!user?.photoURL); // Set isPhotoURLLoaded based on user.photoURL availability
     });
-
+  
     return () => unsubscribe();
   }, []);
 
@@ -84,16 +86,17 @@ function Navbar(props) {
       </Link>
 
       <div className="nav-item dropdown">
+  
       {user && (
         <div className="profile-image-container" onClick={handleDropdownToggle}>
-          {user.photoURL ? (
-            <img src={user.photoURL} alt="User" className="profile-image" />
+          {isPhotoURLLoaded ? (
+            user.photoURL ? (
+              <img src={user.photoURL} alt="User Profile" className="profile-image" />
+            ) : (
+              <img src={defaultuser} alt="Default User" className="profile-image" />
+            )
           ) : (
-            <img
-              src={defaultuser}  
-              alt="Default User"
-              className="profile-image"
-            />
+            <div className="loading-spinner">Loading...</div> // or render a fallback image
           )}
         </div>
       )}

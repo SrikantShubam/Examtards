@@ -9,8 +9,8 @@ import { Link } from 'react-router-dom';
 
 
 import defaultuser from '../../assets/images/usercute.webp';
-
-
+/*exam add */
+import quizData from '../../../src/exams/results.json';
 
 function Dashboard(props) {
 
@@ -37,6 +37,24 @@ function Dashboard(props) {
   
    
   }, [user]); 
+
+  const addQuizToFirestore = async () => {
+    try {
+      const db = getFirestore();
+      const examRef = doc(collection(db, 'quizzes'), 'exam1');
+      const subjectRef = doc(collection(examRef, 'subjects'), 'General Compulsory');
+      const documentRef = doc(collection(subjectRef, 'questions'));
+      await setDoc(documentRef, { questions: quizData });
+      console.log('Quiz data added to Firestore successfully!');
+    } catch (error) {
+      console.error('Error adding quiz data to Firestore: ', error);
+    }
+  };
+
+  useEffect(() => {
+    // addQuizToFirestore();
+  }, []);
+ 
 
   const fetchUserAddedExams = async () => {
     if (!user) {
@@ -217,7 +235,7 @@ const calculateCountdown = (examDate) => {
         <div className="div-13">
           <div className="div-14">
             <div id="your_exams">
-              <div className="div-15">
+              <div className="div-15 g1">
                 <div className="div-16">
             
                 <div className="div-17">
@@ -300,7 +318,7 @@ const calculateCountdown = (examDate) => {
               </div>
             </div>
             <div className="column-6">
-              <div className="div-22">
+              <div className="div-22 g2">
                 <div className="div-23">Your Ranking</div>
                 <div className="div-24">
                   <div className="div-25">Rank</div>
@@ -317,78 +335,109 @@ const calculateCountdown = (examDate) => {
         {showPopup && (
           <Popup searchResults={searchResults} closePopup={closePopup}  showButtons={true} addExam={addExam}/>
         )}   
-        <div className="div-13">
-        <div className="div-14">
-          <div className="your_exams">
-            <div className="div-15">
-              <div className="div-16">
-                <div className="column-4">
-                  <div className="div-17">
-                    <div className="div-18">Available Exams</div>
-                    <p className='mt-3'>
-                    2 or 3 hour real mock exams paper . Let the odds be in your favour.
-                    </p>
-                  </div>
-                </div>
-              
-              </div>
-              <div className="row">
-              <div className="col-md-9">
-              
-              <h3>UPSC EXAM</h3>
-              <div className="d-flex flex-direction-row">
-              <h6>UPSC EXAM</h6>  
-               <h6 className='px-1'>UPSC EXAM</h6>
-                <h6 className='px-1'>UPSC EXAM</h6>
-              </div>
-           
-            
-            
-              
-              </div>
-              <div className="col-md-3">
-              <button className="btn btn-primary mx-3">hey</button>
-              <button className="btn btn-primary">hey</button>
-              </div>
-             
-          </div>
-            </div>
-            
-          </div>
-          <div className="column-6">
-          <div className="featured-tests">
-          <header className="header">Available Tests</header>
-          <p className="description">
-            For the fast and the furious! Tests that make you pull your eyes out!
-          </p>
-          <div className="test-wrapper">
-            <div className="test-container">
-              <h2 className="test-title">UPSC Prelims Exam SP4</h2>
-              <div className="start-button">
-                <button className="start-btn">Start</button>
-                <img
-                  loading="lazy"
-                  src="https://cdn.builder.io/api/v1/image/assets/TEMP/65cb2edacc184908b2d0b7cb965e37398e29b840ed96897f15be75775102ce11?apiKey=de722ffef7e043389cb3e537e0a30338&"
-                  className="test-image"
-                  alt="Test Image"
-                />
-              </div>
-            </div>
-          </div>
-          </div>
-          </div>
+      
+        <div className="user-wrapper">
+          
+        <div className="div-4">
+       
+       
         </div>
      
+  
+    </div>
+    <div className="div-13">
+      <div className="div-14">
+        <div id="your_exams">
+          <div className="div-15 g2">
+            <div className="div-16">
+        
+            <div className="div-17">
+            <div className="div-18">Available Exams</div>
+       
+     
+      
+              <p className='mt-3 '>
+              2 or 3 hour real mock exams paper . Let the odds be in your favour !
+              </p>
+         
+              {allExams.length > 0 ? (
+                allExams.map((exam, index) => (
+                    <div className="refined-content my-4" key={index}>
+                        <div className="row">
+                            {/* Exam Name Section */}
+                            <div className="col-lg-6">
+                                <h2 className='text-start'>{exam.name}</h2>
+                            </div>
+                            {/* Remaining content goes here */}
+                        </div>
+                    </div>
+                ))
+            ) : (
+                <h5 className='mt-3'>Add in an exam in 'Your exams' section to see related exams</h5>
+            )}
+            <div className="row">
+              <div className="col-6">  <button className=" exam-btn mt-3 mb-5">View All Exams </button></div>
+            </div>
+          
+            
+          
+        </div>
+        
+              
+          
+        
+             
+            </div>
+          </div>
+        </div>
+        <div className="column-6">
+          <div className="div-22 g1">
+            <div className="div-23">Your Ranking</div>
+            <div className="div-24">
+              <div className="div-25">Rank</div>
+              <div className="div-26">Category</div>
+            </div>
+            <div className="div-27">
+              <li className="div-28">257</li>
+              <li className="div-29">Medical</li>
+            </div>
+          </div>
+        </div>
       </div>
-    
+    </div>
       
       </div>
    
       <style jsx>{`
-
+      .exam-btn {
+        border:none;
+        -webkit-border-radius: 30;
+        -moz-border-radius: 30;
+        border-radius: 30px;
+        -webkit-box-shadow: 0px 6px 30px rgba(0, 0, 0, 0.3); /* Adjusted box shadow with opacity */
+        -moz-box-shadow: 0px 6px 30px rgba(0, 0, 0, 0.3);
+        box-shadow: 0px 6px 30px rgba(0, 0, 0, 0.3)
+        font-family: 'Roboto';
+        color: #000000;
+        font-size: 24px;
+        background: #ffffff;
+        padding: 10px 20px; 
+        text-decoration: none;
+      }
+      
+      .exam-btn:hover {
+        background: #001a41;
+        text-decoration: none;
+        color: white;
+      }
+      
       @media (max-width: 991px) {
         .points {
           font-size: 40px;
+        }
+        .exam-btn{
+          font-size: 18px;
+          padding: 8px 16px; 
         }
       }
       
@@ -591,13 +640,24 @@ const calculateCountdown = (examDate) => {
             width: 100%;
           }
         }
+        :root {
+          --material-theme-sys-light-primary-container: #d8e2ff;
+          
+        
+          --material-theme-sys-light-surface-variant:#e1e2ec;
+          )
+         
+        }
+        .g1{
+          background-color:var(--material-theme-sys-light-primary-container);
+        }
+        .g2{
+          background-color:var(--material-theme-sys-light-surface-variant);
+        }
         .div-15 {
           justify-content: center;
           border-radius: 10px;
-          background-color: var(
-            --material-theme-sys-light-primary-container,
-            #d8e2ff
-          );
+      
           flex-grow: 1;
           width: 100%;
           padding: 40px ;
@@ -670,10 +730,7 @@ const calculateCountdown = (examDate) => {
         }
         .div-20 {
           border-radius: 15px;
-          background-color: var(
-            --material-theme-sys-light-on-primary-fixed-variant,
-            #004494
-          );
+          background-color: ;
           display: flex;
           margin-top: 114px;
           flex-grow: 1;
@@ -722,10 +779,7 @@ const calculateCountdown = (examDate) => {
         }
         .div-22 {
           border-radius: 10px;
-          background-color: var(
-            --material-theme-sys-light-surface-variant,
-            #e1e2ec
-          );
+        
           display: flex;
           width: 100%;
           flex-grow: 1;

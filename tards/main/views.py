@@ -22,35 +22,38 @@ def homepage(request):
 
 
 
+
+
 @api_view(['GET'])
 def search_exam(request):
     form = ExamSearchForm(request.GET)
-    print(form)
     if form.is_valid():
         search_query = form.cleaned_data['search_query'].lower()
         all_exams = Exam.objects.all()
 
-        # Use fuzzy matching to find the exam with the closest match
-        
-        best_match = None
-        best_ratio = 55
+        # First, try to find an exact match (case-insensitive)
+        exact_matches = [exam for exam in all_exams if exam.name.lower() == search_query]
+
+        # If exact matches are found, return them
+        if exact_matches:
+            results = [{'name': exam.name, 'exam_date': exam.exam_date} for exam in exact_matches]
+            return JsonResponse(results, safe=False)
+
+        # If no exact match is found, use fuzzy matching to find the closest matches
+        matching_exams = []
+        threshold = 65  # Adjust the threshold as needed
 
         for exam in all_exams:
             ratio = fuzz.token_set_ratio(search_query, exam.name.lower())
-            if ratio > best_ratio:
-                best_ratio = ratio
-                best_match = exam
+            if ratio > threshold:
+                matching_exams.append({'name': exam.name, 'exam_date': exam.exam_date})
 
-        if best_match:
-            # If a matching exam is found, return its name and exam date
-            result_dict = {
-                'name': best_match.name,
-                'exam_date': best_match.exam_date
-            }
-            return Response([result_dict])
+        if matching_exams:
+            # If matching exams are found, return them
+            return JsonResponse(matching_exams, safe=False)
 
-   
-    return Response([])
+    return JsonResponse([], safe=False)
+
 
 
 @api_view(['GET'])
