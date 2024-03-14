@@ -4,8 +4,9 @@ import './Dashboard.css';
 import { getAuth, signOut, onAuthStateChanged} from 'firebase/auth';
 import {auth,provider} from '../SignUp/config';
 import Popup from '../Popup/Popup';
-import { getFirestore, collection, setDoc,getDoc,addDoc, query, where, getDocs, deleteDoc, doc } from 'firebase/firestore';
+import { getFirestore, collection, setDoc,getDoc,collectionGroup,addDoc, query, where, getDocs, deleteDoc, doc } from 'firebase/firestore';
 import { Link } from 'react-router-dom';
+
 
 
 import defaultuser from '../../assets/images/usercute.webp';
@@ -41,9 +42,13 @@ function Dashboard(props) {
   const addQuizToFirestore = async () => {
     try {
       const db = getFirestore();
-      const examRef = doc(collection(db, 'quizzes'), 'exam1');
-      const subjectRef = doc(collection(examRef, 'subjects'), 'General Compulsory');
-      const documentRef = doc(collection(subjectRef, 'questions'));
+      const examName = 'CUET UG'; // Change this to your actual exam name
+      const subjectName = 'General Compulsory';
+      const paperName = 'CUET_UG_102'
+      const examRef = doc(collection(db, 'quizzes'), examName);
+      const subjectRef = doc(collection(examRef, 'subjects'), subjectName);
+      const documentRef = doc(collection(subjectRef, 'questions'), paperName)
+      
       await setDoc(documentRef, { questions: quizData });
       console.log('Quiz data added to Firestore successfully!');
     } catch (error) {
@@ -160,7 +165,7 @@ function Dashboard(props) {
   
         const examsData = userExamsSnapshot.data().exams || [];
         setAllExams(examsData);
-        console.log('Total read operations fetched:', examsData.length);
+        // console.log('Total read operations fetched:', examsData.length);
       } catch (error) {
         console.error('Error fetching all exams:', error);
       }
@@ -185,6 +190,335 @@ const calculateCountdown = (examDate) => {
 
   return { days, hours, minutes };
 };
+
+
+/*------fetch exam-data-------*/
+
+// const fetchExamData = async (examName) => {
+//   try {
+//     const db = getFirestore();
+//     const examRef = doc(collection(db, 'quizzes'), examName);
+//     const examSnapshot = await getDoc(examRef);
+
+//     if (examSnapshot.exists()) {
+//       const subjectCollectionRef = collection(examRef, 'subjects');
+//       const subjectSnapshot = await getDocs(subjectCollectionRef);
+
+//       if (!subjectSnapshot.empty) {
+//         const paperCollectionRefs = subjectSnapshot.docs.map((doc) =>
+//           collection(doc.ref, 'questions')
+//         );
+
+//         for (const paperCollectionRef of paperCollectionRefs) {
+//           const paperSnapshot = await getDocs(paperCollectionRef);
+
+//           if (!paperSnapshot.empty) {
+//             const paperNames = paperSnapshot.docs.map((doc) => doc.id);
+//             return paperNames;
+//           }
+//         }
+//       } else {
+//         console.log('No subjects found for this exam.');
+//       }
+//     } else {
+//       console.log('No exam found with the given name.');
+//     }
+//   } catch (error) {
+//     console.error('Error fetching exam data: ', error);
+//   }
+
+//   return []; // Return an empty array if no paperName is found
+// };
+
+// const fetchExamData = async (examName) => {
+//   try {
+//     const db = getFirestore();
+//     const quizzesCollectionGroup = collectionGroup(db, 'quizzes');
+//     const quizzesSnapshot = await getDocs(quizzesCollectionGroup);
+
+//     const examDoc = quizzesSnapshot.docs.find((doc) => doc.id === examName);
+
+//     if (examDoc) {
+//       const subjectsCollectionRef = collection(examDoc.ref, 'subjects');
+//       const subjectsSnapshot = await getDocs(subjectsCollectionRef);
+
+//       if (!subjectsSnapshot.empty) {
+//         const questionsCollectionGroupRefs = subjectsSnapshot.docs.map((doc) =>
+//           collectionGroup(doc.ref, 'questions')
+//         );
+
+//         let paperNames = [];
+
+//         for (const questionsCollectionGroupRef of questionsCollectionGroupRefs) {
+//           const questionsSnapshot = await getDocs(questionsCollectionGroupRef);
+
+//           if (!questionsSnapshot.empty) {
+//             const names = questionsSnapshot.docs.map((doc) => doc.id);
+//             paperNames = paperNames.concat(names);
+//           }
+//         }
+//         console.log(paperNames);
+//         return paperNames;
+//       } else {
+//         console.log('No subjects found for this exam.');
+//       }
+//     } else {
+//       console.log('No exam found with the given name.');
+//     }
+//   } catch (error) {
+//     console.error('Error fetching exam data: ', error);
+//   }
+
+//   return [];
+// };
+const [paperNames, setPaperNames] = useState({});
+const [allExams2, setAllExams2] = useState([])
+// const fetchExamData = async (examName) => {
+//   try {
+//     const db = getFirestore();
+//     const quizzesCollectionGroup = collectionGroup(db, 'quizzes');
+//     const quizzesSnapshot = await getDocs(quizzesCollectionGroup);
+
+//     const examDoc = quizzesSnapshot.docs.find((doc) => doc.id === examName);
+
+//     if (examDoc) {
+//       const subjectsCollectionRef = collection(examDoc.ref, 'subjects');
+//       const subjectsSnapshot = await getDocs(subjectsCollectionRef);
+
+//       if (!subjectsSnapshot.empty) {
+//         for (const subjectDoc of subjectsSnapshot.docs) {
+//           if (subjectDoc.id === 'General Compulsory') {
+//             const questionsCollectionRef = collection(subjectDoc.ref, 'questions');
+//             const questionsSnapshot = await getDocs(questionsCollectionRef);
+
+//             if (!questionsSnapshot.empty) {
+//               const paperNames = questionsSnapshot.docs.map((doc) => doc.id);
+//               console.log(paperNames);
+//               return paperNames;
+//             } else {
+//               console.log('No questions found for General Compulsory.');
+//             }
+//           }
+//         }
+//       } else {
+//         console.log('No subjects found for this exam.');
+//       }
+//     } else {
+//       console.log('No exam found with the given name.');
+//     }
+//   } catch (error) {
+//     console.error('Error fetching exam data: ', error);
+//   }
+
+//   return [];
+// };
+
+// useEffect(() => {
+//   const fetchPaperNames = async () => {
+//     const examPaperNames = {};
+//     for (const exam of allExams2) {
+//       const names = await fetchExamData(exam.name);
+//       examPaperNames[exam.name] = names;
+//     }
+//     setPaperNames(examPaperNames);
+//   };
+//   fetchPaperNames();
+// }, [allExams2]);
+/**debug exam names */
+
+const checkQuizzesCollection = async () => {
+  try {
+    const db = getFirestore();
+    const quizzesCollectionRef = collection(db, 'quizzes');
+    const quizzesSnapshot = await getDocs(quizzesCollectionRef);
+
+    console.log('Quizzes Snapshot:', quizzesSnapshot.docs);
+
+    if (!quizzesSnapshot.empty) {
+      let cuetUGExists = false;
+      quizzesSnapshot.forEach((doc) => {
+        console.log('Document ID:', doc.id);
+        console.log('Document Data:', doc.data());
+        if (doc.id === 'CUET UG') {
+          cuetUGExists = true;
+          return;
+        }
+      });
+      
+      if (cuetUGExists) {
+        console.log('CUET UG exam document exists in the "quizzes" collection.');
+      } else {
+        console.log('CUET UG exam document does not exist in the "quizzes" collection.');
+      }
+    } else {
+      console.log('No documents found in the quizzes collection.');
+    }
+  } catch (error) {
+    console.error('Error checking quizzes collection:', error);
+  }
+};
+
+// checkQuizzesCollection();
+
+const fetchExamPaperNames = async (examName) => {
+  try {
+    const firestore = getFirestore();
+    const examRef = collection(firestore, `quizzes/${examName}/subjects`);
+    console.log('examRef path:', examRef.path);
+
+    const subjectSnapshots = await getDocs(examRef);
+    console.log('subjectSnapshots:', subjectSnapshots);
+    console.log('subjectSnapshots size:', subjectSnapshots.size);
+    const collectionRef = collection(firestore, `quizzes/CUET UG/subjects`);
+    const snapshot = await getDocs(collectionRef);
+    console.log('Collection is empty:', snapshot.empty);  
+
+    const paperNames = [];
+    console.log('going towards subject data');
+    // console.log(subjectSnapshots);
+    subjectSnapshots.forEach((subjectDoc) => {
+      console.log('1')
+      const subjectData = subjectDoc.data();
+      console.log('here is subject data')
+      console.log('Subject Data:', subjectData);
+
+      console.log('Subject Document Path:', subjectDoc.ref.path);
+
+      console.log('suiiiiiiii->',subjectData.questions);
+      const subjectQuestions = subjectData.questions || {};
+      paperNames.push(...Object.keys(subjectQuestions));
+    });
+    // console.log('money money....',paperNames);
+    return paperNames;
+  } catch (error) {
+    console.error('Error fetching exam paper names:', error);
+    return [];
+  }
+};
+
+// // Usage example
+// const examName = 'CUET UG';
+// fetchExamPaperNames(examName)
+//   .then((paperNames) => {
+//     // console.log('Exam paper names:', paperNames);
+//   })
+//   .catch((error) => {
+//     console.error('Error:', error);
+//   });
+
+
+
+const fetchQuestionPaper = async (examName) => {
+  try {
+    const firestore = getFirestore();
+    const quizzesRef = collection(firestore, 'quizzes', examName, 'subjects');
+    const subjectsSnapshot = await getDocs(quizzesRef);
+
+    let questionPaper = '';
+
+    subjectsSnapshot.forEach(async (subjectDoc) => {
+      const questionsRef = collection(subjectDoc.ref, 'questions');
+      const questionsSnapshot = await getDocs(questionsRef);
+
+      questionsSnapshot.forEach((questionDoc) => {
+        if (questionDoc.id.startsWith(examName)) {
+          questionPaper = questionDoc.id;
+        }
+      });
+    });
+
+    if (questionPaper) {
+      return questionPaper;
+    } else {
+      return 'Question paper not found for the specified exam.';
+    }
+  } catch (error) {
+    console.error('Error fetching question paper:', error);
+    return 'An error occurred while fetching the question paper.';
+  }
+};
+
+
+
+
+  const printSubjectsInExam = async (examName) => {
+    try {
+      const firestore = getFirestore();
+      const quizzesRef = collection(firestore, 'quizzes', examName, 'subjects');
+      const subjectsSnapshot = await getDocs(quizzesRef);
+  
+      if (subjectsSnapshot.empty) {
+        console.log('No subjects found for the specified exam.');
+        return;
+      }
+  
+      console.log('Subjects in the specified exam:');
+      subjectsSnapshot.forEach((subjectDoc) => {
+        console.log(subjectDoc.id);
+      });
+    } catch (error) {
+      console.error('Error fetching subjects:', error);
+    }
+  };
+
+
+  
+  const fetchSubcollectionNames = async (examName) => {
+    try {
+      const firestore = getFirestore();
+      const subjectsRef = collection(firestore, 'quizzes', examName, 'subjects');
+      
+      const subjectsSnapshot = await getDocs(subjectsRef);
+      if (subjectsSnapshot.empty) {
+        console.log(`No subjects found for the exam "${examName}".`);
+        return [];
+      }
+  
+      const subcollectionNames = [];
+  
+      for (const subjectDoc of subjectsSnapshot.docs) {
+        const subcollectionsRef = collection(subjectDoc.ref, 'questions').withConverter({
+          fromFirestore: (snapshot) => snapshot.id,
+          toFirestore: (name) => firestore.FieldValue.serverTimestamp(),
+        });
+  
+        const subcollectionsSnapshot = await getDocs(subcollectionsRef);
+        subcollectionsSnapshot.forEach((subcollectionDoc) => {
+          subcollectionNames.push(subcollectionDoc.id);
+        });
+      }
+  
+      return subcollectionNames;
+    } catch (error) {
+      console.error('Error fetching subcollection names:', error);
+      return [];
+    }
+  };
+  
+  // Usage example
+  const examName = 'CUET UG';
+  fetchSubcollectionNames(examName)
+    .then((subcollectionNames) => {
+      if (subcollectionNames.length > 0) {
+        console.log(`Subcollections found for the exam "${examName}":`, subcollectionNames);
+      } else {
+        console.log(`No subcollections found for the exam "${examName}".`);
+      }
+    })
+    .catch((error) => {
+      console.error('Error:', error);
+    });
+  
+  
+  
+  
+  
+  
+  
+
+
+
+
   return (
     <>
    
@@ -361,20 +695,40 @@ const calculateCountdown = (examDate) => {
               </p>
          
               {allExams.length > 0 ? (
-                allExams.map((exam, index) => (
+                <div>
+                  {allExams.map((exam, index) => (
                     <div className="refined-content my-4" key={index}>
-                        <div className="row">
-                            {/* Exam Name Section */}
-                            <div className="col-lg-6">
-                                <h2 className='text-start'>{exam.name}</h2>
+                      <div className="row align-items-center">
+                        {/* Exam Name Section */}
+                        {/* Get paperName values */}
+                        <div className="col-lg-6" key={index}>
+                          {paperNames[exam.name] ? (
+                            <div>
+                              <p>Paper names found:</p>
+                              <ul>
+                                {paperNames[exam.name].map((paperName, idx) => (
+                                  <li key={idx}>{paperName}</li>
+                                ))}
+                              </ul>
                             </div>
-                            {/* Remaining content goes here */}
+                          ) : (
+                            <p>No paper names found for {exam.name}</p>
+                          )}
                         </div>
+                        <div className="col-lg-6">
+                          <h5 className='text-start'>
+                            <button className=" exam-btn">View All Exams </button>
+                          </h5>
+                        </div>
+                      </div>
                     </div>
-                ))
-            ) : (
-                <h5 className='mt-3'>Add in an exam in 'Your exams' section to see related exams</h5>
-            )}
+                  ))}
+                </div>
+              ) : (
+                <h5 className='mt-3'>Add an exam in the 'Your exams' section to see related exams</h5>
+              )}
+              
+              
             <div className="row">
               <div className="col-6">  <button className=" exam-btn mt-3 mb-5">View All Exams </button></div>
             </div>
