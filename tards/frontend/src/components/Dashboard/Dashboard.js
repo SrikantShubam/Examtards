@@ -39,23 +39,55 @@ function Dashboard(props) {
    
   }, [user]); 
 
+  // const addQuizToFirestore = async () => {
+  //   try {
+  //     const db = getFirestore();
+  //     const examName = 'CUET UG'; // Change this to your actual exam name
+  //     const subjectName = 'General Compulsory';
+  //     const paperName = 'CUET_UG_102'
+  //     const examRef = doc(collection(db, 'quizzes'), examName);
+  //     const subjectRef = doc(collection(examRef, 'subjects'), subjectName);
+  //     const documentRef = doc(collection(subjectRef, 'questions'), paperName)
+      
+  //     await setDoc(documentRef, { questions: quizData });
+  //     console.log('Quiz data added to Firestore successfully!');
+  //   } catch (error) {
+  //     console.error('Error adding quiz data to Firestore: ', error);
+  //   }
+  // };
   const addQuizToFirestore = async () => {
     try {
       const db = getFirestore();
-      const examName = 'CUET UG'; // Change this to your actual exam name
+      const examName = 'CUET UG';
       const subjectName = 'General Compulsory';
-      const paperName = 'CUET_UG_102'
+      const paperName = 'CUET_UG_102';
+  
       const examRef = doc(collection(db, 'quizzes'), examName);
       const subjectRef = doc(collection(examRef, 'subjects'), subjectName);
-      const documentRef = doc(collection(subjectRef, 'questions'), paperName)
-      
-      await setDoc(documentRef, { questions: quizData });
+  
+      // Store metadata
+      const metadataRef = doc(collection(subjectRef, 'metadata'), paperName);
+      await setDoc(metadataRef, { meta: quizData.meta[0] });
+  
+      // Store questions as separate sets/batches
+      const questionsRef = collection(subjectRef, 'questions', paperName, 'sets');
+      const numSets = 5; // Divide questions into 5 sets
+      const questionsPerSet = Math.ceil(quizData.questions.length / numSets);
+  
+      for (let i = 0; i < numSets; i++) {
+        const startIndex = i * questionsPerSet;
+        const endIndex = startIndex + questionsPerSet - 1;
+        const setQuestions = quizData.questions.slice(startIndex, endIndex + 1);
+  
+        const setRef = doc(questionsRef);
+        await setDoc(setRef, { questions: setQuestions });
+      }
+  
       console.log('Quiz data added to Firestore successfully!');
     } catch (error) {
       console.error('Error adding quiz data to Firestore: ', error);
     }
   };
-
   useEffect(() => {
     // addQuizToFirestore();
   }, []);
@@ -199,7 +231,7 @@ const [isLoading, setIsLoading] = useState(false);
 useEffect(() => {
   // Fetch paper names for all exams after initial render
   fetchAllPaperNames();
-  console.log("yolo");
+ 
 }, [allExams]);
 
 const fetchAllPaperNames = async () => {
@@ -530,7 +562,7 @@ useEffect(() => {
                                 <div key={idx}>
                                   <div className="d-flex justify-content-between">
                                     <h3>{paperName}</h3>
-                                    <button className="exam-btn">Attempt Exam <i className="fas fa-chevron-right"></i></button>
+                                    <button className="btn btn-gray">Attempt Exam <i className="fas fa-chevron-right"></i></button>
                                   </div>
                                   {examAttemptStatus[paperName] === true ? (
                                     <button className="btn mt-1 btn-success" style={{ borderRadius: '50px', border: 'none' }}>
@@ -580,7 +612,7 @@ useEffect(() => {
         </div>
         <div className="column-6">
           <div className="div-22 g1">
-            <div className="div-23">Your Ranking</div>
+            <div className="div-23">Available Quizzes</div>
             <div className="div-24">
               <div className="div-25">Rank</div>
               <div className="div-26">Category</div>
@@ -597,6 +629,13 @@ useEffect(() => {
       </div>
    
       <style jsx>{`
+      .btn-gray{
+        border-radius: 30px;
+        -webkit-box-shadow: 0px 6px 30px rgba(0, 0, 0, 0.3); /* Adjusted box shadow with opacity */
+        -moz-box-shadow: 0px 6px 30px rgba(0, 0, 0, 0.3);
+        padding: 10px 20px; 
+        background: #ffffff;
+      }
       .exam-btn {
         border:none;
         -webkit-border-radius: 30;
@@ -613,7 +652,7 @@ useEffect(() => {
         text-decoration: none;
       }
       
-      .exam-btn:hover {
+      .exam-btn:hover,.btn-gray:hover {
         background: #001a41;
         text-decoration: none;
         color: white;

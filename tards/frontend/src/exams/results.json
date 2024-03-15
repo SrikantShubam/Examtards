@@ -1,5 +1,11 @@
 {
-    "isMainPaper": true,
+    "meta": [
+        {
+          "isMainPaper": true,
+          "totalquestions": 100,
+          "timeAllot": 120
+        }
+      ],
     "questions": [
         {
             "question": "2. The maintenance _____ law and order is the state's responsibility.",
