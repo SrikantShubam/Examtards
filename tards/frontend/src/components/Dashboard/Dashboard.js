@@ -39,22 +39,7 @@ function Dashboard(props) {
    
   }, [user]); 
 
-  // const addQuizToFirestore = async () => {
-  //   try {
-  //     const db = getFirestore();
-  //     const examName = 'CUET UG'; // Change this to your actual exam name
-  //     const subjectName = 'General Compulsory';
-  //     const paperName = 'CUET_UG_102'
-  //     const examRef = doc(collection(db, 'quizzes'), examName);
-  //     const subjectRef = doc(collection(examRef, 'subjects'), subjectName);
-  //     const documentRef = doc(collection(subjectRef, 'questions'), paperName)
-      
-  //     await setDoc(documentRef, { questions: quizData });
-  //     console.log('Quiz data added to Firestore successfully!');
-  //   } catch (error) {
-  //     console.error('Error adding quiz data to Firestore: ', error);
-  //   }
-  // };
+ 
   const addQuizToFirestore = async () => {
     try {
       const db = getFirestore();
@@ -357,16 +342,54 @@ useEffect(() => {
   };
 
   fetchStatusForExams();
+  console.log('damn')
 }, [allExams, paperNames]);
 
 
 
 
 
+/* fetch quiz  */
 
+const fetchSubjectNames = async (examName) => {
+  try {
+    const firestore = getFirestore();
+    const subjectsRef = collection(firestore, 'quizzes', examName, 'subjects');
 
+    const subjectsSnapshot = await getDocs(subjectsRef);
+    if (subjectsSnapshot.empty) {
+      console.log(`No subjects found for the exam "${examName}".`);
+      return [];
+    }
 
+    const subjectNames = [];
 
+    for (const subjectDoc of subjectsSnapshot.docs) {
+      const subjectData = subjectDoc.data();
+      const subjectName = subjectData.name || subjectDoc.id; // Use the 'name' field or the document ID as the subject name
+      subjectNames.push(subjectName);
+    }
+
+    return subjectNames;
+  } catch (error) {
+    console.error('Error fetching subject names:', error);
+    return [];
+  }
+};
+
+const [subjectNames, setSubjectNames] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      if (allExams.length > 0) {
+        const firstExamName = allExams[0].name;
+        const fetchedSubjectNames = await fetchSubjectNames(firstExamName);
+        setSubjectNames(fetchedSubjectNames);
+      }
+    };
+
+    fetchData();
+  }, [allExams]);
 
   
  
@@ -562,7 +585,7 @@ useEffect(() => {
                                 <div key={idx}>
                                   <div className="d-flex justify-content-between">
                                     <h3>{paperName}</h3>
-                                    <button className="btn btn-gray">Attempt Exam <i className="fas fa-chevron-right"></i></button>
+                                    <button className="btn btn-gray">Attempt <i className="fas mx-2 fa-chevron-right"></i></button>
                                   </div>
                                   {examAttemptStatus[paperName] === true ? (
                                     <button className="btn mt-1 btn-success" style={{ borderRadius: '50px', border: 'none' }}>
@@ -596,7 +619,7 @@ useEffect(() => {
               
               
             <div className="row">
-              <div className="col-6">  <button className=" exam-btn mt-3 mb-5">View All Exams </button></div>
+              <div className="col-7"> <Link to='/all-exams'>  <button className=" exam-btn mt-3 mb-5">View All Exams </button> </Link> </div>
             </div>
           
             
@@ -613,14 +636,41 @@ useEffect(() => {
         <div className="column-6">
           <div className="div-22 g1">
             <div className="div-23">Available Quizzes</div>
-            <div className="div-24">
-              <div className="div-25">Rank</div>
-              <div className="div-26">Category</div>
-            </div>
-            <div className="div-27">
-              <li className="div-28">257</li>
-              <li className="div-29">Medical</li>
-            </div>
+            <p className='mt-3 '>
+            For the fast and the furious ! Tests that make you pull your eyes out!
+              </p>
+              
+              {isLoading ? (
+                <p>Loading...</p>
+              ) : allExams.length > 0 ? (
+                <div>
+                  {allExams.map((exam, index) => (
+                    <div key={index}>
+                 
+                      <div>
+                  
+                        
+                          {subjectNames.map((subjectName, idx) => (
+                            <div className='d-flex justify-content-between align-items-center'>
+                            <h5 className="mt-2" key={idx}>{subjectName}</h5>
+                            <button className="btn btn-gray">Attempt <i className="fas mx-2 fa-chevron-right"></i></button>
+                          </div>
+                            ))}
+                      
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <h5 className='mt-3'>
+                  Add an exam in the 'Your exams' section to see related exams
+                </h5>)}
+                <div className="row mt-5">
+                <div className="col-7">
+                <button className=" exam-btn mt-5 mb-5">Take Random Quiz </button>
+                </div>
+                </div>
+               
           </div>
         </div>
       </div>
@@ -635,6 +685,7 @@ useEffect(() => {
         -moz-box-shadow: 0px 6px 30px rgba(0, 0, 0, 0.3);
         padding: 10px 20px; 
         background: #ffffff;
+        color:black;
       }
       .exam-btn {
         border:none;

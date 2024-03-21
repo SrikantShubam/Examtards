@@ -12,5 +12,5 @@ import Userpanel from './Userpanel/Userpanel';
 import Login from './Login/Login';
 import ForgotPassword from './ForgotPassword/ForgotPassword'
 import Dashboard from './Dashboard/Dashboard';
-
-export {Header,Banner,Card,Sidenav,Footer,ExamDetail,CompareSyllabus,Contact,Disclaimer,SignUp,Userpanel,Login,ForgotPassword,Dashboard};
+import AllExams from './AllExams/AllExams';
+export {Header,Banner,Card,Sidenav,Footer,ExamDetail,CompareSyllabus,Contact,Disclaimer,SignUp,Userpanel,Login,ForgotPassword,Dashboard,AllExams};

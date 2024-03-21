@@ -38,17 +38,19 @@ line-height: 1.25rem;
 
 
 .form-control{
-    background-color: var(--light-on-primary-fixed-variant, #004494) !important;
+    background-color: var(--light-on-primary-fixed-variant);
     border: none;
 
       outline: none !important;
 }
  
-
+.marge{
+  margin-top: 15rem;
+}
   
 .input-group{
     background-color: var(--light-on-primary-fixed-variant, #004494);
-    margin-top: 15rem;
+   
     color: #FFF;
 border-radius: 0.9375rem!important;
 
@@ -67,7 +69,7 @@ border-radius: 0.9375rem!important;
   .search-form .input-group-text {
     border: none;
     color: white;
-    background-color: #004494;
+    background-color:  var(--light-on-primary-fixed-variant);
   }
   
   .search-form input.form-control::placeholder {
@@ -120,6 +122,9 @@ line-height: 3.25rem;
         margin-left: 1rem;
         width: 12rem;
         
+      }
+      .marge{
+        margin-top: 0rem;
       }
       
     }

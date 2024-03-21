@@ -33,7 +33,7 @@ function Banner() {
         </div>
         <div className="col-md-5  col-sm-12 ">
           <form action="/search" method="GET" className="search-form" onSubmit={handleSearch}>
-            <div className="input-group">
+            <div className="input-group marge">
               <div className="input-group-prepend">
                 <span className="input-group-text">
                   <i className="fas fa-search"></i>
