@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback, memo } from 'react';
-import { getFirestore, collection, getDocs, query, where, getDoc, doc } from 'firebase/firestore';
+import { getFirestore, collection,orderBy , getDocs, query, where, getDoc, doc } from 'firebase/firestore';
 import styles from '../AllExams/AllExams.module.css';
-
+import { Link } from 'react-router-dom';
 function AllExams() {
   const firestore = getFirestore();
 
@@ -40,83 +40,158 @@ function AllExams() {
     }, [getPopularExams]);
 
     return (
-      <>
-        {popularExams.length > 0 ? (
-          <div className="col-3">
-            <div className="card d-flex justify-content-center">
-              {popularExams.map((exam) => (
-                <div className="text-center" key={exam}><h4>{exam}</h4></div>
-              ))}
-            </div>
-          </div>
-        ) : (
-          <p>No popular exams found</p>
-        )}
-      </>
+    
+        <>
+          {popularExams.length > 0 ? (
+            popularExams.map((exam, index) => (
+              <div className="col-md-3 col-sm-12" key={index}>
+              <Link to={`/exam-series/${encodeURIComponent(exam.replace(/ /g, '-'))}`}>
+              <div className="card d-flex justify-content-center align-items-center">
+                    <div className="text-center">
+                      <h4 className="m-0">{exam}</h4>
+                    </div>
+                  </div>
+                </Link>
+              </div>
+            ))
+          ) : (
+            <p>No popular exams found</p>
+          )}
+        </>
+
+    
     );
   });
 
-  const quizzesRef = collection(firestore, 'quizzes');
+
+
+  const quizzesRef = collection(firestore, 'categories'); 
   const getExamNames = useCallback(async () => {
     const examNames = [];
-
     try {
       const quizzesSnapshot = await getDocs(quizzesRef);
       quizzesSnapshot.forEach((doc) => {
-        examNames.push(doc.id);
+        const docData = doc.data();
+        const arrayData = {};
+        const keys = Object.keys(docData);
+        keys.forEach((fieldName) => {
+          if (Array.isArray(docData[fieldName])) {
+            arrayData[fieldName] = docData[fieldName];
+          }
+        });
+        const arrayDataKeys = Object.keys(arrayData).sort(); // Sort keys alphabetically
+        examNames.push({ id: doc.id, arrayDataKeys, arrayData });
       });
+    
+      return examNames;
     } catch (error) {
       console.error('Error getting exam names:', error);
+      return [];
     }
-
-    return examNames;
   }, [quizzesRef]);
-
+  
   const ExamNames = () => {
     const [examNames, setExamNames] = useState([]);
     const [paperNames, setPaperNames] = useState([]);
-
+    const [activeExam, setActiveExam] = useState('');
+  
     useEffect(() => {
       const fetchExamNames = async () => {
         const names = await getExamNames();
         setExamNames(names);
-
+    
+        // Automatically set the first exam as active and fetch its data
         if (names.length > 0) {
-          const firstExamName = names[0];
-          const papers = await getPaperNamesForExam(firstExamName);
-          setPaperNames(papers);
+          const firstExamKey = names[0].arrayDataKeys[0];
+          setActiveExam(firstExamKey);
+          handleClick(firstExamKey);
         }
       };
-
+    
       fetchExamNames();
     }, [getExamNames]);
-
-    const getPaperNamesForExam = useCallback(async (examName) => {
-      const paperNames = [];
   
-      try {
-        const metadataRef = collection(firestore, `quizzes/${examName}/meta`);
-        const papernamesQuery = query(metadataRef, where('__name__', '==', 'papernames'));
-        const papernamesSnapshot = await getDocs(papernamesQuery);
-  
-        papernamesSnapshot.forEach((doc) => {
-          const paperNamesData = doc.data();
-          if (paperNamesData.papers) {
-            paperNames.push(...paperNamesData.papers);
+    useEffect(() => {
+      const fetchData = async () => {
+        try {
+          const quizzesSnapshot = await getDocs(quizzesRef);
+          const exams = quizzesSnapshot.map((doc) => {
+            const docData = doc.data();
+            const arrayData = {};
+            const keys = Object.keys(docData);
+            keys.forEach((fieldName) => {
+              if (Array.isArray(docData[fieldName])) {
+                arrayData[fieldName] = docData[fieldName];
+              }
+            });
+            const arrayDataKeys = Object.keys(arrayData).sort();
+            return { id: doc.id, arrayDataKeys, arrayData };
+          });
+    
+          setExamNames(exams);
+    
+          // Set the first exam as active and fetch its paperNames
+          if (exams.length > 0) {
+            const firstExam = exams[0];
+            const firstExamKey = firstExam.arrayDataKeys[0];
+            setActiveExam(firstExamKey);
+            const firstExamPaperNames = firstExam.arrayData[firstExamKey] || [];
+            setPaperNames(firstExamPaperNames);
           }
-        });
-      } catch (error) {
-        console.error(`Error getting paper names for ${examName}:`, error);
-      }
-  
-      return paperNames;
-    }, [firestore]);
+        } catch (error) {
+          console.error('Error getting exam names:', error);
+        }
+      };
+    
+      fetchData();
+    }, []);
+    
   
     const handleClick = async (examName) => {
-      const names = await getPaperNamesForExam(examName.target.value);
-      console.log(names);
-      setPaperNames(names);
+      // Find the selected exam object based on the clicked exam name
+      const selectedExam = examNames.find(exam => exam.arrayDataKeys.includes(examName));
+      
+      if (selectedExam) {
+        // Retrieve the array data associated with the selected exam
+        const arrayData = selectedExam.arrayData[examName];
+
+        setPaperNames(arrayData);
+        setActiveExam(examName);
+    
+      } else {
+        // console.error(`Exam '${examName}' not found.`);
+      }
     };
+  
+    useEffect(() => {
+      const selectedExam = examNames.find(exam => exam.arrayDataKeys.includes(activeExam));
+      if (selectedExam) {
+        const arrayData = selectedExam.arrayData[activeExam];
+        setPaperNames(arrayData);
+      } else {
+        console.error(`Exam '${activeExam}' not found.`);
+      }
+     
+    }, [activeExam, examNames]);
+    
+
+  
+
+  
+  
+  
+  
+  
+  
+  
+
+  
+
+    
+    
+    
+    
+  
   
    
 
@@ -162,35 +237,52 @@ function AllExams() {
               </div>
               <div className="row mt-5">
                 <div className="col-md-2 col-sm-6">
-                  <div>
-                    {examNames.length > 0 ? (
-                      <ul className="sidebar">
-                        {examNames.map((name) => (
-                          <li key={name}>
-                            <div className="wrapper-buttons active-side">
-                              <button onClick={handleClick} value={name} className="btn">{name}</button>
-                              <i className="fas fa-chevron-right"></i>
-                            </div>
-                          </li>
-                        ))}
-                      </ul>
-                    ) : (
-                      <p>No exams found</p>
-                    )}
-                  </div>
+                <div>
+                {examNames.length > 0 ? (
+                  <ul className="sidebar">
+                    {examNames.map((exam, index) => (
+                      exam.arrayDataKeys.map((key, idx) => (
+                        <li
+                          className={`d-flex justify-content-center align-items-center ${activeExam === key ? 'active-side' : ''}`}
+                          key={`${index}-${idx}`}
+                        >
+                          <div className="wrapper-buttons">
+                            <button onClick={() => handleClick(key)} className="btn">
+                              {key}
+                            </button>
+                          </div>
+                        </li>
+                      ))
+                    ))}
+                  </ul>
+                ) : (
+                  <p>No exams found</p>
+                )}
+              </div>
+       
+
+              
+              
+              
+              
+              
                 </div>
                 <div className="col-md-10 col-sm-6">
                 <div className="row" id="card-jum">
              
                 
-                {paperNames.length > 0 ? (
+                {paperNames && paperNames.length > 0  ? (
                   <div className="row">
-                    {paperNames.map((name, index) => (
-                      <div className="col-md-3 col-sm-12" key={index}>
-                        <div className="card"><h5 className="mt-5 mx-5">{name}</h5></div>
-                      </div>
-                    ))}
-                  </div>
+    {paperNames.map((paperName, index) => (
+      <div className="col-md-3 col-sm-12" key={index}>
+      <Link to={`/exam-series/${encodeURIComponent(paperName.replace(/ /g, '-'))}`}>
+        <div className="card">
+        <h5 className="card-title mt-3 mx-2">{paperName}</h5>
+        </div>
+        </Link>
+      </div>
+    ))}
+  </div>
                 ) : (
                   <p>No paper names found</p>
                 )}
