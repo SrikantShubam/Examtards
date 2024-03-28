@@ -33,7 +33,6 @@ gap: 4.6875rem;
     color: var(--material-theme-sys-light-on-primary-fixed-variant, #004494);
 font-family: Roboto;
 font-size: 2rem;
-font-style: italic;
 font-weight: 500;
 line-height: 2.5rem; 
 margin-bottom: 1.38rem;
@@ -348,6 +347,7 @@ color: #000!important;
     }
     #exam_details #main .col-md-5 h5{
       font-size: 1.5rem;
+      line-height: 1.8rem;
     }
     #exam_details #main .col-md-5 h6{
 font-size: 1.2rem;
