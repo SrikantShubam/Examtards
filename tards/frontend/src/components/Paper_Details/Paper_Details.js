@@ -18,12 +18,10 @@ const Paper_Details = () => {
   const [detailsData, setDetailsData] = useState(null);
   const [paperNamesWithData, setPaperNamesWithData] = useState([]);
   const [activeExam, setActiveExam] = useState("");
-
+  const [paperNamesWithDataArray, setPaperNamesWithDataArray] = useState([]);
 
 
   useEffect(() => {
-
-
     const fetchData = async () => {
       try {
         const db = getFirestore();
@@ -53,8 +51,8 @@ const Paper_Details = () => {
         const fetchedSubjectNames = subjectsSnapshot.docs.map((doc) => doc.id);
         setSubjectNames(fetchedSubjectNames);
         setActiveExam(fetchedSubjectNames[0]);
-        handleClick(fetchedSubjectNames[0]);
-        const paperNamesWithDataArray = [];
+
+        const paperNamesWithDataBySubject = {};
 
         for (const subjectName of fetchedSubjectNames) {
           const metadataCollectionRef = collection(
@@ -62,16 +60,20 @@ const Paper_Details = () => {
             `quizzes/${decodedExamName}/subjects/${subjectName}/metadata`
           );
           const metadataSnapshot = await getDocs(metadataCollectionRef);
-
+    
+          const paperNamesWithDataForSubject = [];
+    
           for (const metadataDoc of metadataSnapshot.docs) {
             const paperName = metadataDoc.id;
             const paperData = metadataDoc.data();
-            paperNamesWithDataArray.push({ paperName, paperData });
+            paperNamesWithDataForSubject.push({ paperName, paperData, subjectName });
           }
+    
+          paperNamesWithDataBySubject[subjectName] = paperNamesWithDataForSubject;
         }
-
-        setPaperNamesWithData(paperNamesWithDataArray);
-        console.log("Paper names with data:", paperNamesWithDataArray);
+    
+        setPaperNamesWithData(paperNamesWithDataBySubject);
+        console.log("Paper names with data by subject:", paperNamesWithDataBySubject);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -80,21 +82,25 @@ const Paper_Details = () => {
     fetchData();
   }, []);
   
- const handleClick = async (examName) => {
-  // Find the selected exam object based on the clicked exam name
-  const selectedExam = paperNamesWithDataArray.find((exam) => exam.paperName === examName);
+  const handleClick = async (subjectName) => {
+    console.log("Selected subject:", subjectName);
+    setActiveExam(subjectName);
   
-  if (selectedExam) {
-    // Retrieve the paper data associated with the selected exam
-    const paperData = selectedExam.paperData;
-
-    setPaperNamesWithData(paperData);
-    setActiveExam(examName);
-  } else {
-    console.error(`Exam '${examName}' not found.`);
-  }
-};
-
+    const subjectData = paperNamesWithData[subjectName];
+  
+    if (Array.isArray(subjectData) && subjectData.length > 0) {
+      subjectData.forEach((paper, index) => {
+        console.log(`Paper ${index + 1} for ${subjectName}:`);
+        console.log('"paperName":', paper.paperName);
+        console.log('"paperData":', paper.paperData);
+       
+      });
+    } else {
+      console.log(`No data found for the subject: ${subjectName}`);
+    }
+  };
+  
+  
   return (
     <>
       <div className="body">
@@ -137,54 +143,102 @@ const Paper_Details = () => {
 
         <section id="category" className="mb-5">
           <div className="row mt-5">
-          <div className="col-md-2 col-sm-12">
-          <div className={`${style.sidebarContainer} `}>
-            {subjectNames.length > 0 ? (
-              <ul className={`${style.sidebar} d-flex justify-content-center align-items-center`}>
-                {subjectNames.map((subjectName, index) => (
-                  <li
-                    className={` ${
-                      activeExam === subjectName ? "active-side" : ""
-                    }`}
-                    key={index}
+            <div className="col-md-2 col-sm-12">
+              <div className={`${style.sidebarContainer} `}>
+                {subjectNames.length > 0 ? (
+                  <ul
+                    className={`${style.sidebar} d-flex justify-content-center align-items-center`}
                   >
-                    <div className="wrapper-buttons">
-                      <button
-                        onClick={() => handleClick(subjectName)}
-                        className="btn"
+                    {subjectNames.map((subjectName, index) => (
+                      <li
+                        className={` ${
+                          activeExam === subjectName ? "active-side" : ""
+                        }`}
+                        key={index}
                       >
-                        {subjectName}
-                      </button>
-                    </div>
-                  </li>
-                ))}
-              </ul>
-            ) : (
-              <p>No exams found</p>
-            )}
-          </div>
-        </div>
-            <div className="col-md-7 col-sm-6">
-              <div className="row" >
-                {paperNamesWithData && paperNamesWithData.length > 0 ? (
-                  <div className="row">
-                    {paperNamesWithData.map((paperName, index) => (
-                      <div className="col-md-12 col-sm-12" key={index}>
-                        <Link>
-                          <div className="card">
-                            <h4 className="card-title mt-3 mx-2">
-                              {paperName.paperName}
-                            </h4>
-                          </div>
-                        </Link>
-                      </div>
+                        <div className="wrapper-buttons">
+                          <button
+                            onClick={() => handleClick(subjectName)}
+                            className="btn"
+                          >
+                            {subjectName}
+                          </button>
+                        </div>
+                      </li>
                     ))}
-                  </div>
+                  </ul>
                 ) : (
-                  <p>No paper names found</p>
+                  <p>No exams found</p>
                 )}
               </div>
             </div>
+            <div className="col-md-7 col-sm-6">
+  <div className="row">
+    {Object.entries(paperNamesWithData).map(([subjectName, paperNamesData], index) => (
+      <div key={index} className="col-md-12">
+      
+        {activeExam === subjectName ? (
+          paperNamesData.length > 0 ? (
+            paperNamesData.map((paperData, idx) => (
+              <div key={idx} className="row">
+                <div className="col-md-12 col-sm-12">
+                  <Link>
+                    <div className={style.examBox} >
+                    <div className="row mt-3 py-2 ">
+                    <div className="col-md-7 col-sm-12">
+                    <h4 className="px-3 py-2  mx-2" style={{color:"#005AC1"}}> Test Name : {paperData.paperName}</h4>
+                    </div>
+                    <div className="col-md-4 col-sm-12 mx-3 ">
+                    <button className={`btn ${style.btnGray}`}>Attempt
+
+                    <i className="fas mx-2 fa-chevron-right"></i>
+                    </button>
+                    </div>
+                   
+                    
+                    </div>
+                   
+                      <div className="card-body px-3 mx-2" style={{color:"#5C5C5C"}}>
+                        {paperData.paperData && paperData.paperData.meta && (
+                          <div className="row">
+                          <div className="col-md-4 mt-2">
+                          <div className="d-flex align-items-center ">
+                          <i className="fa-regular fa-clock mx-2"></i>
+                        
+                          <p className="m-0 ml-2">Total Time: {paperData.paperData.meta.totalquestions}</p>
+                        </div>
+                          </div>
+                          <div className="col-md-4 mt-2">
+                          <div className="d-flex align-items-center ">
+                          <i className="fa-regular fa-circle-question mx-2"></i>
+                          <p className="m-0 ml-2">Total Questions: {paperData.paperData.meta.totalquestions}</p>
+                        </div>
+                          </div>
+                          <div className="col-md-4 mt-2">
+                          <div className="d-flex align-items-center ">
+                        
+                          <i className="fa-regular fa-circle-check mx-2"></i>
+                          <p className="m-0 ml-2">Total Marks: {paperData.paperData.meta.totalmarks}</p>
+                        </div>
+                          </div>
+                          </div>
+                        
+                        
+                        )}
+                      </div>
+                    </div>
+                  </Link>
+                </div>
+              </div>
+            ))
+          ) : (
+            <p>No paper names found for this subject.</p>
+          )
+        ) : null}
+      </div>
+    ))}
+  </div>
+</div>
           </div>
         </section>
 
