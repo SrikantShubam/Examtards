@@ -1,18 +1,23 @@
 import React , { useState,useEffect } from 'react';
 import './App.css';
-import { Routes, Route} from 'react-router-dom';
+import { Routes, Route,useLocation } from 'react-router-dom';
 import ScrollToTop from "react-scroll-to-top";
 import { ReactComponent as MySVG } from "./up.svg";
-import {Header,Banner,Paper_Details,Card,Sidenav,Footer,CompareSyllabus,ExamDetail,Contact,Disclaimer,SignUp,Userpanel,Login,ForgotPassword,Dashboard,AllExams} from './components';
+import {Header,Banner,Paper_Details,Card,Sidenav,Footer,CompareSyllabus,ExamDetail,Contact,GeneralInstructions,Disclaimer,SignUp,Userpanel,Login,ForgotPassword,Dashboard,AllExams} from './components';
 
 
 
 function App() {
   const [selectedCategory, setSelectedCategory] = useState(null);
+  const location = useLocation();
+  const paperNamesData = location.state?.paperNamesWithData;
 
+
+  console.log("data aaya",paperNamesData)
   const handleCategoryClick = (category) => {
     setSelectedCategory(category);
   };
+
   useEffect(() => {
     // Make an HTTP request to the Django sitemap URL
     fetch('http://127.0.0.1:8000/sitemap.xml')
@@ -38,6 +43,15 @@ function App() {
 <Route path="/forgot-password" element={<ForgotPassword />}/>
 <Route path="/all-exams" element={<AllExams />}/>
 <Route path="/exam-series/:examName" element={<Paper_Details />} />
+
+
+<Route
+  path="/general-instructions/:examName"
+  element={<GeneralInstructions />}
+/>
+
+
+
       <Route
         path="/"
         element={

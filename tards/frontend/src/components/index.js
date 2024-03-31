@@ -14,4 +14,6 @@ import ForgotPassword from './ForgotPassword/ForgotPassword'
 import Dashboard from './Dashboard/Dashboard';
 import AllExams from './AllExams/AllExams';
 import Paper_Details from './Paper_Details/Paper_Details';
-export {Header,Banner,Card,Sidenav,Footer,ExamDetail,CompareSyllabus,Paper_Details,Contact,Disclaimer,SignUp,Userpanel,Login,ForgotPassword,Dashboard,AllExams};
+import GeneralInstructions from './GeneralInstructions/GeneralInstructions';
+
+export {Header,Banner,Card,Sidenav,Footer,ExamDetail,CompareSyllabus,Paper_Details,Contact,Disclaimer,SignUp,Userpanel,Login,ForgotPassword,Dashboard,AllExams,GeneralInstructions};

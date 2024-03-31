@@ -10,10 +10,13 @@ import {
 } from "firebase/firestore";
 import style from "./Paper_Details.module.css";
 import { Link } from "react-router-dom";
+
+
 const Paper_Details = () => {
   const [paperNames, setPaperNames] = useState([]);
   const { examName } = useParams();
   const decodedExamName = decodeURIComponent(examName.replace(/-/g, " "));
+  const cleanedExamName = decodedExamName.replace(/ /g, '-');
   const [subjectNames, setSubjectNames] = useState([]);
   const [detailsData, setDetailsData] = useState(null);
   const [paperNamesWithData, setPaperNamesWithData] = useState([]);
@@ -100,7 +103,7 @@ const Paper_Details = () => {
     }
   };
   
-  
+
   return (
     <>
       <div className="body">
@@ -174,22 +177,30 @@ const Paper_Details = () => {
             </div>
             <div className="col-md-7 col-sm-6">
   <div className="row">
+  
     {Object.entries(paperNamesWithData).map(([subjectName, paperNamesData], index) => (
       <div key={index} className="col-md-12">
       
         {activeExam === subjectName ? (
           paperNamesData.length > 0 ? (
             paperNamesData.map((paperData, idx) => (
+           
               <div key={idx} className="row">
                 <div className="col-md-12 col-sm-12">
-                  <Link>
+                <Link
+                to={{
+                  pathname: `/general-instructions/${encodeURIComponent(cleanedExamName)}`,
+                  state: { paperData },
+                }}
+                >
+             
                     <div className={style.examBox} >
                     <div className="row mt-3 py-2 ">
                     <div className="col-md-7 col-sm-12">
                     <h4 className="px-3 py-2  mx-2" style={{color:"#005AC1"}}> Test Name : {paperData.paperName}</h4>
                     </div>
                     <div className="col-md-4 col-sm-12 mx-3 ">
-                    <button className={`btn ${style.btnGray}`}>Attempt
+                    <button className={`btn mx-4 ${style.btnGray}`}>Attempt
 
                     <i className="fas mx-2 fa-chevron-right"></i>
                     </button>
@@ -205,7 +216,7 @@ const Paper_Details = () => {
                           <div className="d-flex align-items-center ">
                           <i className="fa-regular fa-clock mx-2"></i>
                         
-                          <p className="m-0 ml-2">Total Time: {paperData.paperData.meta.totalquestions}</p>
+                          <p className="m-0 ml-2">Total Time: {paperData.paperData.meta.timeAllot/60} hours</p>
                         </div>
                           </div>
                           <div className="col-md-4 mt-2">
@@ -237,6 +248,7 @@ const Paper_Details = () => {
         ) : null}
       </div>
     ))}
+   
   </div>
 </div>
           </div>
