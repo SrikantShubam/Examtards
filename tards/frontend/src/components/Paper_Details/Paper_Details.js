@@ -1,5 +1,5 @@
 import { useEffect, useState, useCallback } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom"; 
 import {
   getFirestore,
   collection,
@@ -22,6 +22,7 @@ const Paper_Details = () => {
   const [paperNamesWithData, setPaperNamesWithData] = useState([]);
   const [activeExam, setActiveExam] = useState("");
   const [paperNamesWithDataArray, setPaperNamesWithDataArray] = useState([]);
+  const navigate = useNavigate(); // Add this line to get the history object
 
 
   useEffect(() => {
@@ -176,9 +177,10 @@ const Paper_Details = () => {
               </div>
             </div>
             <div className="col-md-7 col-sm-6">
+            
   <div className="row">
-  
-    {Object.entries(paperNamesWithData).map(([subjectName, paperNamesData], index) => (
+  {Object.keys(paperNamesWithData).length > 0 ? (
+    Object.entries(paperNamesWithData).map(([subjectName, paperNamesData], index) => (
       <div key={index} className="col-md-12">
       
         {activeExam === subjectName ? (
@@ -187,14 +189,20 @@ const Paper_Details = () => {
            
               <div key={idx} className="row">
                 <div className="col-md-12 col-sm-12">
-                <Link
-                to={{
-                  pathname: `/general-instructions/${encodeURIComponent(cleanedExamName)}`,
-                  state: { paperData },
-                }}
-                >
-             
-                    <div className={style.examBox} >
+                {console.log('paperData  aa gaya  -->>>>:', paperData.paperName)}
+              
+       
+           
+              
+
+            <div
+            className={style.examBox}
+            onClick={() =>
+              navigate(`/general-instructions/${encodeURIComponent(paperData.paperName)}`, {
+                state: JSON.stringify(paperData.paperData),
+              })
+            } // Use navigate instead of history.push
+          >
                     <div className="row mt-3 py-2 ">
                     <div className="col-md-7 col-sm-12">
                     <h4 className="px-3 py-2  mx-2" style={{color:"#005AC1"}}> Test Name : {paperData.paperName}</h4>
@@ -238,7 +246,7 @@ const Paper_Details = () => {
                         )}
                       </div>
                     </div>
-                  </Link>
+               
                 </div>
               </div>
             ))
@@ -247,8 +255,10 @@ const Paper_Details = () => {
           )
         ) : null}
       </div>
-    ))}
-   
+    ))
+    ) : (
+      <p>Loading...</p>
+    )}
   </div>
 </div>
           </div>
